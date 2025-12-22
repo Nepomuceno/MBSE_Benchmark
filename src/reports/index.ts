@@ -2,6 +2,7 @@ export {
   exportToJson,
   exportToJsonFile,
   exportToJsonString,
+  saveResult,
 } from "./json-export";
 
 export {

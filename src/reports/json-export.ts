@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, existsSync, writeFileSync } from "fs";
+import { readdirSync, readFileSync, existsSync, writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
 
 interface TaskResult {
@@ -153,4 +153,19 @@ export function exportToJsonString(
 ): string {
   const data = exportToJson(resultsDir, options);
   return options.pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data);
+}
+
+export function saveResult(
+  result: { version: string; modelId: string },
+  resultsDir: string = "data/results"
+): string {
+  const versionDir = join(resultsDir, result.version);
+  if (!existsSync(versionDir)) {
+    mkdirSync(versionDir, { recursive: true });
+  }
+
+  const filename = `${result.modelId}.json`;
+  const outputPath = join(versionDir, filename);
+  writeFileSync(outputPath, JSON.stringify(result, null, 2), "utf-8");
+  return outputPath;
 }

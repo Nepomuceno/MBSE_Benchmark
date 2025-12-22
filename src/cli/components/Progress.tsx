@@ -152,6 +152,7 @@ interface BenchmarkCompleteProps {
   tasks: TaskProgress[];
   duration: number;
   outputPath: string;
+  timestamp: string;
 }
 
 export function BenchmarkComplete({
@@ -160,6 +161,7 @@ export function BenchmarkComplete({
   tasks,
   duration,
   outputPath,
+  timestamp,
 }: BenchmarkCompleteProps) {
   const score =
     tasks.reduce((sum, t) => sum + t.score, 0) / Math.max(tasks.length, 1);
@@ -181,6 +183,10 @@ export function BenchmarkComplete({
       <Box>
         <Text dimColor>Version: </Text>
         <Text>{version}</Text>
+      </Box>
+      <Box>
+        <Text dimColor>Executed: </Text>
+        <Text>{timestamp}</Text>
       </Box>
       <Box>
         <Text dimColor>Score: </Text>

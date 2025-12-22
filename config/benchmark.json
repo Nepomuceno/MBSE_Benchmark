@@ -6,5 +6,6 @@
   },
   "maxIterations": 10,
   "timeout": 120000,
-  "maxRetries": 2
+  "maxRetries": 2,
+  "parallelTasks": 5
 }

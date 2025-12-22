@@ -70,17 +70,9 @@ function getRankEmoji(rank: number): string {
 
 function getLatestVersion(results: ModelResult[]): string | null {
   const versions = [...new Set(results.map((r) => r.version))].sort((a, b) => {
-    const aParts = a.split(".").map(Number);
-    const bParts = b.split(".").map(Number);
-    const aMajor = aParts[0] ?? 0;
-    const aMinor = aParts[1] ?? 0;
-    const aPatch = aParts[2] ?? 0;
-    const bMajor = bParts[0] ?? 0;
-    const bMinor = bParts[1] ?? 0;
-    const bPatch = bParts[2] ?? 0;
-    if (aMajor !== bMajor) return bMajor - aMajor;
-    if (aMinor !== bMinor) return bMinor - aMinor;
-    return bPatch - aPatch;
+    // Sort by version string - semver with timestamp suffix sorts lexicographically
+    // e.g., 0.1.0-202512221500 > 0.1.0-202512221400
+    return b.localeCompare(a);
   });
   return versions[0] ?? null;
 }
@@ -178,15 +170,21 @@ function LeaderboardResults({
             Latency
           </Text>
         </Box>
+        <Box width={22}>
+          <Text bold dimColor>
+            Executed (UTC)
+          </Text>
+        </Box>
       </Box>
 
-      <Text dimColor>────  ──────────────  ────────  ────────  ──────────</Text>
+      <Text dimColor>────  ──────────────  ────────  ────────  ──────────  ────────────────────</Text>
 
       {ranked.map((result, index) => {
         const avgLatency =
           result.tasks.reduce((sum, t) => sum + t.latencyMs, 0) /
           result.tasks.length;
         const passedTasks = result.tasks.filter((t) => t.score > 0).length;
+        const executedAt = new Date(result.timestamp).toISOString().replace("T", " ").slice(0, 19);
 
         return (
           <Box key={result.modelId}>
@@ -208,6 +206,9 @@ function LeaderboardResults({
             </Box>
             <Box width={12}>
               <Text dimColor>{formatLatency(avgLatency)} avg</Text>
+            </Box>
+            <Box width={22}>
+              <Text dimColor>{executedAt}</Text>
             </Box>
           </Box>
         );
@@ -266,8 +267,8 @@ function ModelResults({
         </Text>
       </Box>
       <Box>
-        <Text dimColor>Date:    </Text>
-        <Text>{new Date(modelResult.timestamp).toLocaleDateString()}</Text>
+        <Text dimColor>Executed:</Text>
+        <Text> {new Date(modelResult.timestamp).toISOString().replace("T", " ").slice(0, 19)} UTC</Text>
       </Box>
 
       <Box marginTop={1}>

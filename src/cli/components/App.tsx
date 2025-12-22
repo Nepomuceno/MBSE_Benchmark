@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Text } from "ink";
 import type { CliArgs } from "../args";
 import { ResultsView } from "./ResultsView";
+import { BenchmarkRunner } from "./BenchmarkRunner";
 
 interface AppProps {
   args: CliArgs;
@@ -20,6 +21,31 @@ export function App({ args }: AppProps) {
     return <ResultsView modelId={args.resultsModel} />;
   }
 
+  if (args.model) {
+    return (
+      <BenchmarkRunner
+        modelId={args.model}
+        force={args.force}
+        verbose={args.verbose}
+      />
+    );
+  }
+
+  if (args.all) {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text bold color="cyan">
+          🚀 MBSE Benchmark
+        </Text>
+        <Text dimColor>─────────────────────────</Text>
+        <Box marginTop={1}>
+          <Text color="yellow">Running all models is not yet implemented.</Text>
+        </Box>
+        <Text>Use --model {"<id>"} to run a specific model.</Text>
+      </Box>
+    );
+  }
+
   return (
     <Box flexDirection="column" padding={1}>
       <Text bold color="cyan">
@@ -27,17 +53,8 @@ export function App({ args }: AppProps) {
       </Text>
       <Text dimColor>─────────────────────────</Text>
       <Box marginTop={1}>
-        <Text>
-          {args.all
-            ? "Running all models..."
-            : args.model
-              ? `Running model: ${args.model}`
-              : "No model specified. Use --model <id> or --all"}
-        </Text>
+        <Text>No model specified. Use --model {"<id>"} or --all</Text>
       </Box>
-      {args.force && (
-        <Text color="yellow">⚠ Force mode: ignoring cached results</Text>
-      )}
     </Box>
   );
 }
