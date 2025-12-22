@@ -96,10 +96,10 @@ export function exportToJson(
   if (!options.includeResponses) {
     results = results.map((r) => ({
       ...r,
-      tasks: r.tasks.map((t) => ({
-        ...t,
-        finalResponse: undefined,
-      })),
+      tasks: r.tasks.map((t) => {
+        const { finalResponse: _, ...rest } = t;
+        return rest;
+      }),
     }));
   }
 
@@ -107,10 +107,10 @@ export function exportToJson(
   if (!options.includeIterations) {
     results = results.map((r) => ({
       ...r,
-      tasks: r.tasks.map((t) => ({
-        ...t,
-        iterations: undefined,
-      })),
+      tasks: r.tasks.map((t) => {
+        const { iterations: _, ...rest } = t;
+        return rest;
+      }),
     }));
   }
 

@@ -52,9 +52,13 @@ export function parseArgs(argv: string[]): CliArgs {
         break;
       case "--output":
       case "-o": {
-        const format = argv[++i];
-        if (format === "json" || format === "table" || format === "minimal") {
-          args.output = format;
+        const next = argv[i + 1];
+        if (next && !next.startsWith("-")) {
+          const format = next;
+          if (format === "json" || format === "table" || format === "minimal") {
+            args.output = format;
+          }
+          i++;
         }
         break;
       }

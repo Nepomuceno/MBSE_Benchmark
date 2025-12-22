@@ -15,8 +15,8 @@ export interface Props {
 
 const { type, data, height = 300, showLegend = true } = Astro.props;
 
-// Generate unique ID for this chart
-const chartId = `chart-${Math.random().toString(36).substr(2, 9)}`;
+// Generate unique ID for this chart (ensure starts with letter for valid HTML ID)
+const chartId = `chart-${Math.random().toString(36).slice(2, 11)}`;
 
 // Color palette
 const colors = [
@@ -74,7 +74,7 @@ const chartConfig = JSON.stringify({
 </div>
 
 <script define:vars={{ chartId, chartConfig }}>
-  // Load Chart.js from CDN if not already loaded
+  // Load Chart.js from CDN if not already loaded (with SRI for security)
   function loadChartJs() {
     return new Promise((resolve, reject) => {
       if (window.Chart) {
@@ -84,6 +84,8 @@ const chartConfig = JSON.stringify({
       
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+      script.integrity = 'sha384-K/fGEEhgPRr4D+CJiw8yT4jWh4IqhLvL0VJML3BqjXdJv4sZ2YT+X6D8emBUOx4n';
+      script.crossOrigin = 'anonymous';
       script.onload = () => resolve(window.Chart);
       script.onerror = reject;
       document.head.appendChild(script);

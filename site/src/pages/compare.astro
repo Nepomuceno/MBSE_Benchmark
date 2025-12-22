@@ -36,26 +36,28 @@ const getBgScoreColor = (score: number) => {
 };
 
 // Get task scores for each model
-const taskComparison = tasks.map(task => {
-  const scores = selectedModels.map(model => {
-    const taskResult = model.tasks?.find(t => t.taskId === task.id);
-    return {
-      modelId: model.modelId,
-      score: taskResult?.score ?? 0,
-      latencyMs: taskResult?.latencyMs ?? 0,
-    };
-  });
-  
-  // Find winner(s)
-  const maxScore = Math.max(...scores.map(s => s.score));
-  const winners = scores.filter(s => s.score === maxScore && maxScore > 0).map(s => s.modelId);
-  
-  return {
-    task,
-    scores,
-    winners,
-  };
-});
+const taskComparison = selectedModels.length === 0
+  ? []
+  : tasks.map(task => {
+      const scores = selectedModels.map(model => {
+        const taskResult = model.tasks?.find(t => t.taskId === task.id);
+        return {
+          modelId: model.modelId,
+          score: taskResult?.score ?? 0,
+          latencyMs: taskResult?.latencyMs ?? 0,
+        };
+      });
+      
+      // Find winner(s)
+      const maxScore = Math.max(...scores.map(s => s.score));
+      const winners = scores.filter(s => s.score === maxScore && maxScore > 0).map(s => s.modelId);
+      
+      return {
+        task,
+        scores,
+        winners,
+      };
+    });
 
 // Calculate wins per model
 const winsPerModel = new Map<string, number>();
@@ -66,7 +68,7 @@ for (const comparison of taskComparison) {
 }
 ---
 
-<Layout title="Compare Models - MBSE Benchmark" currentPage="models" currentVersion={selectedVersion}>
+<Layout title="Compare Models - MBSE Benchmark" currentPage="compare" currentVersion={selectedVersion}>
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-slate-900 mb-2">Compare Models</h1>
     <p class="text-slate-500">Side-by-side comparison of model performance</p>

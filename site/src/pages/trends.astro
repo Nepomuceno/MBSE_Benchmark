@@ -95,7 +95,7 @@ const modelsImproved = improvements.filter(i => i.change > 0).length;
 const modelsRegressed = improvements.filter(i => i.change < 0).length;
 ---
 
-<Layout title="Trends - MBSE Benchmark" currentPage="leaderboard" currentVersion={latestVersion ?? undefined}>
+<Layout title="Trends - MBSE Benchmark" currentPage="trends" currentVersion={latestVersion ?? undefined}>
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-slate-900 mb-2">Performance Trends</h1>
     <p class="text-slate-500">Track model performance across benchmark versions</p>

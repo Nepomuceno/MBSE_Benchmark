@@ -35,7 +35,7 @@ function formatLatency(ms: number): string {
 
 function ProgressBar({ current, total }: { current: number; total: number }) {
   const width = 20;
-  const filled = Math.round((current / total) * width);
+  const filled = total > 0 ? Math.round((current / total) * width) : 0;
   const empty = width - filled;
   const bar = "█".repeat(filled) + "░".repeat(empty);
 
