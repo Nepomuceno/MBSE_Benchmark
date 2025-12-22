@@ -184,7 +184,10 @@ function LeaderboardResults({
           result.tasks.reduce((sum, t) => sum + t.latencyMs, 0) /
           result.tasks.length;
         const passedTasks = result.tasks.filter((t) => t.score > 0).length;
-        const executedAt = new Date(result.timestamp).toISOString().replace("T", " ").slice(0, 19);
+        const executedDate = new Date(result.timestamp);
+        const executedAt = Number.isNaN(executedDate.getTime())
+          ? "Invalid date"
+          : executedDate.toISOString().replace("T", " ").split(".")[0];
 
         return (
           <Box key={result.modelId}>
@@ -268,7 +271,18 @@ function ModelResults({
       </Box>
       <Box>
         <Text dimColor>Executed:</Text>
-        <Text> {new Date(modelResult.timestamp).toISOString().replace("T", " ").slice(0, 19)} UTC</Text>
+        <Text>
+          {(() => {
+            const date = new Date(modelResult.timestamp);
+            if (Number.isNaN(date.getTime())) {
+              return ` ${modelResult.timestamp}`;
+            }
+            const iso = date.toISOString();
+            const [datePart, timePartWithMs] = iso.split("T");
+            const timePart = (timePartWithMs ?? "").split(".")[0];
+            return ` ${datePart} ${timePart} UTC`;
+          })()}
+        </Text>
       </Box>
 
       <Box marginTop={1}>

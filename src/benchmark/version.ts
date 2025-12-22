@@ -23,6 +23,11 @@ export async function computeVersion(basePath: string = "."): Promise<string> {
     // Config doesn't exist yet
   }
 
+  // If no task files or config were found, fall back to the current time
+  if (latestMtime === 0) {
+    latestMtime = Date.now();
+  }
+
   // Create a semver-compatible version with chronological suffix
   // Format: 0.1.0-YYYYMMDDHHMM
   const date = new Date(latestMtime);

@@ -15,11 +15,11 @@ interface TaskProgress {
 
 interface BenchmarkRunnerProps {
   modelId: string;
-  force?: boolean;
-  verbose?: boolean;
+  force?: boolean;  // TODO: Implement cache invalidation when force=true
+  verbose?: boolean;  // TODO: Implement verbose logging
 }
 
-export function BenchmarkRunner({ modelId, force, verbose: _verbose }: BenchmarkRunnerProps) {
+export function BenchmarkRunner({ modelId, force: _force, verbose: _verbose }: BenchmarkRunnerProps) {
   const { exit } = useApp();
   const [status, setStatus] = useState<"loading" | "running" | "complete" | "error">("loading");
   const [tasks, setTasks] = useState<TaskProgress[]>([]);
@@ -85,7 +85,7 @@ export function BenchmarkRunner({ modelId, force, verbose: _verbose }: Benchmark
     }
 
     run();
-  }, [modelId, force, exit]);
+  }, [modelId, exit]);
 
   if (status === "error") {
     return (

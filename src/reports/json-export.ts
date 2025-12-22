@@ -155,8 +155,8 @@ export function exportToJsonString(
   return options.pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data);
 }
 
-export function saveResult(
-  result: { version: string; modelId: string },
+export function saveResult<T extends { version: string; modelId: string }>(
+  result: T,
   resultsDir: string = "data/results"
 ): string {
   const versionDir = join(resultsDir, result.version);
