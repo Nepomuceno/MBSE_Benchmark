@@ -62,11 +62,20 @@ export interface TaskFiles {
 }
 
 export interface TaskEvaluation {
-  type: "keyword-match" | "element-extraction" | "llm-judge" | "file-validation";
+  type: "keyword-match" | "element-extraction" | "llm-judge" | "file-validation" | "sysml-validation";
   weight: number;
   keywords?: string[];
   elements?: string[];
   criteria?: string[];
+  // SysML validation options
+  checkSyntax?: boolean;
+  checkStructure?: boolean;
+  checkElements?: boolean;
+  expectedModel?: string;
+  expectedElements?: Record<string, unknown>;
+  syntaxWeight?: number;
+  structureWeight?: number;
+  elementsWeight?: number;
 }
 
 export interface Task {
