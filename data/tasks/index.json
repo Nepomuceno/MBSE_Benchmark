@@ -1,4 +1,47 @@
 {
-  "version": "0.1.0",
-  "tasks": ["sample-task"]
+  "version": "0.2.0",
+  "tasks": [
+    "sysml-valid-detection-001",
+    "sysml-invalid-braces-001",
+    "sysml-invalid-keywords-001",
+    "sysml-mixed-validation-001",
+    "sysml-semantic-validity-001",
+    "sysml-constraint-syntax-001",
+    "sysml-extract-parts-001",
+    "sysml-extract-ports-001",
+    "sysml-extract-requirements-001",
+    "sysml-extract-connections-001",
+    "sysml-extract-hierarchy-001",
+    "sysml-extract-attributes-001",
+    "sysml-extract-actions-001",
+    "sysml-extract-interfaces-001"
+  ],
+  "categories": {
+    "validation": {
+      "name": "SysML v2 Validation",
+      "description": "Tasks testing ability to validate SysML v2 syntax and detect errors",
+      "tasks": [
+        "sysml-valid-detection-001",
+        "sysml-invalid-braces-001",
+        "sysml-invalid-keywords-001",
+        "sysml-mixed-validation-001",
+        "sysml-semantic-validity-001",
+        "sysml-constraint-syntax-001"
+      ]
+    },
+    "extraction": {
+      "name": "SysML v2 Extraction",
+      "description": "Tasks testing ability to extract structured information from SysML v2 models",
+      "tasks": [
+        "sysml-extract-parts-001",
+        "sysml-extract-ports-001",
+        "sysml-extract-requirements-001",
+        "sysml-extract-connections-001",
+        "sysml-extract-hierarchy-001",
+        "sysml-extract-attributes-001",
+        "sysml-extract-actions-001",
+        "sysml-extract-interfaces-001"
+      ]
+    }
+  }
 }

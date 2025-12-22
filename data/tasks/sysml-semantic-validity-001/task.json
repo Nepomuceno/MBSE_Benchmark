@@ -1,0 +1,22 @@
+{
+  "id": "sysml-semantic-validity-001",
+  "type": "analysis",
+  "name": "SysML v2 Semantic Validity Check",
+  "description": "Check if syntactically correct SysML v2 code has semantic errors such as undefined references, type mismatches, or invalid specializations.",
+  "prompt": "This SysML v2 code is intended to be syntactically correct but may have semantic errors.\n\nAnalyze the code and identify any semantic issues such as:\n1. References to undefined types or elements\n2. Invalid type specializations (wrong parent type)\n3. Undefined port or part types\n4. Missing or incorrect imports\n\nFor each issue found, explain:\n- What is referenced that doesn't exist\n- Where in the code the issue occurs\n- What the correct reference should be (if determinable)\n\nIf no semantic errors are found, state 'NO SEMANTIC ERRORS FOUND'.",
+  "maxTokens": 1200,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["semantic_understanding", "reference_checking", "completeness"],
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "validation",
+    "source": "Modified from GfSE/SysML-v2-Models VehicleModel.sysml",
+    "tags": ["semantic", "validation", "references", "types"]
+  }
+}

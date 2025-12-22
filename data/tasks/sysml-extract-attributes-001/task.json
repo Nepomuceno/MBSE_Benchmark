@@ -1,0 +1,22 @@
+{
+  "id": "sysml-extract-attributes-001",
+  "type": "analysis",
+  "name": "SysML v2 Attribute Extraction",
+  "description": "Extract all attributes with their types and default values from a SysML v2 model.",
+  "prompt": "Extract all `attribute` declarations from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"name\": the attribute name\n- \"type\": the attribute type (after : or :>)\n- \"value\": the default value if specified, or null\n- \"owner\": the part/item def that contains this attribute\n\nExample output format:\n```json\n[\n  {\"name\": \"orderID\", \"type\": \"String\", \"value\": null, \"owner\": \"GeneralOrder\"},\n  {\"name\": \"temperature\", \"type\": \"Real\", \"value\": \"25.0\", \"owner\": \"Sensor\"}\n]\n```\n\nInclude ALL attributes from all definitions.",
+  "maxTokens": 1500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "element-extraction",
+    "expectedElements": ["orderID", "orderAmount", "productID", "materialID", "name", "secondsToProcess", "temperature", "duration", "angle", "length", "holeLocationsX", "holeLocationsY", "grainSize"],
+    "weight": 1.0
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models Fischertechnik.sysml",
+    "tags": ["extraction", "attributes", "types"]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sysml-invalid-braces-001",
+  "type": "qa",
+  "name": "SysML v2 Missing Braces Detection",
+  "description": "Detect missing closing braces in SysML v2 code. Tests the ability to identify structural syntax errors in state machine definitions.",
+  "prompt": "Analyze this SysML v2 code and identify any syntax errors.\n\nFor each error found, provide:\n1. The type of error (e.g., missing brace, unmatched bracket)\n2. The approximate location (which definition or block is affected)\n3. How to fix it\n\nIf no errors are found, state 'NO ERRORS FOUND'.",
+  "maxTokens": 600,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["error_detection", "location_accuracy", "fix_suggestion"],
+    "weight": 1.0
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "category": "validation",
+    "source": "Modified from GfSE/SysML-v2-Models StopWatchStates.sysml",
+    "tags": ["syntax", "validation", "braces", "error-detection"]
+  }
+}

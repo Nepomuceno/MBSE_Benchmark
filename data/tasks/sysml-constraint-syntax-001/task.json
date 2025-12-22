@@ -1,0 +1,22 @@
+{
+  "id": "sysml-constraint-syntax-001",
+  "type": "qa",
+  "name": "SysML v2 Constraint Syntax Validation",
+  "description": "Validate constraint expressions in SysML v2 requirement definitions. Tests understanding of constraint syntax and expression validity.",
+  "prompt": "Examine these SysML v2 requirement definitions with constraint expressions.\n\nFor each requirement definition:\n1. State if the constraint syntax is VALID or INVALID\n2. If INVALID, identify the specific syntax error in the constraint expression\n3. Explain what the constraint is intended to verify\n\nPay attention to:\n- Proper constraint block syntax { }\n- Valid comparison operators (<=, >=, ==, !=)\n- Complete expressions (no missing operands)\n- Proper attribute references",
+  "maxTokens": 1000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["constraint_understanding", "expression_validity", "explanation_quality"],
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "validation",
+    "source": "Based on GfSE/SysML-v2-Models HVACSystemRequirements.sysml",
+    "tags": ["constraints", "validation", "requirements", "expressions"]
+  }
+}

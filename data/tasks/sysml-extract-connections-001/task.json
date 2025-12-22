@@ -1,0 +1,22 @@
+{
+  "id": "sysml-extract-connections-001",
+  "type": "analysis",
+  "name": "SysML v2 Connection Extraction",
+  "description": "Extract all connection statements showing how parts and ports are connected.",
+  "prompt": "Extract all `connect` statements from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"source\": the source reference (e.g., \"part.port\" or just \"port\")\n- \"target\": the target reference\n- \"context\": the containing part or package where the connection is defined (optional)\n\nExample output format:\n```json\n[\n  {\"source\": \"engine.drivePwrPort\", \"target\": \"transmission.clutchPort\", \"context\": \"vehicle\"},\n  {\"source\": \"Customer.inquiryOut\", \"target\": \"Manufacturer.Sales.inquiryIn\", \"context\": \"factoryContext\"}\n]\n```\n\nInclude ALL connect statements in the model.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "element-extraction",
+    "expectedElements": ["materialIn to Heating.productIn", "Heating.productOut to Bending.productIn", "Bending.productOut to Cutting.productIn", "Customer.inquiryOut to Manufacturer.Sales.inquiryIn", "Supplier.materialOut to Manufacturer.Storage.materialIn"],
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models Fischertechnik.sysml",
+    "tags": ["extraction", "connections", "topology"]
+  }
+}

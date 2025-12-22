@@ -1,0 +1,22 @@
+{
+  "id": "sysml-extract-parts-001",
+  "type": "analysis",
+  "name": "SysML v2 Part Definition Extraction",
+  "description": "Extract all part definitions from a SysML v2 model, identifying names, parent types (specializations), and attributes.",
+  "prompt": "Extract all `part def` declarations from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"name\": the part definition name\n- \"parent\": the parent type if specializing (after :> or 'specializes'), or null\n- \"attributes\": array of attribute names defined in the part\n\nExample output format:\n```json\n[\n  {\"name\": \"Vehicle\", \"parent\": null, \"attributes\": [\"mass\", \"velocity\"]},\n  {\"name\": \"FrontAxle\", \"parent\": \"Axle\", \"attributes\": [\"steeringAngle\"]}\n]\n```\n\nInclude ALL part definitions, even empty ones.",
+  "maxTokens": 1500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "element-extraction",
+    "expectedElements": ["GeneralOrder", "SalesOrder", "MaterialOrder", "ProductOrder", "PurchaseOrder", "Inquiry", "OrderQuotation", "OrderConfirmation", "Shipment", "ShippingConfirmation", "Product", "Material", "Inventory", "IntermediateProduct", "Machine"],
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models Fischertechnik.sysml",
+    "tags": ["extraction", "parts", "structure"]
+  }
+}

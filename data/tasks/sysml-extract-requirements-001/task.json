@@ -1,0 +1,22 @@
+{
+  "id": "sysml-extract-requirements-001",
+  "type": "analysis",
+  "name": "SysML v2 Requirement Extraction",
+  "description": "Extract all requirement definitions with their documentation, attributes, and constraint expressions.",
+  "prompt": "Extract all `requirement def` declarations from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"name\": the requirement definition name\n- \"doc\": the documentation text (from doc /* ... */)\n- \"attributes\": array of {\"name\": attr name, \"type\": attr type}\n- \"constraint\": the constraint expression if present (text inside require constraint { })\n\nExample output format:\n```json\n[\n  {\n    \"name\": \"MassRequirement\",\n    \"doc\": \"The actual mass shall be less than required\",\n    \"attributes\": [{\"name\": \"massRequired\", \"type\": \"ISQ::mass\"}],\n    \"constraint\": \"massActual <= massRequired\"\n  }\n]\n```\n\nExtract ALL requirement definitions.",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "element-extraction",
+    "expectedElements": ["TemperatureRegulationReqDef", "CoolingFunctionReqDef", "HeatingFunctionReqDef", "DefrostingReqDef", "AirQualityControlReqDef", "UserInterfaceReqDef", "PerformanceReqDef", "ReliabilityReqDef", "PowerConsumptionReqDef", "NoiseLevelsReqDef", "ElectricalSystemInterfaceReqDef", "EngineInterfaceReqDef", "UserInterfaceAccessibilityReqDef", "TestingReqDef", "UserFeedbackReqDef", "GlossaryReqDef", "ReferencesReqDef"],
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models HVACSystemRequirements.sysml",
+    "tags": ["extraction", "requirements", "constraints"]
+  }
+}
