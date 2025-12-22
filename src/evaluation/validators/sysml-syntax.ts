@@ -145,18 +145,15 @@ function validateBraceMatching(input: string): SyntaxError[] {
   };
 
   let inString = false;
-  let inLineComment = false;
   let inBlockComment = false;
   let stringChar = "";
 
   for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
     const line = lines[lineIndex]!;
-    inLineComment = false;
 
     for (let col = 0; col < line.length; col++) {
       const char = line[col]!;
       const nextChar = line[col + 1] ?? "";
-      const prevChar = col > 0 ? line[col - 1]! : "";
 
       // Handle block comments
       if (!inString && char === "/" && nextChar === "*") {
@@ -173,18 +170,24 @@ function validateBraceMatching(input: string): SyntaxError[] {
 
       // Handle line comments
       if (!inString && char === "/" && nextChar === "/") {
-        inLineComment = true;
         break;
       }
-      if (inLineComment) continue;
 
-      // Handle strings
-      if ((char === '"' || char === "'") && prevChar !== "\\") {
-        if (!inString) {
-          inString = true;
-          stringChar = char;
-        } else if (char === stringChar) {
-          inString = false;
+      // Handle strings - count consecutive backslashes to determine if quote is escaped
+      if (char === '"' || char === "'") {
+        let backslashCount = 0;
+        for (let i = col - 1; i >= 0 && line[i] === "\\"; i--) {
+          backslashCount++;
+        }
+        const isEscaped = backslashCount % 2 === 1;
+
+        if (!isEscaped) {
+          if (!inString) {
+            inString = true;
+            stringChar = char;
+          } else if (char === stringChar) {
+            inString = false;
+          }
         }
         continue;
       }

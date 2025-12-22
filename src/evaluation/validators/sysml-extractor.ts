@@ -97,6 +97,42 @@ function removeComments(input: string): string {
   return input.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
 }
 
+function findMatchingBrace(content: string, startIndex: number): number {
+  let braceCount = 1;
+  let endIndex = startIndex;
+  let inString = false;
+  let stringDelimiter: string | null = null;
+  let escape = false;
+
+  while (braceCount > 0 && endIndex < content.length) {
+    const ch = content[endIndex];
+
+    if (inString) {
+      if (escape) {
+        escape = false;
+      } else if (ch === "\\") {
+        escape = true;
+      } else if (ch === stringDelimiter) {
+        inString = false;
+        stringDelimiter = null;
+      }
+    } else {
+      if (ch === '"' || ch === "'" || ch === "`") {
+        inString = true;
+        stringDelimiter = ch;
+        escape = false;
+      } else if (ch === "{") {
+        braceCount++;
+      } else if (ch === "}") {
+        braceCount--;
+      }
+    }
+    endIndex++;
+  }
+
+  return endIndex;
+}
+
 function extractPackages(input: string): PackageInfo[] {
   const packages: PackageInfo[] = [];
   const noComments = removeComments(input);
@@ -109,16 +145,11 @@ function extractPackages(input: string): PackageInfo[] {
     const name = match[1];
     const startIndex = match.index;
 
-    // Find the content of this package
-    let braceCount = 1;
-    let endIndex = startIndex + match[0].length;
-    while (braceCount > 0 && endIndex < noComments.length) {
-      if (noComments[endIndex] === "{") braceCount++;
-      if (noComments[endIndex] === "}") braceCount--;
-      endIndex++;
-    }
+    // Find the content of this package using string-aware brace matching
+    const contentStart = startIndex + match[0].length;
+    const endIndex = findMatchingBrace(noComments, contentStart);
 
-    const packageContent = noComments.slice(startIndex + match[0].length, endIndex - 1);
+    const packageContent = noComments.slice(contentStart, endIndex - 1);
 
     // Extract imports from this package
     const imports: string[] = [];

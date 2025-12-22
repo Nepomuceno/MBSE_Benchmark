@@ -139,8 +139,6 @@ describe("SysML Validators Integration", () => {
       expect(result.elements.requirements).toBeGreaterThan(0);
       expect(result.elements.actions).toBeGreaterThan(0);
 
-      console.log("✓ Syntax validation passed");
-      console.log(`  Elements found: ${JSON.stringify(result.elements)}`);
     });
 
     test("syntax validation detects errors", () => {
@@ -149,9 +147,6 @@ describe("SysML Validators Integration", () => {
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThan(0);
 
-      console.log("✓ Error detection passed");
-      console.log(`  Errors found: ${result.errors.length}`);
-      result.errors.forEach((e) => console.log(`    - Line ${e.line}: ${e.message}`));
     });
 
     test("component extraction", () => {
@@ -164,12 +159,6 @@ describe("SysML Validators Integration", () => {
       expect(extracted.states.length).toBeGreaterThan(0);
       expect(extracted.actions.length).toBeGreaterThan(0);
 
-      console.log("✓ Component extraction passed");
-      console.log(`  Packages: ${extracted.packages.map((p) => p.name).join(", ")}`);
-      console.log(`  Part Defs: ${extracted.partDefs.map((p) => p.name).join(", ")}`);
-      console.log(`  Port Defs: ${extracted.portDefs.map((p) => p.name).join(", ")}`);
-      console.log(`  Requirements: ${extracted.requirements.map((r) => r.name).join(", ")}`);
-      console.log(`  Actions: ${extracted.actions.map((a) => a.name).join(", ")}`);
     });
 
     test("component comparison", () => {
@@ -181,9 +170,6 @@ describe("SysML Validators Integration", () => {
       expect(comparison.matchRatio).toBeLessThan(1);
       expect(comparison.missing.length).toBeGreaterThan(0);
 
-      console.log("✓ Component comparison passed");
-      console.log(`  Match ratio: ${(comparison.matchRatio * 100).toFixed(1)}%`);
-      console.log(`  Missing: ${comparison.missing.slice(0, 5).join(", ")}...`);
     });
 
     test("structure tree building", () => {
@@ -196,9 +182,6 @@ describe("SysML Validators Integration", () => {
       expect(vehicleModelPkg).toBeDefined();
       expect(vehicleModelPkg!.children.length).toBeGreaterThan(0);
 
-      console.log("✓ Structure tree building passed");
-      console.log(`  Root children: ${tree.children.map((c) => c.name).join(", ")}`);
-      console.log(`  VehicleModel children: ${vehicleModelPkg!.children.map((c) => `${c.name}(${c.type})`).join(", ")}`);
     });
 
     test("structure comparison", () => {
@@ -207,11 +190,6 @@ describe("SysML Validators Integration", () => {
       expect(result.match).toBe(false);
       expect(result.missing.length).toBeGreaterThan(0);
 
-      console.log("✓ Structure comparison passed");
-      console.log(`  Score: ${(result.score * 100).toFixed(1)}%`);
-      console.log(`  Matched: ${result.matched.length}`);
-      console.log(`  Missing: ${result.missing.length}`);
-      console.log(`  Extra: ${result.extra.length}`);
     });
   });
 
@@ -239,9 +217,6 @@ describe("SysML Validators Integration", () => {
       expect(result.score).toBe(1);
       expect(result.explanation).toContain("100%");
 
-      console.log("✓ Syntax evaluation strategy passed");
-      console.log(`  Score: ${result.score}`);
-      console.log(`  Explanation: ${result.explanation}`);
     });
 
     test("evaluates with structure comparison", async () => {
@@ -271,9 +246,6 @@ describe("SysML Validators Integration", () => {
       expect(partialResult.score).toBeLessThan(1);
       expect(partialResult.score).toBeGreaterThan(0);
 
-      console.log("✓ Structure evaluation strategy passed");
-      console.log(`  Exact match score: ${exactResult.score}`);
-      console.log(`  Partial match score: ${partialResult.score.toFixed(3)}`);
     });
 
     test("evaluates invalid SysML", async () => {
@@ -294,23 +266,11 @@ describe("SysML Validators Integration", () => {
 
       expect(result.score).toBe(0);
 
-      console.log("✓ Invalid model detection passed");
-      console.log(`  Score: ${result.score}`);
-      console.log(`  Explanation: ${result.explanation}`);
     });
   });
 
   describe("Summary", () => {
     test("print summary", () => {
-      console.log("\n" + "=".repeat(60));
-      console.log("SysML v2 Validators Integration Test Summary");
-      console.log("=".repeat(60));
-      console.log("All validators working correctly:");
-      console.log("  ✓ sysml-syntax.ts - Syntax validation");
-      console.log("  ✓ sysml-extractor.ts - Component extraction");
-      console.log("  ✓ sysml-structure.ts - Structure matching");
-      console.log("  ✓ sysml-validation.ts - Evaluation strategy");
-      console.log("=".repeat(60));
     });
   });
 });

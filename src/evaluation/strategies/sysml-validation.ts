@@ -81,10 +81,15 @@ export class SysmlValidationStrategy implements EvaluationStrategy {
       });
     }
 
-    // Calculate weighted average
-    const totalWeight = scores.reduce((sum, s) => sum + s.weight, 0);
-    const weightedSum = scores.reduce((sum, s) => sum + s.score * s.weight, 0);
-    const overallScore = totalWeight > 0 ? weightedSum / totalWeight : 0;
+    // Calculate weighted average - return 1.0 if no checks configured
+    let overallScore: number;
+    if (scores.length === 0) {
+      overallScore = 1;
+    } else {
+      const totalWeight = scores.reduce((sum, s) => sum + s.weight, 0);
+      const weightedSum = scores.reduce((sum, s) => sum + s.score * s.weight, 0);
+      overallScore = totalWeight > 0 ? weightedSum / totalWeight : 0;
+    }
 
     return {
       score: overallScore,

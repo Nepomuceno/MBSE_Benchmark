@@ -273,10 +273,8 @@ function parseElement(ctx: ParseContext): StructureNode | null {
     return null;
   }
 
-  // Skip single character if stuck
-  if (ctx.position < ctx.content.length) {
-    ctx.position++;
-  }
+  // Skip single character if stuck; always advance to avoid infinite loops
+  ctx.position = Math.min(ctx.position + 1, ctx.content.length);
 
   return null;
 }
