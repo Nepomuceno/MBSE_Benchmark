@@ -70,7 +70,8 @@ export function createAzureAdapter(config: ModelConfig): ModelAdapter {
         prompt,
         system: options?.systemPrompt,
         maxOutputTokens: options?.maxTokens,
-        temperature: options?.temperature,
+        // Skip temperature for reasoning models (they don't support it)
+        temperature: config.reasoningModel ? undefined : options?.temperature,
         tools,
       });
 

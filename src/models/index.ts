@@ -10,6 +10,7 @@ export interface ModelConfig {
   envEndpoint?: string;
   deployment?: string;
   model?: string;
+  reasoningModel?: boolean;
 }
 
 export function loadModels(): ModelConfig[] {

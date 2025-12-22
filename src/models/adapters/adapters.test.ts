@@ -103,3 +103,46 @@ describe("Local Adapter", () => {
     }
   });
 });
+
+describe("Reasoning Model Config", () => {
+  test("reasoning model flag is recognized", () => {
+    const originalKey = process.env.TEST_AZURE_KEY;
+    const originalEndpoint = process.env.TEST_AZURE_ENDPOINT;
+    process.env.TEST_AZURE_KEY = "test-key";
+    process.env.TEST_AZURE_ENDPOINT = "https://test.openai.azure.com";
+
+    const config: ModelConfig = {
+      id: "reasoning-model",
+      name: "Reasoning Model",
+      provider: "azure",
+      envKey: "TEST_AZURE_KEY",
+      envEndpoint: "TEST_AZURE_ENDPOINT",
+      deployment: "gpt-5.2",
+      reasoningModel: true,
+    };
+
+    try {
+      const adapter = createAzureAdapter(config);
+      expect(adapter.id).toBe("reasoning-model");
+      // The adapter should be created successfully with reasoningModel flag
+      expect(typeof adapter.generate).toBe("function");
+    } finally {
+      if (originalKey === undefined) delete process.env.TEST_AZURE_KEY;
+      else process.env.TEST_AZURE_KEY = originalKey;
+      if (originalEndpoint === undefined) delete process.env.TEST_AZURE_ENDPOINT;
+      else process.env.TEST_AZURE_ENDPOINT = originalEndpoint;
+    }
+  });
+
+  test("non-reasoning model config does not have flag", () => {
+    const config: ModelConfig = {
+      id: "regular-model",
+      name: "Regular Model",
+      provider: "openai-compatible",
+      envKey: "",
+      model: "gpt-4",
+    };
+
+    expect(config.reasoningModel).toBeUndefined();
+  });
+});

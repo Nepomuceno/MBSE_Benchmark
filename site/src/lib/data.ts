@@ -94,12 +94,8 @@ export async function getLatestVersion(): Promise<string | null> {
     const validVersions = versions
       .filter((v) => v !== 'README.md')
       .sort((a, b) => {
-        // Sort by semver-like comparison
-        const [aMajor, aMinor, aPatch] = a.split('.').map(Number);
-        const [bMajor, bMinor, bPatch] = b.split('.').map(Number);
-        if (aMajor !== bMajor) return bMajor - aMajor;
-        if (aMinor !== bMinor) return bMinor - aMinor;
-        return bPatch - aPatch;
+        // Sort lexicographically - works with 0.1.0-YYYYMMDDHHMM format
+        return b.localeCompare(a);
       });
     return validVersions[0] ?? null;
   } catch {
@@ -134,11 +130,8 @@ export async function getAllVersions(): Promise<string[]> {
     return versions
       .filter((v) => v !== 'README.md')
       .sort((a, b) => {
-        const [aMajor, aMinor, aPatch] = a.split('.').map(Number);
-        const [bMajor, bMinor, bPatch] = b.split('.').map(Number);
-        if (aMajor !== bMajor) return bMajor - aMajor;
-        if (aMinor !== bMinor) return bMinor - aMinor;
-        return bPatch - aPatch;
+        // Sort lexicographically - works with 0.1.0-YYYYMMDDHHMM format
+        return b.localeCompare(a);
       });
   } catch {
     return [];

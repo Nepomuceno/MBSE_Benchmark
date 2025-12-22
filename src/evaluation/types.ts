@@ -39,4 +39,5 @@ export interface BenchmarkSettings {
   maxIterations: number;
   timeout: number;
   maxRetries: number;
+  parallelTasks: number;
 }

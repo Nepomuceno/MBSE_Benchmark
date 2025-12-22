@@ -77,15 +77,33 @@ export async function runBenchmark(
     tasks = await loadAllTasks(basePath);
   }
 
-  // Run each task
-  const taskResults: TaskResult[] = [];
-  let totalIterations = 0;
+  // Run tasks in parallel with concurrency from settings (default 5)
+  const concurrency = settings.parallelTasks ?? 5;
 
-  for (const task of tasks) {
-    const result = await runTask(adapter, task, maxIterations, settings);
-    taskResults.push(result);
-    totalIterations += result.iterations.length;
+  let taskResults: TaskResult[];
+
+  if (tasks.length > 1 && concurrency > 1) {
+    // Run tasks in parallel with concurrency limit
+    taskResults = await runTasksInParallel(
+      tasks,
+      adapter,
+      maxIterations,
+      settings,
+      concurrency
+    );
+  } else {
+    // Run tasks sequentially
+    taskResults = [];
+    for (const task of tasks) {
+      const result = await runTask(adapter, task, maxIterations, settings);
+      taskResults.push(result);
+    }
   }
+
+  const totalIterations = taskResults.reduce(
+    (sum, r) => sum + r.iterations.length,
+    0
+  );
 
   // Compute aggregate score
   const taskScores = taskResults.map((r) => {
@@ -109,6 +127,40 @@ export async function runBenchmark(
       totalIterations,
     },
   };
+}
+
+async function runTasksInParallel(
+  tasks: LoadedTask[],
+  adapter: ModelAdapter,
+  maxIterations: number,
+  settings: BenchmarkSettings,
+  concurrency: number
+): Promise<TaskResult[]> {
+  const results: TaskResult[] = [];
+  const queue = [...tasks];
+
+  async function worker(): Promise<void> {
+    while (queue.length > 0) {
+      const task = queue.shift();
+      if (task) {
+        const result = await runTask(adapter, task, maxIterations, settings);
+        results.push(result);
+      }
+    }
+  }
+
+  // Start workers up to concurrency limit
+  const workers = Array.from(
+    { length: Math.min(concurrency, tasks.length) },
+    () => worker()
+  );
+  await Promise.all(workers);
+
+  // Sort results to match original task order
+  const taskOrder = new Map(tasks.map((t, i) => [t.id, i]));
+  results.sort((a, b) => (taskOrder.get(a.taskId) ?? 0) - (taskOrder.get(b.taskId) ?? 0));
+
+  return results;
 }
 
 async function runTask(

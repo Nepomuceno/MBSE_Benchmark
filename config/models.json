@@ -6,7 +6,8 @@
       "provider": "azure",
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
-      "deployment": "gpt-5.2"
+      "deployment": "gpt-5.2",
+      "reasoningModel": true
     },
     {
       "id": "gpt-5.1-codex-mini",
@@ -14,7 +15,8 @@
       "provider": "azure",
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
-      "deployment": "gpt-5.1-codex-mini"
+      "deployment": "gpt-5.1-codex-mini",
+      "reasoningModel": true
     },
     {
       "id": "gpt-4.1",
@@ -38,7 +40,8 @@
       "provider": "azure",
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
-      "deployment": "Phi-4-reasoning"
+      "deployment": "Phi-4-reasoning",
+      "reasoningModel": true
     },
     {
       "id": "deepseek-v3.2",
@@ -62,7 +65,8 @@
       "provider": "openai-compatible",
       "envKey": "LOCAL_API_KEY",
       "envEndpoint": "LOCAL_MODEL_URL",
-      "model": "microsoft/phi-4-reasoning-plus"
+      "model": "microsoft/phi-4-reasoning-plus",
+      "reasoningModel": true
     },
     {
       "id": "local-qwen3-coder",

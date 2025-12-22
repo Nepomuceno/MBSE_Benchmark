@@ -1,5 +1,4 @@
-import { createHash } from "crypto";
-import { readdir, readFile } from "fs/promises";
+import { readdir, stat } from "fs/promises";
 import { join } from "path";
 
 let cachedVersion: string | null = null;
@@ -9,56 +8,66 @@ export async function computeVersion(basePath: string = "."): Promise<string> {
     return cachedVersion;
   }
 
-  const hash = createHash("sha256");
-
-  // Hash task definitions
+  // Find the latest modification time across all benchmark files
   const tasksDir = join(basePath, "data/tasks");
-  await hashDirectory(hash, tasksDir);
+  let latestMtime = await getLatestMtime(tasksDir);
 
-  // Hash tool definitions (filesystem tools are stable, but include for completeness)
-  hash.update("filesystem-tools-v1");
-
-  // Hash benchmark config
+  // Also check benchmark config
   const configPath = join(basePath, "config/benchmark.json");
   try {
-    const configContent = await readFile(configPath, "utf-8");
-    hash.update(configContent);
+    const configStat = await stat(configPath);
+    if (configStat.mtimeMs > latestMtime) {
+      latestMtime = configStat.mtimeMs;
+    }
   } catch {
     // Config doesn't exist yet
   }
 
-  const fullHash = hash.digest("hex");
-  // Create a semver-like version from the hash
-  const major = 0;
-  const minor = 1;
-  const patch = parseInt(fullHash.slice(0, 8), 16) % 1000;
+  // If no task files or config were found, fall back to the current time
+  if (latestMtime === 0) {
+    latestMtime = Date.now();
+  }
 
-  cachedVersion = `${major}.${minor}.${patch}`;
+  // Create a semver-compatible version with chronological suffix
+  // Format: 0.1.0-YYYYMMDDHHMM
+  const date = new Date(latestMtime);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+
+  cachedVersion = `0.1.0-${year}${month}${day}${hours}${minutes}`;
   return cachedVersion;
 }
 
-async function hashDirectory(hash: ReturnType<typeof createHash>, dirPath: string): Promise<void> {
+async function getLatestMtime(dirPath: string): Promise<number> {
+  let latestMtime = 0;
+
   let entries;
   try {
     entries = await readdir(dirPath, { withFileTypes: true });
   } catch {
-    return;
+    return latestMtime;
   }
-
-  // Sort for deterministic ordering
-  entries.sort((a, b) => a.name.localeCompare(b.name));
 
   for (const entry of entries) {
     const fullPath = join(dirPath, entry.name);
 
     if (entry.isDirectory()) {
-      hash.update(`dir:${entry.name}`);
-      await hashDirectory(hash, fullPath);
+      const dirMtime = await getLatestMtime(fullPath);
+      if (dirMtime > latestMtime) {
+        latestMtime = dirMtime;
+      }
     } else if (entry.isFile() && entry.name.endsWith(".json")) {
-      const content = await readFile(fullPath, "utf-8");
-      hash.update(`file:${entry.name}:${content}`);
+      const fileStat = await stat(fullPath);
+      if (fileStat.mtimeMs > latestMtime) {
+        latestMtime = fileStat.mtimeMs;
+      }
     }
   }
+
+  return latestMtime;
 }
 
 export function clearVersionCache(): void {
