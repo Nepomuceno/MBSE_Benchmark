@@ -167,14 +167,14 @@ Replace regex validators with Langium parser.
 
 ## Estimated Effort
 
-| Phase | Complexity | Estimated Time |
-|-------|------------|----------------|
-| Phase 1: Setup | Low | 1-2 days |
-| Phase 2: KerML | High | 2-3 weeks |
-| Phase 3: SysML | High | 2-3 weeks |
-| Phase 4: Validation | Medium | 1-2 weeks |
-| Phase 5: Integration | Medium | 1 week |
-| **Total** | | **7-10 weeks** |
+| Phase                 | Complexity | Estimated Time |
+| --------------------- | ---------- | -------------- |
+| Phase 1: Setup        | Low        | 1-2 days       |
+| Phase 2: KerML        | High       | 2-3 weeks      |
+| Phase 3: SysML        | High       | 2-3 weeks      |
+| Phase 4: Validation   | Medium     | 1-2 weeks      |
+| Phase 5: Integration  | Medium     | 1 week         |
+| **Total**             |            | **7-10 weeks** |
 
 ## Decision Point
 
