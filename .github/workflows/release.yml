@@ -45,7 +45,7 @@ jobs:
         run: bun build ./src/cli/index.tsx --compile --target=bun-${{ matrix.target }} --outfile ./dist/${{ matrix.artifact }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.artifact }}
           path: ./dist/${{ matrix.artifact }}
@@ -71,7 +71,7 @@ jobs:
           cat license-report.txt
 
       - name: Upload license report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: license-report
           path: license-report.txt
@@ -94,7 +94,7 @@ jobs:
           bunx @cyclonedx/bun --output-file sbom.json
 
       - name: Upload SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sbom
           path: sbom.json
