@@ -286,6 +286,20 @@ describe("SysML v2 Component Extractor", () => {
         expect(runningState?.exitAction).toBe("stopFuelPump");
         expect(runningState?.doAction).toBe("monitorTemperature");
       });
+
+      test("detects initial state with first keyword", () => {
+        const input = `
+          state def EngineState {
+            first state off;
+            state running;
+          }
+        `;
+        const result = extractSysmlComponents(input);
+        const offState = result.states.find((s) => s.name === "off");
+        const runningState = result.states.find((s) => s.name === "running");
+        expect(offState?.isInitial).toBe(true);
+        expect(runningState?.isInitial).toBe(false);
+      });
     });
 
     describe("transition extraction", () => {
@@ -314,6 +328,17 @@ describe("SysML v2 Component Extractor", () => {
         `;
         const result = extractSysmlComponents(input);
         expect(result.transitions[0]!.source).toBe("off");
+        expect(result.transitions[0]!.target).toBe("running");
+      });
+
+      test("extracts transition guards", () => {
+        const input = `
+          transition off accept start [isReady] then running;
+        `;
+        const result = extractSysmlComponents(input);
+        expect(result.transitions[0]!.source).toBe("off");
+        expect(result.transitions[0]!.trigger).toBe("start");
+        expect(result.transitions[0]!.guard).toBe("isReady");
         expect(result.transitions[0]!.target).toBe("running");
       });
     });
@@ -535,6 +560,64 @@ describe("SysML v2 Component Extractor", () => {
       const result = compareExtracted(expected, actual);
       expect(result.matchRatio).toBe(1); // All expected items found
       expect(result.extra).toContain("partDefs:C");
+    });
+
+    test("supports ignoreCase option", () => {
+      const expected: ExtractedModel = {
+        packages: [],
+        partDefs: [{ name: "Engine", attributes: [], ports: [], actions: [], parts: [] }],
+        parts: [],
+        portDefs: [],
+        ports: [],
+        attributes: [],
+        connections: [],
+        requirements: [],
+        states: [],
+        transitions: [],
+        actions: [],
+      };
+
+      const actual: ExtractedModel = {
+        packages: [],
+        partDefs: [{ name: "engine", attributes: [], ports: [], actions: [], parts: [] }],
+        parts: [],
+        portDefs: [],
+        ports: [],
+        attributes: [],
+        connections: [],
+        requirements: [],
+        states: [],
+        transitions: [],
+        actions: [],
+      };
+
+      // Without ignoreCase, should not match
+      const result1 = compareExtracted(expected, actual);
+      expect(result1.matchRatio).toBe(0);
+
+      // With ignoreCase, should match
+      const result2 = compareExtracted(expected, actual, { ignoreCase: true });
+      expect(result2.matchRatio).toBe(1);
+    });
+
+    test("handles connections without names using source->target key", () => {
+      const model: ExtractedModel = {
+        packages: [],
+        partDefs: [],
+        parts: [],
+        portDefs: [],
+        ports: [],
+        attributes: [],
+        connections: [{ source: "a.port1", target: "b.port2" }],
+        requirements: [],
+        states: [],
+        transitions: [],
+        actions: [],
+      };
+
+      const result = compareExtracted(model, model);
+      expect(result.matchRatio).toBe(1);
+      expect(result.matched).toContain("connections:a.port1->b.port2");
     });
   });
 });

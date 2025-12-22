@@ -422,15 +422,16 @@ function extractStates(input: string): StateInfo[] {
   const states: StateInfo[] = [];
   const noComments = removeComments(input);
 
-  // Match state definitions and usages
-  const statePattern = /\bstate\s+(?:def\s+)?(\w+)(?:\s*:>\s*(\w+))?\s*\{?/g;
+  // Match state definitions and usages, including "first" keyword for initial states
+  const statePattern = /\b(first\s+)?state\s+(?:def\s+)?(\w+)(?:\s*:>\s*(\w+))?\s*\{?/g;
   let match;
 
   while ((match = statePattern.exec(noComments)) !== null) {
-    if (!match[1]) continue;
+    if (!match[2]) continue;
     const info: StateInfo = {
-      name: match[1],
-      parent: match[2],
+      name: match[2],
+      parent: match[3],
+      isInitial: match[1] !== undefined,
     };
 
     // If there's a block, check for entry/exit/do actions
@@ -466,17 +467,18 @@ function extractTransitions(input: string): TransitionInfo[] {
   const transitions: TransitionInfo[] = [];
   const noComments = removeComments(input);
 
-  // Match transition patterns
-  const transPattern = /\btransition\s+(?:(\w+)\s+)?(?:first\s+)?(\w+)\s+(?:accept\s+(\w+)\s+)?then\s+(\w+)/g;
+  // Match transition patterns with optional guard [condition]
+  const transPattern = /\btransition\s+(?:(\w+)\s+)?(?:first\s+)?(\w+)\s+(?:accept\s+(\w+)\s+)?(?:\[([^\]]+)\]\s+)?then\s+(\w+)/g;
   let match;
 
   while ((match = transPattern.exec(noComments)) !== null) {
-    if (!match[2] || !match[4]) continue;
+    if (!match[2] || !match[5]) continue;
     transitions.push({
       name: match[1],
       source: match[2],
       trigger: match[3],
-      target: match[4],
+      guard: match[4],
+      target: match[5],
     });
   }
 
@@ -561,8 +563,6 @@ export function extractSysmlComponents(input: string): ExtractedModel {
 
 export interface CompareOptions {
   ignoreCase?: boolean;
-  ignoreOrder?: boolean;
-  fuzzyMatch?: boolean;
 }
 
 export interface ComparisonResult {
@@ -573,15 +573,42 @@ export interface ComparisonResult {
   details: Record<string, { expected: number; actual: number; matched: number }>;
 }
 
+function getItemKey(item: Record<string, unknown>, category: string): string {
+  // For items with a name, use the name
+  if (typeof item.name === "string" && item.name) {
+    return item.name;
+  }
+
+  // For connections/transitions without names, create a key from source/target
+  if (category === "connections" || category === "transitions") {
+    const source = item.source as string | undefined;
+    const target = item.target as string | undefined;
+    if (source && target) {
+      return `${source}->${target}`;
+    }
+  }
+
+  // Fallback: create sorted key from relevant properties
+  const keys = Object.keys(item).sort();
+  const parts = keys
+    .filter((k) => item[k] !== undefined && item[k] !== null)
+    .map((k) => `${k}:${String(item[k])}`);
+  return parts.join("|");
+}
+
 export function compareExtracted(
   expected: ExtractedModel,
   actual: ExtractedModel,
-  _options: CompareOptions = {}
+  options: CompareOptions = {}
 ): ComparisonResult {
   const matched: string[] = [];
   const missing: string[] = [];
   const extra: string[] = [];
   const details: Record<string, { expected: number; actual: number; matched: number }> = {};
+
+  const normalizeKey = (key: string): string => {
+    return options.ignoreCase ? key.toLowerCase() : key;
+  };
 
   // Compare each category
   const categories: (keyof ExtractedModel)[] = [
@@ -605,23 +632,27 @@ export function compareExtracted(
     const expectedItems = expected[category];
     const actualItems = actual[category];
 
-    const expectedNames = new Set(expectedItems.map((item) => (item as { name: string }).name || JSON.stringify(item)));
-    const actualNames = new Set(actualItems.map((item) => (item as { name: string }).name || JSON.stringify(item)));
+    const expectedKeys = new Set(
+      expectedItems.map((item) => normalizeKey(getItemKey(item as unknown as Record<string, unknown>, category)))
+    );
+    const actualKeys = new Set(
+      actualItems.map((item) => normalizeKey(getItemKey(item as unknown as Record<string, unknown>, category)))
+    );
 
     let categoryMatched = 0;
 
-    for (const name of expectedNames) {
-      if (actualNames.has(name)) {
-        matched.push(`${category}:${name}`);
+    for (const key of expectedKeys) {
+      if (actualKeys.has(key)) {
+        matched.push(`${category}:${key}`);
         categoryMatched++;
       } else {
-        missing.push(`${category}:${name}`);
+        missing.push(`${category}:${key}`);
       }
     }
 
-    for (const name of actualNames) {
-      if (!expectedNames.has(name)) {
-        extra.push(`${category}:${name}`);
+    for (const key of actualKeys) {
+      if (!expectedKeys.has(key)) {
+        extra.push(`${category}:${key}`);
       }
     }
 

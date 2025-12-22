@@ -331,17 +331,38 @@ function validateKeywords(input: string): SyntaxError[] {
   for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
     const line = lines[lineIndex]!;
 
-    // Skip block comments
-    if (line.includes("/*")) inBlockComment = true;
-    if (line.includes("*/")) {
-      inBlockComment = false;
+    // Process block comments properly - handle inline comments like /* comment */ code
+    let processedLine = "";
+    let i = 0;
+    while (i < line.length) {
+      if (!inBlockComment) {
+        const start = line.indexOf("/*", i);
+        if (start === -1) {
+          processedLine += line.slice(i);
+          break;
+        }
+        processedLine += line.slice(i, start);
+        inBlockComment = true;
+        i = start + 2;
+      } else {
+        const end = line.indexOf("*/", i);
+        if (end === -1) {
+          i = line.length;
+        } else {
+          inBlockComment = false;
+          i = end + 2;
+        }
+      }
+    }
+
+    // Skip if still inside block comment and nothing outside it
+    if (inBlockComment && processedLine.trim().length === 0) {
       continue;
     }
-    if (inBlockComment) continue;
 
     // Skip line comments
-    const commentIndex = line.indexOf("//");
-    const effectiveLine = commentIndex >= 0 ? line.slice(0, commentIndex) : line;
+    const commentIndex = processedLine.indexOf("//");
+    const effectiveLine = commentIndex >= 0 ? processedLine.slice(0, commentIndex) : processedLine;
 
     // Skip empty lines and pure string lines
     if (effectiveLine.trim().length === 0) continue;
@@ -377,17 +398,38 @@ function validateStructure(input: string): SyntaxError[] {
   for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
     const line = lines[lineIndex]!;
 
-    // Handle block comments
-    if (line.includes("/*")) inBlockComment = true;
-    if (line.includes("*/")) {
-      inBlockComment = false;
+    // Process block comments properly - handle inline comments
+    let processedLine = "";
+    let i = 0;
+    while (i < line.length) {
+      if (!inBlockComment) {
+        const start = line.indexOf("/*", i);
+        if (start === -1) {
+          processedLine += line.slice(i);
+          break;
+        }
+        processedLine += line.slice(i, start);
+        inBlockComment = true;
+        i = start + 2;
+      } else {
+        const end = line.indexOf("*/", i);
+        if (end === -1) {
+          i = line.length;
+        } else {
+          inBlockComment = false;
+          i = end + 2;
+        }
+      }
+    }
+
+    // Skip if still inside block comment and nothing outside it
+    if (inBlockComment && processedLine.trim().length === 0) {
       continue;
     }
-    if (inBlockComment) continue;
 
     // Skip line comments
-    const commentIndex = line.indexOf("//");
-    const effectiveLine = commentIndex >= 0 ? line.slice(0, commentIndex) : line;
+    const commentIndex = processedLine.indexOf("//");
+    const effectiveLine = commentIndex >= 0 ? processedLine.slice(0, commentIndex) : processedLine;
 
     // Check for semicolon issues (statement without semicolon or brace)
     // Look for lines that look like attribute declarations
