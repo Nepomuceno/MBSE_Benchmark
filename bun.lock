@@ -9,6 +9,7 @@
         "ai": "^6.0.0-beta.166",
         "ink": "^6.5.1",
         "react": "^19.2.3",
+        "zod": "^4.2.1",
       },
       "devDependencies": {
         "@types/bun": "latest",

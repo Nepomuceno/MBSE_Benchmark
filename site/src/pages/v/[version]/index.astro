@@ -1,16 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import StatCard from '../components/StatCard.astro';
-import ScoreBar from '../components/ScoreBar.astro';
-import RankBadge from '../components/RankBadge.astro';
-import { loadResults, getLatestVersion, getAllVersions, formatScore, formatDate } from '../lib/data';
+import Layout from '../../../layouts/Layout.astro';
+import StatCard from '../../../components/StatCard.astro';
+import ScoreBar from '../../../components/ScoreBar.astro';
+import RankBadge from '../../../components/RankBadge.astro';
+import { loadResults, getAllVersions, formatScore, formatDate } from '../../../lib/data';
 
-// Get version from URL query parameter
-const urlVersion = Astro.url.searchParams.get('v');
-const latestVersion = await getLatestVersion();
-const selectedVersion = urlVersion ?? latestVersion ?? undefined;
+export async function getStaticPaths() {
+  const allVersions = await getAllVersions();
+  return allVersions.map((version) => ({
+    params: { version },
+    props: { version },
+  }));
+}
 
-const results = await loadResults(selectedVersion);
+const { version } = Astro.props;
+const results = await loadResults(version);
 const allVersions = await getAllVersions();
 const topModel = results[0];
 const avgScore = results.length > 0 
@@ -18,12 +22,12 @@ const avgScore = results.length > 0
   : 0;
 ---
 
-<Layout title="MBSE Benchmark - Leaderboard" currentPage="leaderboard" currentVersion={selectedVersion}>
+<Layout title={`MBSE Benchmark - v${version}`} currentPage="leaderboard" currentVersion={version}>
   <div class="mb-8">
     <div class="flex items-center space-x-3 mb-2">
       <h1 class="text-3xl font-bold text-slate-900">Leaderboard</h1>
       <span class="px-2 py-1 text-xs font-mono bg-blue-50 text-blue-700 rounded border border-blue-200">
-        v{selectedVersion ?? '0.0.0'}
+        v{version}
       </span>
     </div>
     <p class="text-slate-500">AI model performance rankings on Model-Based Systems Engineering tasks</p>
@@ -48,17 +52,6 @@ const avgScore = results.length > 0
       </div>
       <h2 class="text-xl font-semibold text-slate-900 mb-2">No Results Yet</h2>
       <p class="text-slate-500 mb-6">Run the benchmark to see model rankings here.</p>
-      <div class="terminal max-w-md mx-auto">
-        <div class="terminal-header">
-          <span class="terminal-dot bg-red-400"></span>
-          <span class="terminal-dot bg-yellow-400"></span>
-          <span class="terminal-dot bg-green-400"></span>
-          <span class="ml-2 text-xs text-slate-400">terminal</span>
-        </div>
-        <div class="terminal-body text-sm">
-          <span class="text-emerald-400">$</span> bun run bench --model gpt-4
-        </div>
-      </div>
     </div>
   ) : (
     <div class="card rounded-xl overflow-hidden">
@@ -80,7 +73,7 @@ const avgScore = results.length > 0
                 <RankBadge rank={i + 1} />
               </td>
               <td class="py-4 px-6">
-                <a href={`/models/${result.modelId}/`} class="font-medium text-slate-900 hover:text-blue-600 transition-colors">
+                <a href={`/v/${version}/models/${result.modelId}/`} class="font-medium text-slate-900 hover:text-blue-600 transition-colors">
                   {result.modelId}
                 </a>
               </td>

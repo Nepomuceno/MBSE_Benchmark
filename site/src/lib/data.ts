@@ -1,11 +1,20 @@
-import { readdir } from 'fs/promises';
+import { readdir, stat, readFile } from 'fs/promises';
 import { join } from 'path';
 
 export interface TaskResult {
   taskId: string;
   score: number;
-  response: string;
+  finalResponse?: string;
   latencyMs: number;
+  iterations?: unknown[];
+  evaluation?: {
+    score: number;
+    details: {
+      matched: string[];
+      missing: string[];
+    };
+    explanation: string;
+  };
 }
 
 export interface ModelResult {
@@ -14,6 +23,12 @@ export interface ModelResult {
   timestamp: string;
   tasks: TaskResult[];
   score: number;
+  metadata?: {
+    duration: number;
+    tasksCompleted: number;
+    tasksFailed: number;
+    totalIterations: number;
+  };
 }
 
 export interface TaskDefinition {
@@ -21,18 +36,33 @@ export interface TaskDefinition {
   name: string;
   description: string;
   prompt: string;
-  expectedKeywords?: string[];
+  type: string;
   maxTokens?: number;
+  files?: {
+    initial?: string;
+    expected?: unknown[];
+  };
   evaluation: {
     type: string;
     weight: number;
   };
 }
 
-const RESULTS_DIR = '../data/results';
-const TASKS_DIR = '../data/tasks';
+// Use process.cwd() which should be the site directory during build
+// Then go up one level to the project root
+function getDataDir(): string {
+  // Check if we're in the site directory or project root
+  const cwd = process.cwd();
+  if (cwd.endsWith('/site')) {
+    return join(cwd, '../data');
+  }
+  return join(cwd, 'data');
+}
 
-export async function loadResults(): Promise<ModelResult[]> {
+const RESULTS_DIR = join(getDataDir(), 'results');
+const TASKS_DIR = join(getDataDir(), 'tasks');
+
+export async function loadAllResults(): Promise<ModelResult[]> {
   const results: ModelResult[] = [];
 
   try {
@@ -47,8 +77,8 @@ export async function loadResults(): Promise<ModelResult[]> {
       for (const file of files) {
         if (!file.endsWith('.json')) continue;
 
-        const content = await Bun.file(join(versionPath, file)).json();
-        results.push(content as ModelResult);
+        const content = await readFile(join(versionPath, file), 'utf-8');
+        results.push(JSON.parse(content) as ModelResult);
       }
     }
   } catch {
@@ -58,14 +88,84 @@ export async function loadResults(): Promise<ModelResult[]> {
   return results.sort((a, b) => b.score - a.score);
 }
 
+export async function getLatestVersion(): Promise<string | null> {
+  try {
+    const versions = await readdir(RESULTS_DIR);
+    const validVersions = versions
+      .filter((v) => v !== 'README.md')
+      .sort((a, b) => {
+        // Sort by semver-like comparison
+        const [aMajor, aMinor, aPatch] = a.split('.').map(Number);
+        const [bMajor, bMinor, bPatch] = b.split('.').map(Number);
+        if (aMajor !== bMajor) return bMajor - aMajor;
+        if (aMinor !== bMinor) return bMinor - aMinor;
+        return bPatch - aPatch;
+      });
+    return validVersions[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function loadResults(version?: string): Promise<ModelResult[]> {
+  const allResults = await loadAllResults();
+  
+  const targetVersion = version ?? await getLatestVersion();
+  if (!targetVersion) return [];
+
+  // Filter to requested version and get best result per model
+  const versionResults = allResults.filter((r) => r.version === targetVersion);
+  
+  // Deduplicate by modelId, keeping best score
+  const bestByModel = new Map<string, ModelResult>();
+  for (const result of versionResults) {
+    const existing = bestByModel.get(result.modelId);
+    if (!existing || result.score > existing.score) {
+      bestByModel.set(result.modelId, result);
+    }
+  }
+
+  return Array.from(bestByModel.values()).sort((a, b) => b.score - a.score);
+}
+
+export async function getAllVersions(): Promise<string[]> {
+  try {
+    const versions = await readdir(RESULTS_DIR);
+    return versions
+      .filter((v) => v !== 'README.md')
+      .sort((a, b) => {
+        const [aMajor, aMinor, aPatch] = a.split('.').map(Number);
+        const [bMajor, bMinor, bPatch] = b.split('.').map(Number);
+        if (aMajor !== bMajor) return bMajor - aMajor;
+        if (aMinor !== bMinor) return bMinor - aMinor;
+        return bPatch - aPatch;
+      });
+  } catch {
+    return [];
+  }
+}
+
 export async function loadTasks(): Promise<TaskDefinition[]> {
   const tasks: TaskDefinition[] = [];
 
   try {
-    const index = await Bun.file(join(TASKS_DIR, 'index.json')).json();
+    const indexContent = await readFile(join(TASKS_DIR, 'index.json'), 'utf-8');
+    const index = JSON.parse(indexContent);
 
     for (const taskId of index.tasks) {
-      const task = await Bun.file(join(TASKS_DIR, `${taskId}.json`)).json();
+      const taskPath = join(TASKS_DIR, taskId);
+      const taskStat = await stat(taskPath).catch(() => null);
+      
+      let task: TaskDefinition;
+      if (taskStat?.isDirectory()) {
+        // New directory format
+        const taskContent = await readFile(join(taskPath, 'task.json'), 'utf-8');
+        task = JSON.parse(taskContent);
+      } else {
+        // Legacy JSON file format
+        const taskContent = await readFile(join(TASKS_DIR, `${taskId}.json`), 'utf-8');
+        task = JSON.parse(taskContent);
+      }
       tasks.push(task as TaskDefinition);
     }
   } catch {

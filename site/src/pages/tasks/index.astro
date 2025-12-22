@@ -1,9 +1,14 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import StatCard from '../../components/StatCard.astro';
-import { loadResults, loadTasks, formatScore } from '../../lib/data';
+import { loadResults, getLatestVersion, loadTasks, formatScore } from '../../lib/data';
 
-const results = await loadResults();
+// Get version from URL query parameter
+const urlVersion = Astro.url.searchParams.get('v');
+const latestVersion = await getLatestVersion();
+const selectedVersion = urlVersion ?? latestVersion ?? undefined;
+
+const results = await loadResults(selectedVersion);
 const tasks = await loadTasks();
 
 const getScoreColor = (score: number) => {
@@ -14,7 +19,7 @@ const getScoreColor = (score: number) => {
 };
 ---
 
-<Layout title="Tasks - MBSE Benchmark" currentPage="tasks">
+<Layout title="Tasks - MBSE Benchmark" currentPage="tasks" currentVersion={selectedVersion}>
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-slate-900 mb-2">Benchmark Tasks</h1>
     <p class="text-slate-500">All tasks used in the MBSE benchmark evaluation</p>

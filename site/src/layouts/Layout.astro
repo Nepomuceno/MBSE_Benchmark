@@ -1,10 +1,19 @@
 ---
+import VersionSelector from '../components/VersionSelector.astro';
+import { getLatestVersion } from '../lib/data';
+
 export interface Props {
   title: string;
   currentPage?: 'leaderboard' | 'models' | 'tasks';
+  currentVersion?: string;
 }
 
-const { title, currentPage = 'leaderboard' } = Astro.props;
+const { title, currentPage = 'leaderboard', currentVersion } = Astro.props;
+
+// Get version from URL query parameter if not provided
+const urlVersion = Astro.url.searchParams.get('v');
+const latestVersion = await getLatestVersion();
+const selectedVersion = currentVersion ?? urlVersion ?? latestVersion ?? undefined;
 
 const navItems = [
   { id: 'leaderboard', label: 'Leaderboard', href: '/' },
@@ -39,6 +48,8 @@ const navItems = [
             </div>
           </a>
           <nav class="flex items-center space-x-1">
+            <VersionSelector currentVersion={selectedVersion} />
+            <div class="w-px h-6 bg-slate-200 mx-2"></div>
             {navItems.map((item) => (
               <a
                 href={item.href}

@@ -1,2 +1,7 @@
-export { runBenchmark, computeVersion } from "./runner";
-export type { BenchmarkResult, TaskResult, BenchmarkConfig } from "./runner";
+export { runBenchmark, computeVersion, clearVersionCache } from "./runner.js";
+export type {
+  BenchmarkResult,
+  TaskResult,
+  TaskIteration,
+  BenchmarkConfig,
+} from "./runner.js";

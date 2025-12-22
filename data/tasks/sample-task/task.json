@@ -1,0 +1,31 @@
+{
+  "id": "sample-task",
+  "type": "qa",
+  "name": "Sample MBSE Task",
+  "description": "A sample task demonstrating the benchmark framework with file system support",
+  "prompt": "You have access to a project with some documentation. Your task is to:\n1. Use the readFile tool to read the README.md file\n2. Extract the requirements from the documentation\n3. Use the patchFile tool to create a new file called requirements.txt\n4. Each requirement should be on a new line with format REQ-XXX: description (e.g., REQ-001: The system shall...)\n\nYou MUST create the requirements.txt file using the patchFile tool.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": [
+      {
+        "path": "requirements.txt",
+        "validation": {
+          "type": "exists",
+          "value": true
+        }
+      },
+      {
+        "path": "requirements.txt",
+        "validation": {
+          "type": "regex",
+          "patterns": ["REQ-\\d{3}:"]
+        }
+      }
+    ]
+  },
+  "evaluation": {
+    "type": "file-validation",
+    "weight": 1.0
+  }
+}
