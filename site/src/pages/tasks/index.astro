@@ -1,0 +1,112 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StatCard from '../../components/StatCard.astro';
+import { loadResults, loadTasks, formatScore } from '../../lib/data';
+
+const results = await loadResults();
+const tasks = await loadTasks();
+
+const getScoreColor = (score: number) => {
+  if (score >= 0.8) return 'text-emerald-600';
+  if (score >= 0.6) return 'text-cyan-600';
+  if (score >= 0.4) return 'text-amber-600';
+  return 'text-red-600';
+};
+---
+
+<Layout title="Tasks - MBSE Benchmark" currentPage="tasks">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900 mb-2">Benchmark Tasks</h1>
+    <p class="text-slate-500">All tasks used in the MBSE benchmark evaluation</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <StatCard label="Total Tasks" value={tasks.length} icon="📝" />
+    <StatCard 
+      label="Evaluation Types" 
+      value={new Set(tasks.map((t) => t.evaluation.type)).size}
+      icon="🔬"
+    />
+    <StatCard label="Models Tested" value={results.length} icon="🤖" />
+  </div>
+
+  {tasks.length === 0 ? (
+    <div class="card rounded-xl p-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
+        <span class="text-3xl">📝</span>
+      </div>
+      <h2 class="text-xl font-semibold text-slate-900 mb-2">No Tasks Defined</h2>
+      <p class="text-slate-500 mb-6">Add tasks to data/tasks/ to get started.</p>
+      <div class="terminal max-w-md mx-auto">
+        <div class="terminal-header">
+          <span class="terminal-dot bg-red-400"></span>
+          <span class="terminal-dot bg-yellow-400"></span>
+          <span class="terminal-dot bg-green-400"></span>
+        </div>
+        <div class="terminal-body text-sm">
+          <span class="text-slate-500"># Add a task definition</span><br/>
+          <span class="text-emerald-400">$</span> cat {">"} data/tasks/my-task.json
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {tasks.map((task) => {
+        const modelScores = results
+          .map((r) => {
+            const taskResult = r.tasks?.find((t) => t.taskId === task.id);
+            return taskResult ? { modelId: r.modelId, score: taskResult.score } : null;
+          })
+          .filter(Boolean) as { modelId: string; score: number }[];
+
+        modelScores.sort((a, b) => b.score - a.score);
+        const avgScore = modelScores.length
+          ? modelScores.reduce((sum, m) => sum + m.score, 0) / modelScores.length
+          : 0;
+
+        return (
+          <div class="card rounded-xl p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-semibold text-lg text-slate-900">{task.name}</h3>
+                <span class="text-xs font-mono px-2 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                  {task.evaluation.type}
+                </span>
+              </div>
+              <div class="text-right">
+                <div class="text-slate-500 text-sm">Avg Score</div>
+                <div class={`font-bold text-lg ${getScoreColor(avgScore)}`}>{formatScore(avgScore)}</div>
+              </div>
+            </div>
+
+            <p class="text-slate-500 text-sm mb-4">{task.description}</p>
+
+            <div class="terminal mb-4">
+              <div class="terminal-header">
+                <span class="terminal-dot bg-red-400"></span>
+                <span class="terminal-dot bg-yellow-400"></span>
+                <span class="terminal-dot bg-green-400"></span>
+                <span class="ml-2 text-xs text-slate-400">prompt</span>
+              </div>
+              <div class="terminal-body text-sm line-clamp-2">{task.prompt}</div>
+            </div>
+
+            {modelScores.length > 0 && (
+              <div>
+                <div class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold">Top Performers</div>
+                {modelScores.slice(0, 3).map((m, i) => (
+                  <div class:list={['flex justify-between items-center py-2', i > 0 && 'border-t border-slate-100']}>
+                    <span class="text-slate-700 font-medium">{m.modelId}</span>
+                    <span class={`font-mono text-sm font-medium ${getScoreColor(m.score)}`}>
+                      {formatScore(m.score)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
+</Layout>

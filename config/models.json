@@ -1,0 +1,28 @@
+{
+  "models": [
+    {
+      "id": "gpt-4o",
+      "name": "GPT-4o",
+      "provider": "azure",
+      "envKey": "AZURE_OPENAI_API_KEY",
+      "envEndpoint": "AZURE_OPENAI_ENDPOINT",
+      "deployment": "gpt-4o"
+    },
+    {
+      "id": "gpt-4o-mini",
+      "name": "GPT-4o Mini",
+      "provider": "azure",
+      "envKey": "AZURE_OPENAI_API_KEY",
+      "envEndpoint": "AZURE_OPENAI_ENDPOINT",
+      "deployment": "gpt-4o-mini"
+    },
+    {
+      "id": "local-llama",
+      "name": "Llama 3 (Local)",
+      "provider": "openai-compatible",
+      "envKey": "LOCAL_API_KEY",
+      "envEndpoint": "LOCAL_MODEL_URL",
+      "model": "llama3"
+    }
+  ]
+}

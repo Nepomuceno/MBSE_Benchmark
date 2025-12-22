@@ -1,0 +1,20 @@
+---
+export interface Props {
+  rank: number;
+}
+
+const { rank } = Astro.props;
+
+const getRankDisplay = (r: number) => {
+  if (r === 1) return { icon: '🥇', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' };
+  if (r === 2) return { icon: '🥈', bg: 'bg-slate-50', text: 'text-slate-600', border: 'border-slate-200' };
+  if (r === 3) return { icon: '🥉', bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' };
+  return { icon: `#${r}`, bg: 'bg-slate-50', text: 'text-slate-500', border: 'border-slate-200' };
+};
+
+const display = getRankDisplay(rank);
+---
+
+<span class={`inline-flex items-center justify-center w-10 h-10 rounded-lg border ${display.bg} ${display.border} ${display.text} font-semibold text-sm`}>
+  {display.icon}
+</span>

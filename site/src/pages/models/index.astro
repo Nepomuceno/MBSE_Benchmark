@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StatCard from '../../components/StatCard.astro';
+import ScoreBar from '../../components/ScoreBar.astro';
+import { loadResults, loadTasks, formatScore } from '../../lib/data';
+
+const results = await loadResults();
+const tasks = await loadTasks();
+---
+
+<Layout title="Models - MBSE Benchmark" currentPage="models">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900 mb-2">Models</h1>
+    <p class="text-slate-500">All benchmarked AI models and their performance</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <StatCard label="Total Models" value={results.length} icon="🤖" />
+    <StatCard label="Total Tasks" value={tasks.length} icon="📝" />
+    <StatCard 
+      label="Best Score" 
+      value={results[0] ? formatScore(results[0].score) : 'N/A'}
+      icon="🏆"
+    />
+  </div>
+
+  {results.length === 0 ? (
+    <div class="card rounded-xl p-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
+        <span class="text-3xl">🤖</span>
+      </div>
+      <h2 class="text-xl font-semibold text-slate-900 mb-2">No Models Yet</h2>
+      <p class="text-slate-500">Run the benchmark to see models here.</p>
+    </div>
+  ) : (
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {results.map((result, i) => (
+        <a href={`/models/${result.modelId}/`} class="card rounded-xl p-6 hover:shadow-lg hover:border-blue-200 transition-all group">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="font-semibold text-lg text-slate-900 group-hover:text-blue-600 transition-colors">
+                {result.modelId}
+              </h3>
+              <span class="text-xs font-mono px-2 py-1 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                {result.version}
+              </span>
+            </div>
+            <div class="text-right">
+              <div class="text-2xl font-bold text-emerald-600">{formatScore(result.score)}</div>
+              <div class="text-slate-500 text-sm">Rank #{i + 1}</div>
+            </div>
+          </div>
+          <ScoreBar value={result.score} size="sm" showLabel={false} />
+          <div class="text-slate-500 text-sm mt-3">
+            {result.tasks?.length ?? 0} tasks completed
+          </div>
+        </a>
+      ))}
+    </div>
+  )}
+</Layout>

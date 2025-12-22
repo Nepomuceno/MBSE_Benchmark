@@ -1,0 +1,12 @@
+{
+  "id": "sample-task",
+  "name": "Sample MBSE Task",
+  "description": "A sample task for testing the benchmark framework",
+  "prompt": "What is Model-Based Systems Engineering?",
+  "expectedKeywords": ["systems", "model", "engineering", "design"],
+  "maxTokens": 500,
+  "evaluation": {
+    "type": "keyword-match",
+    "weight": 1.0
+  }
+}

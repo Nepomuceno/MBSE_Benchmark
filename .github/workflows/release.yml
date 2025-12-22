@@ -1,0 +1,139 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-x64
+            artifact: mbse-bench-linux-x64
+          - os: ubuntu-latest
+            target: linux-arm64
+            artifact: mbse-bench-linux-arm64
+          - os: windows-latest
+            target: windows-x64
+            artifact: mbse-bench-windows-x64.exe
+          - os: macos-latest
+            target: darwin-x64
+            artifact: mbse-bench-darwin-x64
+          - os: macos-latest
+            target: darwin-arm64
+            artifact: mbse-bench-darwin-arm64
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build for ${{ matrix.target }}
+        run: bun build ./src/cli/index.tsx --compile --target=bun-${{ matrix.target }} --outfile ./dist/${{ matrix.artifact }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ./dist/${{ matrix.artifact }}
+
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Install license checker
+        run: bun add -d license-checker-rseidelsohn
+
+      - name: Check licenses
+        run: |
+          bunx license-checker-rseidelsohn --production --onlyAllow "MIT;ISC;BSD-2-Clause;BSD-3-Clause;Apache-2.0;0BSD;CC0-1.0;Unlicense;Python-2.0;BlueOak-1.0.0" --excludePackages "mbse-benchmark" > license-report.txt
+          cat license-report.txt
+
+      - name: Upload license report
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-report
+          path: license-report.txt
+
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate SBOM (CycloneDX)
+        run: |
+          bun add -d @cyclonedx/bun
+          bunx @cyclonedx/bun --output-file sbom.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
+
+  release:
+    needs: [build, license-check, sbom]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release
+          cp artifacts/mbse-bench-linux-x64/mbse-bench-linux-x64 release/
+          cp artifacts/mbse-bench-linux-arm64/mbse-bench-linux-arm64 release/
+          cp artifacts/mbse-bench-darwin-x64/mbse-bench-darwin-x64 release/
+          cp artifacts/mbse-bench-darwin-arm64/mbse-bench-darwin-arm64 release/
+          cp artifacts/mbse-bench-windows-x64.exe/mbse-bench-windows-x64.exe release/
+          cp artifacts/sbom/sbom.json release/
+          cp artifacts/license-report/license-report.txt release/
+          chmod +x release/mbse-bench-*
+          cd release && sha256sum * > checksums.txt
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          files: |
+            release/mbse-bench-linux-x64
+            release/mbse-bench-linux-arm64
+            release/mbse-bench-darwin-x64
+            release/mbse-bench-darwin-arm64
+            release/mbse-bench-windows-x64.exe
+            release/sbom.json
+            release/license-report.txt
+            release/checksums.txt

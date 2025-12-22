@@ -1,0 +1,43 @@
+name: Publish Results
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/results/**'
+      - 'site/**'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install root dependencies
+        run: bun install
+
+      - name: Install site dependencies
+        run: cd site && bun install
+
+      - name: Build Astro site
+        run: bun run site:build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './public'
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
