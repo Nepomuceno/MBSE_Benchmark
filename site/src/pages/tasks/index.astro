@@ -70,10 +70,10 @@ const getScoreColor = (score: number) => {
           : 0;
 
         return (
-          <div class="card rounded-xl p-6">
+          <a href={`/tasks/${task.id}/`} class="card rounded-xl p-6 block hover:shadow-lg transition-shadow">
             <div class="flex justify-between items-start mb-4">
               <div>
-                <h3 class="font-semibold text-lg text-slate-900">{task.name}</h3>
+                <h3 class="font-semibold text-lg text-slate-900 hover:text-blue-600 transition-colors">{task.name}</h3>
                 <span class="text-xs font-mono px-2 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200">
                   {task.evaluation.type}
                 </span>
@@ -109,7 +109,7 @@ const getScoreColor = (score: number) => {
                 ))}
               </div>
             )}
-          </div>
+          </a>
         );
       })}
     </div>

@@ -1,0 +1,263 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StatCard from '../components/StatCard.astro';
+import Chart from '../components/Chart.astro';
+import { loadAllResults, getAllVersions, getLatestVersion, formatScore } from '../lib/data';
+
+const allResults = await loadAllResults();
+const allVersions = await getAllVersions();
+const latestVersion = await getLatestVersion();
+
+// Group results by version and model
+const resultsByVersion = new Map<string, Map<string, number>>();
+for (const result of allResults) {
+  if (!resultsByVersion.has(result.version)) {
+    resultsByVersion.set(result.version, new Map());
+  }
+  const versionMap = resultsByVersion.get(result.version)!;
+  // Keep best score per model per version
+  const existing = versionMap.get(result.modelId) ?? 0;
+  if (result.score > existing) {
+    versionMap.set(result.modelId, result.score);
+  }
+}
+
+// Get unique models across all versions
+const allModels = [...new Set(allResults.map(r => r.modelId))];
+
+// Sort versions chronologically (oldest first for trends)
+const sortedVersions = [...allVersions].reverse();
+
+// Prepare trend data for chart
+const trendData = {
+  labels: sortedVersions,
+  datasets: allModels.map(modelId => ({
+    label: modelId,
+    data: sortedVersions.map(version => {
+      const versionMap = resultsByVersion.get(version);
+      return versionMap?.get(modelId) ?? 0;
+    }),
+  })),
+};
+
+// Calculate improvements/regressions for each model between latest and previous version
+const improvements: Array<{ modelId: string; change: number; latest: number; previous: number }> = [];
+if (sortedVersions.length >= 2) {
+  const latestVersionKey = sortedVersions[sortedVersions.length - 1];
+  const previousVersionKey = sortedVersions[sortedVersions.length - 2];
+  const latestMap = resultsByVersion.get(latestVersionKey);
+  const previousMap = resultsByVersion.get(previousVersionKey);
+  
+  if (latestMap && previousMap) {
+    for (const modelId of allModels) {
+      const latest = latestMap.get(modelId) ?? 0;
+      const previous = previousMap.get(modelId) ?? 0;
+      if (latest > 0 || previous > 0) {
+        improvements.push({
+          modelId,
+          change: latest - previous,
+          latest,
+          previous,
+        });
+      }
+    }
+  }
+}
+
+improvements.sort((a, b) => b.change - a.change);
+
+const getChangeColor = (change: number) => {
+  if (change > 0.05) return 'text-emerald-600';
+  if (change > 0) return 'text-cyan-600';
+  if (change === 0) return 'text-slate-500';
+  if (change > -0.05) return 'text-amber-600';
+  return 'text-red-600';
+};
+
+const getChangeIcon = (change: number) => {
+  if (change > 0) return '↑';
+  if (change < 0) return '↓';
+  return '→';
+};
+
+const getScoreColor = (score: number) => {
+  if (score >= 0.8) return 'text-emerald-600';
+  if (score >= 0.6) return 'text-cyan-600';
+  if (score >= 0.4) return 'text-amber-600';
+  return 'text-red-600';
+};
+
+// Stats
+const avgImprovement = improvements.length > 0
+  ? improvements.reduce((sum, i) => sum + i.change, 0) / improvements.length
+  : 0;
+const modelsImproved = improvements.filter(i => i.change > 0).length;
+const modelsRegressed = improvements.filter(i => i.change < 0).length;
+---
+
+<Layout title="Trends - MBSE Benchmark" currentPage="leaderboard" currentVersion={latestVersion ?? undefined}>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900 mb-2">Performance Trends</h1>
+    <p class="text-slate-500">Track model performance across benchmark versions</p>
+  </div>
+
+  {allVersions.length < 2 ? (
+    <div class="card rounded-xl p-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
+        <span class="text-3xl">📈</span>
+      </div>
+      <h2 class="text-xl font-semibold text-slate-900 mb-2">Not Enough Data</h2>
+      <p class="text-slate-500 mb-4">
+        Trends require at least 2 benchmark versions. Currently there {allVersions.length === 1 ? 'is' : 'are'} {allVersions.length} version{allVersions.length !== 1 ? 's' : ''}.
+      </p>
+      <div class="terminal max-w-md mx-auto">
+        <div class="terminal-header">
+          <span class="terminal-dot bg-red-400"></span>
+          <span class="terminal-dot bg-yellow-400"></span>
+          <span class="terminal-dot bg-green-400"></span>
+          <span class="ml-2 text-xs text-slate-400">terminal</span>
+        </div>
+        <div class="terminal-body text-sm">
+          <span class="text-emerald-400">$</span> bun run bench --all
+        </div>
+      </div>
+    </div>
+  ) : (
+    <>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <StatCard label="Versions Tracked" value={allVersions.length} icon="📋" />
+        <StatCard label="Models Tracked" value={allModels.length} icon="🤖" />
+        <StatCard 
+          label="Models Improved" 
+          value={modelsImproved} 
+          subtext={`vs ${sortedVersions[sortedVersions.length - 2] ?? 'N/A'}`}
+          icon="📈" 
+        />
+        <StatCard 
+          label="Avg Change" 
+          value={`${avgImprovement >= 0 ? '+' : ''}${(avgImprovement * 100).toFixed(1)}%`}
+          icon={avgImprovement >= 0 ? '✨' : '📉'}
+        />
+      </div>
+
+      <!-- Score Trends Chart -->
+      <div class="card rounded-xl p-6 mb-8">
+        <div class="text-slate-500 text-xs uppercase tracking-wider mb-4 font-semibold">Score Trends Over Versions</div>
+        <Chart 
+          type="line" 
+          data={trendData}
+          height={350}
+          showLegend={true}
+        />
+      </div>
+
+      <!-- Improvements/Regressions Table -->
+      <div class="card rounded-xl overflow-hidden mb-8">
+        <div class="p-6 border-b border-slate-200">
+          <div class="text-slate-500 text-xs uppercase tracking-wider font-semibold">
+            Changes: {sortedVersions[sortedVersions.length - 2]} → {sortedVersions[sortedVersions.length - 1]}
+          </div>
+        </div>
+        <table class="w-full">
+          <thead class="bg-slate-50 border-b border-slate-200">
+            <tr class="text-left text-slate-500 text-xs uppercase tracking-wider">
+              <th class="py-4 px-6 font-semibold">Model</th>
+              <th class="py-4 px-6 font-semibold text-center">Previous</th>
+              <th class="py-4 px-6 font-semibold text-center">Current</th>
+              <th class="py-4 px-6 font-semibold text-center">Change</th>
+              <th class="py-4 px-6 font-semibold">Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            {improvements.map((item) => (
+              <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                <td class="py-4 px-6">
+                  <a href={`/models/${item.modelId}/`} class="font-medium text-slate-900 hover:text-blue-600 transition-colors">
+                    {item.modelId}
+                  </a>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <span class={`font-mono ${getScoreColor(item.previous)}`}>
+                    {item.previous > 0 ? formatScore(item.previous) : '—'}
+                  </span>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <span class={`font-mono font-medium ${getScoreColor(item.latest)}`}>
+                    {item.latest > 0 ? formatScore(item.latest) : '—'}
+                  </span>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <span class={`font-mono font-bold ${getChangeColor(item.change)}`}>
+                    {getChangeIcon(item.change)} {item.change >= 0 ? '+' : ''}{(item.change * 100).toFixed(1)}%
+                  </span>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
+                    {item.change > 0 ? (
+                      <div 
+                        class="h-full bg-emerald-500 rounded-full" 
+                        style={`width: ${Math.min(Math.abs(item.change) * 200, 100)}%`}
+                      />
+                    ) : item.change < 0 ? (
+                      <div 
+                        class="h-full bg-red-500 rounded-full ml-auto" 
+                        style={`width: ${Math.min(Math.abs(item.change) * 200, 100)}%`}
+                      />
+                    ) : null}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Version History -->
+      <div class="card rounded-xl p-6">
+        <div class="text-slate-500 text-xs uppercase tracking-wider mb-4 font-semibold">Version History</div>
+        <div class="space-y-3">
+          {sortedVersions.slice().reverse().map((version, i) => {
+            const versionMap = resultsByVersion.get(version);
+            const modelCount = versionMap?.size ?? 0;
+            const avgScore = versionMap 
+              ? [...versionMap.values()].reduce((a, b) => a + b, 0) / modelCount 
+              : 0;
+            
+            return (
+              <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                <div class="flex items-center space-x-4">
+                  <span class="px-3 py-1 text-sm font-mono bg-white border border-slate-200 rounded">
+                    v{version}
+                  </span>
+                  {i === 0 && (
+                    <span class="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded">
+                      Latest
+                    </span>
+                  )}
+                </div>
+                <div class="flex items-center space-x-6 text-sm">
+                  <div>
+                    <span class="text-slate-500">Models:</span>
+                    <span class="ml-1 font-medium">{modelCount}</span>
+                  </div>
+                  <div>
+                    <span class="text-slate-500">Avg Score:</span>
+                    <span class={`ml-1 font-medium ${getScoreColor(avgScore)}`}>
+                      {formatScore(avgScore)}
+                    </span>
+                  </div>
+                  <a 
+                    href={`/?v=${version}`}
+                    class="text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    View →
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  )}
+</Layout>

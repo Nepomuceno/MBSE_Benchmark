@@ -55,12 +55,14 @@ function HelpView() {
         </Text>
         <Text />
         <Text bold>Options:</Text>
-        <Text> -m, --model {"<id>"}  Run benchmark for specific model</Text>
-        <Text> -a, --all            Run all configured models</Text>
-        <Text> -f, --force          Ignore cached results</Text>
-        <Text> -l, --list           List available models</Text>
-        <Text> -r, --results [id]   View results (optionally for specific model)</Text>
-        <Text> -h, --help           Show this help</Text>
+        <Text> -m, --model {"<id>"}    Run benchmark for specific model</Text>
+        <Text> -a, --all              Run all configured models</Text>
+        <Text> -f, --force            Ignore cached results</Text>
+        <Text> -l, --list             List available models</Text>
+        <Text> -r, --results [id]     View results (optionally for specific model)</Text>
+        <Text> -v, --verbose          Show detailed output</Text>
+        <Text> -o, --output {"<fmt>"}   Output format: table, json, minimal</Text>
+        <Text> -h, --help             Show this help</Text>
       </Box>
     </Box>
   );

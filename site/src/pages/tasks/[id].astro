@@ -1,0 +1,218 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StatCard from '../../components/StatCard.astro';
+import ScoreBar from '../../components/ScoreBar.astro';
+import { loadResults, getLatestVersion, getAllVersions, loadTasks, formatScore } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const tasks = await loadTasks();
+  const allVersions = await getAllVersions();
+  const paths = [];
+  
+  for (const task of tasks) {
+    for (const version of allVersions) {
+      paths.push({
+        params: { id: task.id },
+        props: { task, version },
+      });
+    }
+  }
+  
+  // Also add paths for latest version without version prefix
+  for (const task of tasks) {
+    paths.push({
+      params: { id: task.id },
+      props: { task, version: undefined },
+    });
+  }
+  
+  return paths;
+}
+
+const { task, version } = Astro.props;
+const latestVersion = await getLatestVersion();
+const selectedVersion = version ?? latestVersion ?? undefined;
+const results = await loadResults(selectedVersion);
+
+// Get all model scores for this task
+const modelScores = results
+  .map((r) => {
+    const taskResult = r.tasks?.find((t) => t.taskId === task.id);
+    return taskResult ? { 
+      modelId: r.modelId, 
+      score: taskResult.score,
+      latencyMs: taskResult.latencyMs,
+      finalResponse: taskResult.finalResponse,
+      evaluation: taskResult.evaluation,
+    } : null;
+  })
+  .filter(Boolean) as Array<{
+    modelId: string;
+    score: number;
+    latencyMs: number;
+    finalResponse?: string;
+    evaluation?: {
+      score: number;
+      details: { matched: string[]; missing: string[] };
+      explanation: string;
+    };
+  }>;
+
+modelScores.sort((a, b) => b.score - a.score);
+
+const avgScore = modelScores.length
+  ? modelScores.reduce((sum, m) => sum + m.score, 0) / modelScores.length
+  : 0;
+
+const avgLatency = modelScores.length
+  ? Math.round(modelScores.reduce((sum, m) => sum + m.latencyMs, 0) / modelScores.length)
+  : 0;
+
+const getScoreColor = (score: number) => {
+  if (score >= 0.8) return 'text-emerald-600';
+  if (score >= 0.6) return 'text-cyan-600';
+  if (score >= 0.4) return 'text-amber-600';
+  return 'text-red-600';
+};
+
+const getBgScoreColor = (score: number) => {
+  if (score >= 0.8) return 'bg-emerald-50 border-emerald-200';
+  if (score >= 0.6) return 'bg-cyan-50 border-cyan-200';
+  if (score >= 0.4) return 'bg-amber-50 border-amber-200';
+  return 'bg-red-50 border-red-200';
+};
+---
+
+<Layout title={`${task.name} - MBSE Benchmark`} currentPage="tasks" currentVersion={selectedVersion}>
+  <div class="mb-8">
+    <a href="/tasks/" class="inline-flex items-center text-blue-600 hover:text-blue-700 text-sm mb-4 font-medium">
+      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Back to Tasks
+    </a>
+    <div class="flex items-center space-x-3">
+      <h1 class="text-3xl font-bold text-slate-900">{task.name}</h1>
+      <span class="px-2 py-1 text-xs font-mono bg-blue-50 text-blue-700 rounded border border-blue-200">
+        {task.evaluation.type}
+      </span>
+    </div>
+    <p class="text-slate-500 mt-1">{task.description}</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <StatCard label="Average Score" value={formatScore(avgScore)} icon="📊" />
+    <StatCard label="Models Tested" value={modelScores.length} icon="🤖" />
+    <StatCard label="Avg Latency" value={`${avgLatency}ms`} icon="⚡" />
+    <StatCard label="Weight" value={task.evaluation.weight.toString()} icon="⚖️" />
+  </div>
+
+  <div class="card rounded-xl p-6 mb-8">
+    <div class="text-slate-500 text-xs uppercase tracking-wider mb-3 font-semibold">Task Prompt</div>
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="terminal-dot bg-red-400"></span>
+        <span class="terminal-dot bg-yellow-400"></span>
+        <span class="terminal-dot bg-green-400"></span>
+        <span class="ml-2 text-xs text-slate-400">prompt</span>
+      </div>
+      <div class="terminal-body text-sm whitespace-pre-wrap">{task.prompt}</div>
+    </div>
+  </div>
+
+  <!-- Score Distribution -->
+  {modelScores.length > 0 && (
+    <div class="card rounded-xl p-6 mb-8">
+      <div class="text-slate-500 text-xs uppercase tracking-wider mb-4 font-semibold">Score Distribution</div>
+      <div class="space-y-3">
+        {modelScores.map((m, i) => (
+          <div class="flex items-center space-x-4">
+            <div class="w-6 text-center">
+              {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : <span class="text-slate-400 text-sm">{i + 1}</span>}
+            </div>
+            <div class="w-32 font-medium text-slate-700">{m.modelId}</div>
+            <div class="flex-1">
+              <ScoreBar value={m.score} />
+            </div>
+            <div class={`w-16 text-right font-mono text-sm font-medium ${getScoreColor(m.score)}`}>
+              {formatScore(m.score)}
+            </div>
+            <div class="w-20 text-right text-slate-500 text-sm font-mono">
+              {m.latencyMs}ms
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <div class="mb-6">
+    <h2 class="text-xl font-bold text-slate-900">Model Responses</h2>
+    <p class="text-slate-500 text-sm">All model responses for this task</p>
+  </div>
+
+  {modelScores.length === 0 ? (
+    <div class="card rounded-xl p-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
+        <span class="text-3xl">🤖</span>
+      </div>
+      <h2 class="text-xl font-semibold text-slate-900 mb-2">No Results Yet</h2>
+      <p class="text-slate-500">Run the benchmark to see model responses here.</p>
+    </div>
+  ) : (
+    <div class="space-y-4">
+      {modelScores.map((m, i) => (
+        <div class={`card rounded-xl p-6 border ${getBgScoreColor(m.score)}`}>
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">
+                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : ''}
+              </span>
+              <div>
+                <a href={`/models/${m.modelId}/`} class="font-semibold text-lg text-slate-900 hover:text-blue-600 transition-colors">
+                  {m.modelId}
+                </a>
+                <div class="text-slate-500 text-sm font-mono">{m.latencyMs}ms</div>
+              </div>
+            </div>
+            <div class={`font-bold text-2xl ${getScoreColor(m.score)}`}>
+              {formatScore(m.score)}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold">Response</div>
+            <div class="bg-white border border-slate-200 rounded-lg p-4 text-sm text-slate-700 max-h-64 overflow-y-auto whitespace-pre-wrap">
+              {m.finalResponse || <em class="text-slate-400">No response</em>}
+            </div>
+          </div>
+
+          {m.evaluation && (
+            <div>
+              <div class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold">Evaluation</div>
+              <div class="bg-white border border-slate-200 rounded-lg p-4 text-sm">
+                <div class="text-slate-700 mb-2">{m.evaluation.explanation}</div>
+                {(m.evaluation.details?.matched ?? []).length > 0 && (
+                  <div class="mb-2">
+                    <span class="text-emerald-600 font-medium">✓ Passed:</span>
+                    <ul class="list-disc list-inside text-slate-600 ml-2">
+                      {(m.evaluation.details?.matched ?? []).map((match) => <li>{match}</li>)}
+                    </ul>
+                  </div>
+                )}
+                {(m.evaluation.details?.missing ?? []).length > 0 && (
+                  <div>
+                    <span class="text-red-600 font-medium">✗ Failed:</span>
+                    <ul class="list-disc list-inside text-slate-600 ml-2">
+                      {(m.evaluation.details?.missing ?? []).map((miss) => <li>{miss}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+</Layout>

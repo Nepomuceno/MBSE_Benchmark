@@ -1,0 +1,230 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StatCard from '../components/StatCard.astro';
+import ScoreBar from '../components/ScoreBar.astro';
+import { loadResults, getLatestVersion, loadTasks, formatScore } from '../lib/data';
+
+// Get version and models from URL query parameters
+const urlVersion = Astro.url.searchParams.get('v');
+const modelsParam = Astro.url.searchParams.get('models');
+const latestVersion = await getLatestVersion();
+const selectedVersion = urlVersion ?? latestVersion ?? undefined;
+
+const results = await loadResults(selectedVersion);
+const tasks = await loadTasks();
+
+// Parse selected models from query param (comma-separated)
+const selectedModelIds = modelsParam ? modelsParam.split(',').map(m => m.trim()) : [];
+
+// Get selected models' results
+const selectedModels = selectedModelIds.length > 0
+  ? results.filter(r => selectedModelIds.includes(r.modelId))
+  : results.slice(0, Math.min(4, results.length)); // Default: top 4 models
+
+const getScoreColor = (score: number) => {
+  if (score >= 0.8) return 'text-emerald-600';
+  if (score >= 0.6) return 'text-cyan-600';
+  if (score >= 0.4) return 'text-amber-600';
+  return 'text-red-600';
+};
+
+const getBgScoreColor = (score: number) => {
+  if (score >= 0.8) return 'bg-emerald-100';
+  if (score >= 0.6) return 'bg-cyan-100';
+  if (score >= 0.4) return 'bg-amber-100';
+  return 'bg-red-100';
+};
+
+// Get task scores for each model
+const taskComparison = tasks.map(task => {
+  const scores = selectedModels.map(model => {
+    const taskResult = model.tasks?.find(t => t.taskId === task.id);
+    return {
+      modelId: model.modelId,
+      score: taskResult?.score ?? 0,
+      latencyMs: taskResult?.latencyMs ?? 0,
+    };
+  });
+  
+  // Find winner(s)
+  const maxScore = Math.max(...scores.map(s => s.score));
+  const winners = scores.filter(s => s.score === maxScore && maxScore > 0).map(s => s.modelId);
+  
+  return {
+    task,
+    scores,
+    winners,
+  };
+});
+
+// Calculate wins per model
+const winsPerModel = new Map<string, number>();
+for (const comparison of taskComparison) {
+  for (const winner of comparison.winners) {
+    winsPerModel.set(winner, (winsPerModel.get(winner) ?? 0) + 1);
+  }
+}
+---
+
+<Layout title="Compare Models - MBSE Benchmark" currentPage="models" currentVersion={selectedVersion}>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900 mb-2">Compare Models</h1>
+    <p class="text-slate-500">Side-by-side comparison of model performance</p>
+  </div>
+
+  <!-- Model Selection -->
+  <div class="card rounded-xl p-6 mb-8">
+    <div class="text-slate-500 text-xs uppercase tracking-wider mb-3 font-semibold">Select Models to Compare</div>
+    <form method="get" action="/compare/" class="flex flex-wrap gap-4 items-end">
+      <input type="hidden" name="v" value={selectedVersion} />
+      <div class="flex-1 min-w-64">
+        <label for="models" class="block text-sm font-medium text-slate-700 mb-1">Models (comma-separated)</label>
+        <input 
+          type="text" 
+          id="models" 
+          name="models" 
+          value={selectedModelIds.join(', ')}
+          placeholder={results.map(r => r.modelId).join(', ')}
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+      <button 
+        type="submit"
+        class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Compare
+      </button>
+    </form>
+    <div class="mt-3 text-sm text-slate-500">
+      Available models: {results.map(r => r.modelId).join(', ')}
+    </div>
+  </div>
+
+  {selectedModels.length === 0 ? (
+    <div class="card rounded-xl p-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
+        <span class="text-3xl">🤖</span>
+      </div>
+      <h2 class="text-xl font-semibold text-slate-900 mb-2">No Models Selected</h2>
+      <p class="text-slate-500">Select models above to compare their performance.</p>
+    </div>
+  ) : (
+    <>
+      <!-- Summary Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <StatCard label="Models Compared" value={selectedModels.length} icon="🤖" />
+        <StatCard label="Tasks" value={tasks.length} icon="📝" />
+        <StatCard 
+          label="Best Overall" 
+          value={selectedModels[0]?.modelId ?? 'N/A'} 
+          subtext={selectedModels[0] ? formatScore(selectedModels[0].score) : undefined}
+          icon="🏆" 
+        />
+        <StatCard 
+          label="Most Wins" 
+          value={[...winsPerModel.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'N/A'}
+          subtext={[...winsPerModel.entries()].sort((a, b) => b[1] - a[1])[0]?.[1]?.toString() + ' tasks'}
+          icon="🥇" 
+        />
+      </div>
+
+      <!-- Overall Scores -->
+      <div class="card rounded-xl p-6 mb-8">
+        <div class="text-slate-500 text-xs uppercase tracking-wider mb-4 font-semibold">Overall Scores</div>
+        <div class="space-y-4">
+          {selectedModels.sort((a, b) => b.score - a.score).map((model, i) => (
+            <div class="flex items-center space-x-4">
+              <div class="w-8 text-center text-xl">
+                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : ''}
+              </div>
+              <div class="w-32">
+                <a href={`/models/${model.modelId}/`} class="font-semibold text-slate-900 hover:text-blue-600 transition-colors">
+                  {model.modelId}
+                </a>
+              </div>
+              <div class="flex-1">
+                <ScoreBar value={model.score} />
+              </div>
+              <div class={`w-16 text-right font-mono font-bold ${getScoreColor(model.score)}`}>
+                {formatScore(model.score)}
+              </div>
+              <div class="w-20 text-right text-slate-500 text-sm">
+                {winsPerModel.get(model.modelId) ?? 0} wins
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Task-by-Task Comparison Table -->
+      <div class="card rounded-xl overflow-hidden mb-8">
+        <div class="p-6 border-b border-slate-200">
+          <div class="text-slate-500 text-xs uppercase tracking-wider font-semibold">Task-by-Task Comparison</div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr class="text-left text-slate-500 text-xs uppercase tracking-wider">
+                <th class="py-4 px-6 font-semibold">Task</th>
+                {selectedModels.map(model => (
+                  <th class="py-4 px-6 font-semibold text-center">{model.modelId}</th>
+                ))}
+                <th class="py-4 px-6 font-semibold text-center">Winner</th>
+              </tr>
+            </thead>
+            <tbody>
+              {taskComparison.map((row) => (
+                <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                  <td class="py-4 px-6">
+                    <a href={`/tasks/${row.task.id}/`} class="font-medium text-slate-900 hover:text-blue-600 transition-colors">
+                      {row.task.name}
+                    </a>
+                    <div class="text-slate-500 text-xs">{row.task.evaluation.type}</div>
+                  </td>
+                  {row.scores.map((s) => {
+                    const isWinner = row.winners.includes(s.modelId);
+                    return (
+                      <td class={`py-4 px-6 text-center ${isWinner ? getBgScoreColor(s.score) : ''}`}>
+                        <span class={`font-mono font-medium ${getScoreColor(s.score)}`}>
+                          {formatScore(s.score)}
+                        </span>
+                        <div class="text-slate-400 text-xs">{s.latencyMs}ms</div>
+                      </td>
+                    );
+                  })}
+                  <td class="py-4 px-6 text-center">
+                    {row.winners.length === 1 ? (
+                      <span class="font-medium text-emerald-600">{row.winners[0]}</span>
+                    ) : row.winners.length > 1 ? (
+                      <span class="text-amber-600">Tie</span>
+                    ) : (
+                      <span class="text-slate-400">—</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Wins Summary -->
+      <div class="card rounded-xl p-6">
+        <div class="text-slate-500 text-xs uppercase tracking-wider mb-4 font-semibold">Wins by Model</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {selectedModels.map(model => {
+            const wins = winsPerModel.get(model.modelId) ?? 0;
+            const winRate = tasks.length > 0 ? wins / tasks.length : 0;
+            return (
+              <div class="text-center p-4 bg-slate-50 rounded-lg">
+                <div class="font-semibold text-slate-900 mb-1">{model.modelId}</div>
+                <div class={`text-3xl font-bold ${getScoreColor(winRate)}`}>{wins}</div>
+                <div class="text-slate-500 text-sm">task wins</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  )}
+</Layout>

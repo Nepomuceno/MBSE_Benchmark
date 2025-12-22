@@ -1,0 +1,106 @@
+---
+export interface Props {
+  type: 'bar' | 'line' | 'radar';
+  data: {
+    labels: string[];
+    datasets: Array<{
+      label: string;
+      data: number[];
+      color?: string;
+    }>;
+  };
+  height?: number;
+  showLegend?: boolean;
+}
+
+const { type, data, height = 300, showLegend = true } = Astro.props;
+
+// Generate unique ID for this chart
+const chartId = `chart-${Math.random().toString(36).substr(2, 9)}`;
+
+// Color palette
+const colors = [
+  { bg: 'rgba(59, 130, 246, 0.2)', border: 'rgb(59, 130, 246)' },    // blue
+  { bg: 'rgba(16, 185, 129, 0.2)', border: 'rgb(16, 185, 129)' },    // emerald
+  { bg: 'rgba(245, 158, 11, 0.2)', border: 'rgb(245, 158, 11)' },    // amber
+  { bg: 'rgba(239, 68, 68, 0.2)', border: 'rgb(239, 68, 68)' },      // red
+  { bg: 'rgba(139, 92, 246, 0.2)', border: 'rgb(139, 92, 246)' },    // violet
+  { bg: 'rgba(236, 72, 153, 0.2)', border: 'rgb(236, 72, 153)' },    // pink
+];
+
+// Prepare chart.js compatible data
+const chartData = {
+  labels: data.labels,
+  datasets: data.datasets.map((ds, i) => ({
+    label: ds.label,
+    data: ds.data,
+    backgroundColor: colors[i % colors.length].bg,
+    borderColor: colors[i % colors.length].border,
+    borderWidth: 2,
+    fill: type === 'radar',
+    tension: 0.3,
+    pointRadius: type === 'line' ? 4 : undefined,
+    pointHoverRadius: type === 'line' ? 6 : undefined,
+  })),
+};
+
+const chartConfig = JSON.stringify({
+  type,
+  data: chartData,
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: showLegend,
+        position: 'top',
+      },
+    },
+    scales: type !== 'radar' ? {
+      y: {
+        beginAtZero: true,
+        max: type === 'line' || type === 'bar' ? 1 : undefined,
+        ticks: {
+          callback: (value: number) => `${(value * 100).toFixed(0)}%`,
+        },
+      },
+    } : undefined,
+  },
+});
+---
+
+<div class="chart-container" style={`height: ${height}px;`}>
+  <canvas id={chartId}></canvas>
+</div>
+
+<script define:vars={{ chartId, chartConfig }}>
+  // Load Chart.js from CDN if not already loaded
+  function loadChartJs() {
+    return new Promise((resolve, reject) => {
+      if (window.Chart) {
+        resolve(window.Chart);
+        return;
+      }
+      
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+      script.onload = () => resolve(window.Chart);
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  loadChartJs().then((Chart) => {
+    const ctx = document.getElementById(chartId);
+    if (ctx) {
+      new Chart(ctx, JSON.parse(chartConfig));
+    }
+  });
+</script>
+
+<style>
+  .chart-container {
+    position: relative;
+    width: 100%;
+  }
+</style>
