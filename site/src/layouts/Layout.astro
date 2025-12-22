@@ -4,7 +4,7 @@ import { getLatestVersion } from '../lib/data';
 
 export interface Props {
   title: string;
-  currentPage?: 'leaderboard' | 'models' | 'tasks';
+  currentPage?: 'leaderboard' | 'models' | 'tasks' | 'compare' | 'trends';
   currentVersion?: string;
 }
 
@@ -19,6 +19,8 @@ const navItems = [
   { id: 'leaderboard', label: 'Leaderboard', href: '/' },
   { id: 'models', label: 'Models', href: '/models/' },
   { id: 'tasks', label: 'Tasks', href: '/tasks/' },
+  { id: 'compare', label: 'Compare', href: '/compare/' },
+  { id: 'trends', label: 'Trends', href: '/trends/' },
 ];
 ---
 

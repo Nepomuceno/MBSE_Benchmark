@@ -1,3 +1,5 @@
+export type OutputFormat = "table" | "json" | "minimal";
+
 export interface CliArgs {
   model?: string;
   all?: boolean;
@@ -6,6 +8,8 @@ export interface CliArgs {
   results?: boolean;
   resultsModel?: string;
   help?: boolean;
+  verbose?: boolean;
+  output?: OutputFormat;
 }
 
 export function parseArgs(argv: string[]): CliArgs {
@@ -42,6 +46,22 @@ export function parseArgs(argv: string[]): CliArgs {
       case "-h":
         args.help = true;
         break;
+      case "--verbose":
+      case "-v":
+        args.verbose = true;
+        break;
+      case "--output":
+      case "-o": {
+        const next = argv[i + 1];
+        if (next && !next.startsWith("-")) {
+          const format = next;
+          if (format === "json" || format === "table" || format === "minimal") {
+            args.output = format;
+          }
+          i++;
+        }
+        break;
+      }
     }
   }
 
