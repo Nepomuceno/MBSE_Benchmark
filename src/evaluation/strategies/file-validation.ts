@@ -80,14 +80,16 @@ export class FileValidationStrategy implements EvaluationStrategy {
     task: Task,
     context?: EvaluationContext
   ): Promise<Array<{ path: string; passed: boolean; message: string }>> {
-    if (files.length === 0 || !this.llmJudgeConfig) {
+    if (!this.llmJudgeConfig) {
       return files.map((f) => ({
         path: f.path,
         passed: false,
-        message: this.llmJudgeConfig
-          ? "No files to validate"
-          : "LLM judge not configured",
+        message: "LLM judge not configured",
       }));
+    }
+
+    if (files.length === 0) {
+      return [];
     }
 
     const results: Array<{ path: string; passed: boolean; message: string }> = [];

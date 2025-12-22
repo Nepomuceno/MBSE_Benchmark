@@ -117,6 +117,14 @@ ${criteria.map((c) => `    "${c}": "<brief feedback>"`).join(",\n")}
         feedback: parsed.feedback[c] ?? "",
       }));
 
+      if (criteriaScores.length === 0) {
+        return {
+          score: 0,
+          details: { criteria: criteriaScores },
+          explanation: parsed.overall,
+        };
+      }
+
       const avgScore =
         criteriaScores.reduce((sum, c) => sum + c.score, 0) / criteriaScores.length;
 
@@ -128,7 +136,19 @@ ${criteria.map((c) => `    "${c}": "<brief feedback>"`).join(",\n")}
     } catch {
       // If parsing fails, try to extract a score from the text
       const scoreMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:\/\s*(?:1|10|100))?/);
-      const score = scoreMatch ? parseFloat(scoreMatch[1]!) / (scoreMatch[0].includes("/10") ? 10 : scoreMatch[0].includes("/100") ? 100 : 1) : 0;
+      let score = 0;
+      if (scoreMatch) {
+        const rawScore = parseFloat(scoreMatch[1]!);
+        const matchedText = scoreMatch[0];
+        let divisor = 1;
+        if (matchedText.includes("/10")) {
+          divisor = 10;
+        } else if (matchedText.includes("/100")) {
+          divisor = 100;
+        }
+        // If "/" is present, divide; otherwise treat rawScore as already in [0,1] scale
+        score = matchedText.includes("/") ? rawScore / divisor : rawScore;
+      }
 
       return {
         score: Math.max(0, Math.min(1, score)),

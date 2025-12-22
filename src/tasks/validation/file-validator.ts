@@ -210,7 +210,7 @@ function validateJsonSchema(
     const required = (schema.required as string[]) || [];
 
     for (const prop of required) {
-      if (!(parsed as Record<string, unknown>)[prop]) {
+      if ((parsed as Record<string, unknown>)[prop] === undefined) {
         errors.push(`Missing required property: ${prop}`);
       }
     }
@@ -219,9 +219,12 @@ function validateJsonSchema(
     for (const [prop, propSchema] of Object.entries(props)) {
       const value = (parsed as Record<string, unknown>)[prop];
       if (value !== undefined) {
-        const propType = (propSchema as Record<string, unknown>).type;
-        if (propType && typeof value !== propType) {
-          errors.push(`Property ${prop} should be ${propType}, got ${typeof value}`);
+        const propType = (propSchema as Record<string, unknown>).type as string;
+        if (propType) {
+          const actualType = Array.isArray(value) ? "array" : typeof value;
+          if (actualType !== propType) {
+            errors.push(`Property ${prop} should be ${propType}, got ${actualType}`);
+          }
         }
       }
     }
