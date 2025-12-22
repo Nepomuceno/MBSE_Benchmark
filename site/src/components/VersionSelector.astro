@@ -1,0 +1,36 @@
+---
+import { getAllVersions, getLatestVersion } from '../lib/data';
+
+export interface Props {
+  currentVersion?: string;
+}
+
+const versions = await getAllVersions();
+const latestVersion = await getLatestVersion();
+const { currentVersion = latestVersion } = Astro.props;
+---
+
+{versions.length > 1 && (
+  <div class="relative inline-block">
+    <label for="version-select" class="sr-only">Select benchmark version</label>
+    <select
+      id="version-select"
+      class="appearance-none bg-slate-100 border border-slate-200 text-slate-700 text-sm font-mono rounded-lg px-3 py-1.5 pr-8 cursor-pointer hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+      onchange={`window.location.href = this.value === '${latestVersion}' ? '/' : '/v/' + this.value + '/'`}
+    >
+      {versions.map((version) => (
+        <option 
+          value={version} 
+          selected={version === currentVersion}
+        >
+          v{version}{version === latestVersion ? ' (latest)' : ''}
+        </option>
+      ))}
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+)}

@@ -2,13 +2,18 @@
 import Layout from '../../layouts/Layout.astro';
 import StatCard from '../../components/StatCard.astro';
 import ScoreBar from '../../components/ScoreBar.astro';
-import { loadResults, loadTasks, formatScore } from '../../lib/data';
+import { loadResults, getLatestVersion, loadTasks, formatScore } from '../../lib/data';
 
-const results = await loadResults();
+// Get version from URL query parameter
+const urlVersion = Astro.url.searchParams.get('v');
+const latestVersion = await getLatestVersion();
+const selectedVersion = urlVersion ?? latestVersion ?? undefined;
+
+const results = await loadResults(selectedVersion);
 const tasks = await loadTasks();
 ---
 
-<Layout title="Models - MBSE Benchmark" currentPage="models">
+<Layout title="Models - MBSE Benchmark" currentPage="models" currentVersion={selectedVersion}>
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-slate-900 mb-2">Models</h1>
     <p class="text-slate-500">All benchmarked AI models and their performance</p>
