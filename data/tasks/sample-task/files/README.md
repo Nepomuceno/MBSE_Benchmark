@@ -5,6 +5,7 @@ This is a sample project for testing the MBSE benchmark framework.
 ## System Overview
 
 The system is a satellite communication module that handles:
+
 - Data transmission to ground stations
 - Telemetry collection from sensors
 - Power management during eclipse periods
