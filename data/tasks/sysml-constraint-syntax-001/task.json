@@ -11,7 +11,11 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["constraint_understanding", "expression_validity", "explanation_quality"],
-    "rubric": "The model contains 8 requirement definitions with constraints. Expected validity assessment: (1) TemperatureReq - VALID, uses abs() function and comparison, (2) CoolingReq - INVALID, missing right operand after '<=', (3) AirQualityReq - VALID, uses multiple conditions with && operators, (4) ResponseTimeReq - INVALID, dangling '&&' operator at end of expression, (5) InterfaceReq - INVALID, uses assignment '=' instead of comparison '==' for boolean check, (6) SafetyReq - VALID, proper boolean comparison with || operator, (7) PowerReq - INVALID, missing closing brace for constraint block, (8) ReliabilityReq - VALID, proper numeric comparison with >=. The response must correctly classify all 8 constraints and explain the specific errors in the 4 invalid ones.",
+    "rubric": {
+      "constraint_understanding": "1.0: Correctly understands all 8 constraints' purposes (temperature regulation, cooling, air quality, response time, interface status, safety, power, reliability). 0.5: Understands most but misinterprets 2-3 constraints. 0.0: Fundamentally misunderstands what the constraints verify.",
+      "expression_validity": "1.0: Correctly classifies all 8 constraints - VALID: TemperatureReq (abs() with comparison), AirQualityReq (&& operators), SafetyReq (|| operator), ReliabilityReq (>= comparison). INVALID: CoolingReq (missing operand after <=), ResponseTimeReq (dangling &&), InterfaceReq (= vs ==), PowerReq (missing closing brace). 0.5: Gets 5-7 classifications correct. 0.0: Gets fewer than 5 correct.",
+      "explanation_quality": "1.0: For each INVALID constraint, clearly explains the specific error (missing operand, wrong operator, unclosed brace). 0.5: Identifies errors but explanations are vague or incomplete. 0.0: Does not explain errors or gives wrong explanations."
+    },
     "weight": 1.5
   },
   "metadata": {

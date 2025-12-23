@@ -67,6 +67,8 @@ export interface TaskEvaluation {
   keywords?: string[];
   elements?: string[];
   criteria?: string[];
+  /** Rubric for LLM judge - describes what constitutes good/poor performance for each criterion */
+  rubric?: Record<string, string>;
   // SysML validation options
   checkSyntax?: boolean;
   checkStructure?: boolean;

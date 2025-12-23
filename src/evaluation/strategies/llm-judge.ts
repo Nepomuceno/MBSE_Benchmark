@@ -60,6 +60,8 @@ export class LlmJudgeStrategy implements EvaluationStrategy {
     criteria: string[],
     context?: EvaluationContext
   ): string {
+    const rubric = task.evaluation.rubric || {};
+
     let prompt = `You are evaluating an AI response for a benchmark task.
 
 ## Task Information
@@ -77,11 +79,15 @@ export class LlmJudgeStrategy implements EvaluationStrategy {
 
     prompt += `\n## AI Response\n${response}\n`;
 
-    prompt += `\n## Evaluation Criteria
-Score each criterion from 0.0 to 1.0:
-${criteria.map((c) => `- **${c}**`).join("\n")}
+    prompt += `\n## Evaluation Criteria and Rubric
+Score each criterion from 0.0 to 1.0 based on the rubric:
+`;
+    for (const c of criteria) {
+      const rubricText = rubric[c] || "Evaluate based on quality and correctness.";
+      prompt += `\n### ${c}\n${rubricText}\n`;
+    }
 
-## Response Format
+    prompt += `\n## Response Format
 Return ONLY valid JSON in this exact format:
 {
   "scores": {

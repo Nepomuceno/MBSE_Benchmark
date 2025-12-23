@@ -11,7 +11,11 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["json_validity", "action_extraction", "parameter_accuracy"],
-    "rubric": "The response must be valid JSON containing an array of action definition objects. Each object must have 'name', 'inputs', and 'outputs' fields. The model contains 3 action definitions: VehicleStartSignal, VehicleOnSignal, and VehicleOffSignal. All three are simple action definitions with no input or output parameters, so 'inputs' and 'outputs' arrays should be empty for each. Score based on: (1) Valid JSON array structure, (2) All 3 action definitions included, (3) Correct empty arrays for inputs/outputs, (4) No fabricated parameters.",
+    "rubric": {
+      "json_validity": "1.0: Response is valid JSON with correct array structure containing objects with 'name', 'inputs', and 'outputs' fields. 0.5: Valid JSON but minor structural issues (e.g., missing optional fields). 0.0: Invalid JSON or completely wrong structure.",
+      "action_extraction": "1.0: All 3 action definitions extracted: VehicleStartSignal, VehicleOnSignal, VehicleOffSignal. 0.5: Found 2 of 3 action definitions. 0.0: Found fewer than 2 or included non-action elements.",
+      "parameter_accuracy": "1.0: Correctly identifies that all 3 actions have empty 'inputs' and 'outputs' arrays (no parameters defined). 0.5: Most parameters correct but some fabricated or missing. 0.0: Fabricates parameters that don't exist or misses existing ones."
+    },
     "weight": 1.0
   },
   "metadata": {

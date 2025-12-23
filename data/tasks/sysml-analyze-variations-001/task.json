@@ -1,0 +1,28 @@
+{
+  "id": "sysml-analyze-variations-001",
+  "type": "analysis",
+  "name": "SysML v2 Variation Point Analysis",
+  "description": "Identify and analyze variation points and their variants in a SysML v2 model.",
+  "prompt": "Analyze the variation points in this SysML v2 model.\n\nIdentify all `variation` declarations and their `variant` options:\n1. Find each variation point\n2. List all available variants for each variation\n3. Explain what differs between the variants\n4. Note any constraints or conditions on variant selection\n\nReturn a JSON object with:\n- \"variationPoints\": array of variation point information\n- \"summary\": explanation of the variation modeling approach\n\nExample format:\n```json\n{\n  \"variationPoints\": [\n    {\n      \"name\": \"adoption_certificate\",\n      \"type\": \"part\",\n      \"variants\": [\n        {\"name\": \"TypeB1\", \"description\": \"Adoption with woman as parent1\"},\n        {\"name\": \"TypeB2\", \"description\": \"Adoption with man as parent1\"},\n        {\"name\": \"TypeC\", \"description\": \"Adoption with both adoptive parents\"}\n      ],\n      \"differences\": \"The variants differ in which adults serve as the adoptive parents\"\n    }\n  ],\n  \"summary\": \"The model uses variation to represent different legal adoption scenarios...\"\n}\n```",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["variation_identification", "variant_description", "difference_explanation", "completeness"],
+    "rubric": {
+      "variation_identification": "1.0: Correctly identifies the adoption_certificate variation point (with its 3 variants). 0.5: Partially identifies the variation point or mischaracterizes it. 0.0: Cannot identify the adoption_certificate variation point.",
+      "variant_description": "1.0: For adoption_certificate: correctly describes TypeB1 (adoption with woman as parent1), TypeB2 (adoption with man as parent1), and TypeC (adoption with both adoptive parents). 0.5: Describes the variants but with some inaccuracies or missing details. 0.0: Variants not properly described.",
+      "difference_explanation": "1.0: Clearly explains what differs among the adoption_certificate variants: they differ in which adults serve as the adoptive parents and how parent roles are assigned. 0.5: Some differences are explained but not all or not clearly. 0.0: No meaningful difference explanation.",
+      "completeness": "1.0: Covers the adoption_certificate variation point and all three variants with their relevant attributes and relationships. 0.5: Most relevant content covered, but some aspects of variants or their attributes are missing. 0.0: Major omissions."
+    },
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models family.sysml",
+    "tags": ["analysis", "variation", "variants", "product-line"]
+  }
+}

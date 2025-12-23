@@ -1,0 +1,28 @@
+{
+  "id": "sysml-analyze-crossref-001",
+  "type": "analysis",
+  "name": "SysML v2 Cross-Model Reference Analysis",
+  "description": "Trace references across multiple SysML v2 model files to understand inter-file dependencies.",
+  "prompt": "These SysML v2 files are part of the same model. Analyze how they reference each other.\n\nFor each file:\n1. Identify the package(s) it defines\n2. List all imports from other packages\n3. Identify all cross-file type references\n4. Note any requirements satisfied across files\n\nCreate a dependency map showing:\n- Which packages import from which\n- Which types are used from external packages\n- Any satisfy/require relationships across files\n\nReturn a JSON object with:\n- \"files\": array of file analysis\n- \"crossReferences\": array of cross-file references\n- \"dependencyMap\": text representation of inter-file dependencies\n\nExample format:\n```json\n{\n  \"files\": [\n    {\n      \"filename\": \"ForestFireObservationDrone.sysml\",\n      \"packages\": [\"ForestFireObservationDrone\"],\n      \"imports\": [\"Drone_SharedAssetsSuperset::**\"]\n    }\n  ],\n  \"crossReferences\": [\n    {\"from\": \"ForestFireObservationDrone\", \"to\": \"Drone_BaseArchitecture\", \"type\": \"import\", \"elements\": [\"Drone\"]}\n  ],\n  \"dependencyMap\": \"Drone_BaseArchitecture\\n  ← Drone_SystemArchitecture\\n  ← ForestFireObservationDrone\"\n}\n```",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["cross_reference_tracing", "import_understanding", "dependency_mapping", "completeness"],
+    "rubric": {
+      "cross_reference_tracing": "1.0: Correctly traces that ForestFireObservationDrone uses types from external packages (Drone, DroneEngine, BatteryCapacityKind, PropKind, DroneBatteryVariation). Identifies Drone_BaseArchitecture defines the base Drone part def. 0.5: Finds some cross-references but misses others. 0.0: Cannot trace cross-file references.",
+      "import_understanding": "1.0: Understands import semantics: 'import Drone_SharedAssetsSuperset::**' brings in all elements, 'import RequirementDerivation::*' for requirements. Notes that Drone_BaseArchitecture has no imports. 0.5: Partial understanding of imports. 0.0: Does not understand import statements.",
+      "dependency_mapping": "1.0: Creates accurate dependency map showing: Drone_BaseArchitecture is independent, Drone_SystemArchitecture depends on Drone_BaseArchitecture, both requirement packages reference the architecture. 0.5: Map partially correct. 0.0: No meaningful dependency map.",
+      "completeness": "1.0: Analyzes both provided files, identifies all packages (Drone_BaseArchitecture, Drone_StakeholderRequirements, Drone_SystemArchitecture, Drone_SystemRequirements, ForestFireObservationDrone), and all cross-references. 0.5: Most content covered. 0.0: Major omissions."
+    },
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models Drone models",
+    "tags": ["analysis", "cross-reference", "imports", "multi-file"]
+  }
+}

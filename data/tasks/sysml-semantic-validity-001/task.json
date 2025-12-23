@@ -11,7 +11,11 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["semantic_understanding", "reference_checking", "completeness"],
-    "rubric": "The model contains 17 semantic errors that should be identified: (1) UndefinedPackage import does not exist, (2) UndefinedType::speed reference undefined, (3) PowerUnit::watt reference undefined, (4) RoadInterfacePort type undefined (should be VehicleToRoadPort), (5) startEngine action not defined, (6) FrontAxle incorrectly specializes RearAxle (should be Axle), (7) Gasoline item undefined (should be Fuel), (8) FuelCommand type undefined (should be FuelCmd) in FuelCmdPort, (9) TorqueValue undefined (should be Torque) in DrivePwrPort, (10) FuelCommand undefined in ProvidePower action, (11) TorqueOutput undefined in ProvidePower action, (12) MotorTorque undefined in GenerateTorque action, (13) MassUnit::kilogram undefined in MassRequirement, (14) SportsCar undefined (should be Vehicle) in SpeedRequirement, (15) TurboEngine undefined (should be Engine), (16) AutomaticTransmission undefined, (17) inputPort undefined on transmission. A good response should identify most of these 17 undefined references and type errors.",
+    "rubric": {
+      "semantic_understanding": "1.0: Correctly distinguishes semantic errors (undefined references, type mismatches) from syntax errors. Understands that imports must exist, types must be defined before use, and specializations must reference valid parent types. 0.5: Some confusion between semantic and syntactic issues. 0.0: Does not understand semantic validation.",
+      "reference_checking": "1.0: Identifies undefined references including: UndefinedPackage import, UndefinedType::speed, PowerUnit::watt, RoadInterfacePort, startEngine action, Gasoline, FuelCommand, TorqueValue, TorqueOutput, MotorTorque, MassUnit::kilogram, SportsCar, TurboEngine, AutomaticTransmission, inputPort. Also identifies invalid specialization (FrontAxle :> RearAxle should be :> Axle). 0.5: Identifies 8-14 of the 17 errors. 0.0: Identifies fewer than 8 errors or many false positives.",
+      "completeness": "1.0: Provides specific location and suggested fix for each error (e.g., 'FuelCommand should be FuelCmd'). 0.5: Identifies errors but without context or fixes. 0.0: Very incomplete analysis."
+    },
     "weight": 2.0
   },
   "metadata": {
