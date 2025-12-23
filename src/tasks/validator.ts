@@ -6,6 +6,7 @@ const VALID_EVALUATION_TYPES = [
   "element-extraction",
   "llm-judge",
   "file-validation",
+  "sysml-validation",
 ];
 const VALID_FILE_VALIDATION_TYPES = [
   "exists",

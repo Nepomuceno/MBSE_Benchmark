@@ -1,0 +1,28 @@
+{
+  "id": "sysml-generate-analysis-001",
+  "type": "generation",
+  "name": "SysML v2 Analysis Case Generation",
+  "description": "Generate a complete analysis case for thermal analysis of an electronics enclosure",
+  "prompt": "Create a SysML v2 analysis definition for thermal analysis of an electronics enclosure:\n\nRequirements:\n1. Package named 'ThermalAnalysis'\n2. Import ISQ::*\n3. Define the analysis case with:\n   - Subject: Enclosure part\n   - Objective: Reference to temperature requirements\n   - Input parameters:\n     * ambientTemperature : ISQ::TemperatureValue\n     * powerDissipation : ISQ::PowerValue\n     * airflowRate : ISQ::VolumeFlowRateValue\n   - Action steps for the analysis process:\n     * Calculate heat transfer\n     * Simulate temperature distribution\n     * Verify against limits\n   - Return: calculated internal temperature\n4. Follow the pattern from VehicleModel fuel economy analysis\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "weight": 3.0,
+    "criteria": ["analysis_structure", "objective_definition", "parameter_completeness", "action_flow"],
+    "rubric": {
+      "analysis_structure": "1.0: Analysis def with proper structure (subject, objective, parameters, actions, return). 0.5: Analysis present but some structural elements missing. 0.0: Not using analysis def or fundamentally wrong structure.",
+      "objective_definition": "1.0: Objective references temperature requirements with clear goal for thermal analysis. 0.5: Objective present but vague or not linked to requirements. 0.0: No objective or meaningless.",
+      "parameter_completeness": "1.0: All three input parameters defined with ISQ types (ambientTemperature, powerDissipation, airflowRate) plus return value. 0.5: Most parameters present but some missing or wrong types. 0.0: Parameters missing or incorrect.",
+      "action_flow": "1.0: Action steps represent logical analysis workflow (calculate heat transfer, simulate temperature, verify limits) that make sense for thermal analysis. 0.5: Actions present but flow illogical or incomplete. 0.0: No actions or meaningless steps."
+    }
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "generation",
+    "tags": ["generation", "analysis", "thermal", "simulation"]
+  }
+}

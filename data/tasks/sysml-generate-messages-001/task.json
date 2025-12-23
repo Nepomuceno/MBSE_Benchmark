@@ -1,0 +1,27 @@
+{
+  "id": "sysml-generate-messages-001",
+  "type": "generation",
+  "name": "SysML v2 Signal and Message Definition Generation",
+  "description": "Generate signal definitions and message flows for a communication protocol",
+  "prompt": "Create SysML v2 definitions for a communication protocol:\n\nRequirements:\n1. Package named 'CommunicationProtocol'\n2. Create three signal definitions (as attribute defs):\n   - StartCommand with attribute commandId : Integer\n   - StopCommand with attribute commandId : Integer\n   - StatusReport with attributes: status : String, timestamp : Integer\n3. Create port types that send/receive these signals:\n   - ControllerPort: sends commands, receives status\n   - DevicePort: receives commands, sends status\n4. Create a message sequence:\n   - Controller sends StartCommand to Device\n   - Device sends StatusReport back to Controller\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "weight": 2.0,
+    "criteria": ["signal_structure", "port_correctness", "message_flow"],
+    "rubric": {
+      "signal_structure": "1.0: All three signals defined as attribute defs with proper payload attributes (StartCommand, StopCommand, StatusReport). 0.5: Signals present but some missing or incomplete. 0.0: Fewer than 2 signals or wrong structure.",
+      "port_correctness": "1.0: Port definitions specify correct signal types with proper directionality (ControllerPort sends commands/receives status, DevicePort opposite). 0.5: Ports defined but some signals or directions incorrect. 0.0: Ports missing or fundamentally wrong.",
+      "message_flow": "1.0: Message statements correctly show communication flow (Controller sends StartCommand to Device, Device sends StatusReport to Controller). 0.5: Message flow present but incomplete or partially incorrect. 0.0: No message statements or completely wrong."
+    }
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "generation",
+    "tags": ["generation", "signals", "messages", "communication"]
+  }
+}

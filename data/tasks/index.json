@@ -28,6 +28,20 @@
     "sysml-req-constraint-001",
     "sysml-req-derivation-001",
     "sysml-req-impact-001",
+    "sysml-generate-part-001",
+    "sysml-generate-ports-001",
+    "sysml-generate-requirements-001",
+    "sysml-generate-states-001",
+    "sysml-generate-actions-001",
+    "sysml-generate-subsystem-001",
+    "sysml-generate-variation-001",
+    "sysml-generate-usecase-001",
+    "sysml-generate-constraints-001",
+    "sysml-generate-calc-001",
+    "sysml-generate-connections-001",
+    "sysml-generate-analysis-001",
+    "sysml-generate-individual-001",
+    "sysml-generate-messages-001",
     "sysml-advanced-quality-001",
     "sysml-advanced-patterns-001",
     "sysml-advanced-merge-001",
@@ -122,6 +136,26 @@
         "sysml-transform-req2test-001",
         "sysml-transform-migrate-001"
       ]
+    },
+    "generation": {
+      "name": "SysML v2 Generation",
+      "description": "Tasks testing ability to generate valid SysML v2 models from natural language requirements",
+      "tasks": [
+        "sysml-generate-part-001",
+        "sysml-generate-ports-001",
+        "sysml-generate-requirements-001",
+        "sysml-generate-states-001",
+        "sysml-generate-actions-001",
+        "sysml-generate-subsystem-001",
+        "sysml-generate-variation-001",
+        "sysml-generate-usecase-001",
+        "sysml-generate-constraints-001",
+        "sysml-generate-calc-001",
+        "sysml-generate-connections-001",
+        "sysml-generate-analysis-001",
+        "sysml-generate-individual-001",
+        "sysml-generate-messages-001"
+        ]
     },
     "advanced": {
       "name": "Advanced Semantic Analysis",

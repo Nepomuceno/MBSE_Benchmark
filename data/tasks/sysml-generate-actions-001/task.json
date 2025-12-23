@@ -1,0 +1,27 @@
+{
+  "id": "sysml-generate-actions-001",
+  "type": "generation",
+  "name": "SysML v2 Action Definition Generation",
+  "description": "Generate action definitions with flows for a coffee machine process",
+  "prompt": "Create SysML v2 action definitions for a coffee machine:\n\nRequirements:\n1. Package named 'CoffeeMachine'\n2. Import ScalarValues::*\n3. Create three action definitions:\n   - GrindBeans: input coffeeBeans, output groundCoffee\n   - BrewCoffee: input groundCoffee and water, output brewedCoffee\n   - MakeCoffee: composite action that combines GrindBeans and BrewCoffee with proper flows\n4. Use proper action def syntax with in/out parameters\n5. MakeCoffee should use action usages and flow connections\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "weight": 2.0,
+    "criteria": ["action_structure", "flow_correctness", "composability"],
+    "rubric": {
+      "action_structure": "1.0: All three actions defined with correct in/out parameters (GrindBeans, BrewCoffee, MakeCoffee). 0.5: Actions present but parameters incomplete or incorrect. 0.0: Missing actions or fundamentally wrong structure.",
+      "flow_correctness": "1.0: Flow connections properly link outputs to inputs (grind output flows to brew input). 0.5: Flows present but some connections missing or incorrect. 0.0: No flows or completely incorrect connections.",
+      "composability": "1.0: MakeCoffee correctly composes the two sub-actions with proper parameter binding and flow connections. 0.5: Composition attempted but incomplete or partially incorrect. 0.0: No composition or fundamentally wrong approach."
+    }
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "generation",
+    "tags": ["generation", "actions", "flows", "composition"]
+  }
+}
