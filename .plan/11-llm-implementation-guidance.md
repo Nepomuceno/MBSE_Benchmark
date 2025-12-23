@@ -170,9 +170,9 @@ When implementing a task, update the checklist in this file:
 
 #### State Machine Tasks (STM-001 to STM-003)
 
-- [ ] STM-001: sysml-state-extraction-001
-- [ ] STM-002: sysml-state-complex-001
-- [ ] STM-003: sysml-state-compare-001
+- [x] STM-001: sysml-state-extraction-001 (2025-12-23)
+- [x] STM-002: sysml-state-complex-001 (2025-12-23)
+- [x] STM-003: sysml-state-compare-001 (2025-12-23)
 
 #### Advanced Tasks (ADV-001 to ADV-003)
 
