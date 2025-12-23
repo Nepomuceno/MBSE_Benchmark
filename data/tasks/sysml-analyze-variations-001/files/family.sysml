@@ -142,7 +142,7 @@ package Family {
 		//bind from the last internal action.out to this.out
 		bind serializeOutputMessage.outgoingMessage = outgoingMessage;
 	}
-	action def ParseMessage {in incommingMessage : SoundWaveMessage; out parsedIncommingMessage;}
+	action def ParseMessage {in incomingMessage : SoundWaveMessage; out parsedIncomingMessage;}
 	action def Think { in parsedIncomingMessage; out parsedOutgoingMessage;}
 	action def SerializeMessage { in parsedOutgoingMessage; out OutgoingMessage;}
 	
