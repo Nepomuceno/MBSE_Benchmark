@@ -5,8 +5,8 @@ package HVACSystemRequirements {
     requirement def TemperatureRegulationReqDef {
         doc /* The HVAC system shall regulate the cabin temperature based on user settings. */
 
-        attribute setTemperature : Real;
-        attribute actualTemperature : Real;
+        attribute setTemperature : Temperature;
+        attribute actualTemperature : Temperature;
 
         require constraint { abs(actualTemperature - setTemperature) <= 1 }
     }
@@ -14,8 +14,8 @@ package HVACSystemRequirements {
     requirement def CoolingFunctionReqDef {
         doc /* The HVAC system shall reduce the cabin temperature to the set value when cooling is required. */
 
-        attribute setCoolingTemperature : Real;
-        attribute actualCoolingTemperature : Real;
+        attribute setCoolingTemperature : Temperature;
+        attribute actualCoolingTemperature : Temperature;
 
         require constraint { actualCoolingTemperature <= setCoolingTemperature }
     }
@@ -23,8 +23,8 @@ package HVACSystemRequirements {
     requirement def HeatingFunctionReqDef {
         doc /* The HVAC system shall increase the cabin temperature to the set value when heating is required. */
 
-        attribute setHeatingTemperature : Real;
-        attribute actualHeatingTemperature : Real;
+        attribute setHeatingTemperature : Temperature;
+        attribute actualHeatingTemperature : Temperature;
 
         require constraint { actualHeatingTemperature >= setHeatingTemperature }
     }
@@ -32,8 +32,8 @@ package HVACSystemRequirements {
     requirement def DefrostingReqDef {
         doc /* The HVAC system shall defrost the windshield and windows when activated. */
 
-        attribute defrostTime : Real;
-        attribute maxDefrostTime : Real;
+        attribute defrostTime : Time;
+        attribute maxDefrostTime : Time;
 
         require constraint { defrostTime <= maxDefrostTime }
     }
@@ -41,11 +41,11 @@ package HVACSystemRequirements {
     requirement def AirQualityControlReqDef {
         doc /* The HVAC system shall filter and maintain cabin air quality by removing pollutants and controlling humidity. */
 
-        attribute particleFiltrationEfficiency : Real;
-        attribute humidityLevel : Real;
-        attribute minFiltrationEfficiency : Real;
-        attribute minHumidity : Real;
-        attribute maxHumidity : Real;
+        attribute particleFiltrationEfficiency : Percentage;
+        attribute humidityLevel : Percentage;
+        attribute minFiltrationEfficiency : Percentage;
+        attribute minHumidity : Percentage;
+        attribute maxHumidity : Percentage;
 
         require constraint { 
             particleFiltrationEfficiency >= minFiltrationEfficiency &&
@@ -57,8 +57,8 @@ package HVACSystemRequirements {
     requirement def PerformanceReqDef {
         doc /* The HVAC system shall respond to user inputs within 1 second. */
 
-        attribute responseTime : Real;
-        attribute maxResponseTime : Real;
+        attribute responseTime : Time;
+        attribute maxResponseTime : Time;
 
         require constraint { responseTime <= maxResponseTime }
     }
