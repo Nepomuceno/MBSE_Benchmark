@@ -2,24 +2,18 @@
 import Layout from '../../layouts/Layout.astro';
 import StatCard from '../../components/StatCard.astro';
 import ScoreBar from '../../components/ScoreBar.astro';
-import { loadResults, getLatestVersion, getAllVersions, loadTasks, formatScore } from '../../lib/data';
+import { loadResults, getLatestVersion, loadTasks, formatScore } from '../../lib/data';
 
 export async function getStaticPaths() {
-  const allVersions = await getAllVersions();
-  const paths = [];
+  const latestVersion = await getLatestVersion();
+  if (!latestVersion) return [];
   
-  // Generate paths for each version's models
-  for (const version of allVersions) {
-    const results = await loadResults(version);
-    for (const result of results) {
-      paths.push({
-        params: { id: result.modelId },
-        props: { result, version },
-      });
-    }
-  }
-  
-  return paths;
+  // Generate paths only for the latest version's models
+  const results = await loadResults(latestVersion);
+  return results.map((result) => ({
+    params: { id: result.modelId },
+    props: { result, version: latestVersion },
+  }));
 }
 
 const { result, version } = Astro.props;
@@ -92,26 +86,26 @@ const getScoreColor = (score: number) => {
           </div>
         </div>
 
-        <div class="mb-4">
-          <div class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold">Prompt</div>
-          <div class="terminal">
+        <details class="mb-4">
+          <summary class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold cursor-pointer hover:text-slate-700">Prompt</summary>
+          <div class="terminal mt-2">
             <div class="terminal-body text-sm">
               {taskDef?.prompt ?? 'N/A'}
             </div>
           </div>
-        </div>
+        </details>
 
-        <div>
-          <div class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold">Response</div>
-          <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700 max-h-48 overflow-y-auto whitespace-pre-wrap">
+        <details>
+          <summary class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold cursor-pointer hover:text-slate-700">Response</summary>
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700 max-h-48 overflow-y-auto whitespace-pre-wrap mt-2">
             {taskResult.finalResponse || <em class="text-slate-400">No response</em>}
           </div>
-        </div>
+        </details>
 
         {taskResult.evaluation && (
-          <div class="mt-4">
-            <div class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold">Evaluation</div>
-            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm">
+          <details class="mt-4">
+            <summary class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold cursor-pointer hover:text-slate-700">Evaluation</summary>
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm mt-2">
               <div class="text-slate-700 mb-2">{taskResult.evaluation.explanation}</div>
               {(taskResult.evaluation.details?.matched ?? []).length > 0 && (
                 <div class="mb-2">
@@ -130,18 +124,66 @@ const getScoreColor = (score: number) => {
                 </div>
               )}
             </div>
-          </div>
+          </details>
         )}
 
         {taskResult.iterations && taskResult.iterations.length > 0 && (
-          <div class="mt-4">
-            <div class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold">
+          <details class="mt-4">
+            <summary class="text-slate-500 text-xs uppercase tracking-wider mb-2 font-semibold cursor-pointer hover:text-slate-700">
               Iterations ({taskResult.iterations.length})
+            </summary>
+            <div class="space-y-4 mt-2">
+              {taskResult.iterations.map((iter) => (
+                <details class="border border-slate-200 rounded-lg bg-slate-50">
+                  <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-slate-100">
+                    <span class="font-medium text-slate-700">Iteration {iter.iteration}</span>
+                    <span class="text-xs font-mono text-slate-500">{iter.latencyMs}ms</span>
+                  </summary>
+                  <div class="p-4 pt-0 space-y-3">
+                    {iter.response && (
+                      <div>
+                        <div class="text-slate-500 text-xs uppercase tracking-wider mb-1">Response</div>
+                        <div class="bg-white border border-slate-200 rounded p-3 text-sm text-slate-700 max-h-32 overflow-y-auto whitespace-pre-wrap">
+                          {iter.response}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {iter.toolCalls && iter.toolCalls.length > 0 && (
+                      <div>
+                        <div class="text-slate-500 text-xs uppercase tracking-wider mb-1">Tool Calls ({iter.toolCalls.length})</div>
+                        <div class="space-y-2">
+                          {iter.toolCalls.map((call) => (
+                            <div class="bg-white border border-slate-200 rounded p-3">
+                              <div class="flex items-center space-x-2 mb-1">
+                                <span class="text-xs font-mono bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{call.name}</span>
+                                <span class="text-xs text-slate-400 font-mono">{call.id}</span>
+                              </div>
+                              <pre class="text-xs text-slate-600 overflow-x-auto">{JSON.stringify(call.arguments, null, 2)}</pre>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {iter.toolResults && iter.toolResults.length > 0 && (
+                      <div>
+                        <div class="text-slate-500 text-xs uppercase tracking-wider mb-1">Tool Results ({iter.toolResults.length})</div>
+                        <div class="space-y-2">
+                          {iter.toolResults.map((res) => (
+                            <div class="bg-white border border-slate-200 rounded p-3">
+                              <div class="text-xs font-mono text-emerald-600 mb-1">{res.tool}</div>
+                              <pre class="text-xs text-slate-600 overflow-x-auto max-h-24 overflow-y-auto">{JSON.stringify(res.result, null, 2)}</pre>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </details>
+              ))}
             </div>
-            <div class="text-slate-600 text-sm">
-              Model completed task in {taskResult.iterations.length} iteration(s)
-            </div>
-          </div>
+          </details>
         )}
       </div>
     );
