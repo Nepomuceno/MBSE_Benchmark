@@ -1,0 +1,35 @@
+{
+  "id": "sysml-advanced-merge-001",
+  "type": "generation",
+  "name": "SysML v2 Model Merge and Integration",
+  "description": "Merge two partial SysML v2 models (structural and behavioral) into a single coherent model with proper integration and conflict resolution.",
+  "prompt": "You are given two SysML v2 models that describe parts of the same control system:\n\n**model-structural.sysml**: Contains structural definitions including parts (Controller, Sensor, Actuator), ports, and system assembly with connections.\n\n**model-behavioral.sysml**: Contains behavioral definitions including actions (ReadSensor, ProcessData, SendCommand), control loops, and state machines.\n\nYour task is to merge these two models into a single coherent SysML v2 model. You must:\n\n1. **Resolve naming conflicts**: If there are elements with the same name but different semantics, rename them appropriately\n2. **Connect behavior to structure**: Link the behavioral elements (actions, states) to the structural elements (parts) using appropriate SysML v2 constructs like `perform` relationships\n3. **Ensure all cross-references are valid**: Make sure all imports, references, and connections are properly resolved\n4. **Maintain compatibility**: Ensure port types and action parameter types are compatible where they connect\n5. **Document assumptions**: Add comments documenting any assumptions you made during the merge\n\nReturn a complete, valid SysML v2 model as your output. The merged model should:\n- Import or include both structural and behavioral definitions\n- Connect the ControlLoop action to the Controller part\n- Link SystemStates to appropriate parts\n- Resolve any type mismatches\n- Include clear comments explaining integration decisions\n\nFormat your response as a complete SysML v2 model that could be validated by a SysML v2 parser.",
+  "maxTokens": 4000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": [
+      "merge_completeness",
+      "conflict_resolution",
+      "integration_quality",
+      "assumptions_documented",
+      "syntactic_validity"
+    ],
+    "rubric": {
+      "merge_completeness": "1.0: Successfully merges all elements from both models. All structural and behavioral definitions are present and integrated. 0.5: Merges most elements but some are missing or not integrated. 0.0: Only includes elements from one model or fails to integrate them.",
+      "conflict_resolution": "1.0: Identifies and resolves all naming conflicts and type mismatches appropriately. Solutions are clear and well-justified. 0.5: Resolves some conflicts but misses others or solutions are suboptimal. 0.0: Ignores conflicts or creates invalid resolutions.",
+      "integration_quality": "1.0: Behavioral elements are properly connected to structural elements using appropriate SysML v2 constructs (perform, state allocations, etc.). Connections are semantically correct. 0.5: Some integration but relationships are incomplete or incorrect. 0.0: No meaningful integration between structure and behavior.",
+      "assumptions_documented": "1.0: All assumptions and integration decisions are clearly documented with comments. Explains why specific choices were made. 0.5: Some documentation but key decisions are not explained. 0.0: No documentation of assumptions.",
+      "syntactic_validity": "1.0: Output is valid SysML v2 syntax that could be parsed. Proper package structure, imports, and element definitions. 0.5: Mostly valid but has some minor syntax issues. 0.0: Invalid syntax or not SysML v2."
+    },
+    "weight": 3.5
+  },
+  "metadata": {
+    "difficulty": "expert",
+    "category": "advanced-generation",
+    "source": "synthetic partial models",
+    "tags": ["advanced", "merge", "integration", "generation"]
+  }
+}

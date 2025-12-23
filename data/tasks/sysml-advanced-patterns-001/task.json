@@ -1,0 +1,33 @@
+{
+  "id": "sysml-advanced-patterns-001",
+  "type": "analysis",
+  "name": "SysML v2 Modeling Pattern Recognition",
+  "description": "Identify and analyze common SysML v2 modeling patterns used in a model, explaining their implementation and benefits.",
+  "prompt": "Analyze this SysML v2 model and identify the following modeling patterns. For each pattern, indicate whether it is present, provide evidence, and explain its benefits:\n\n1. **Definition-Usage Pattern** - Are there clear separations between definitions (part def, port def, etc.) and their usages? Where are definitions vs usages?\n2. **Layered Architecture** - Is there separation between logical and physical layers, or between different levels of abstraction?\n3. **Interface Segregation** - How are interfaces and ports organized? Are they small and focused or large and monolithic?\n4. **Variation Points** - Where is variability modeled? Are there variants, specializations, or configuration points?\n5. **Requirements Allocation** - How are requirements linked to design elements? Are there satisfy relationships or allocations?\n\nFor each pattern, provide:\n- **Evidence**: Specific examples from the model (with element names and line references if possible)\n- **Benefits**: Why this pattern is beneficial for this model\n- **Recommendation**: If the pattern is missing or could be improved, suggest how\n\nReturn your analysis in markdown format with clear sections for each pattern.\n\nExample format:\n```markdown\n## Patterns Identified\n\n### 1. Definition-Usage Pattern ✓\n**Evidence:**\n- Part definition `Engine` defined at line X\n- Part usage `engine : Engine` at line Y\n- Multiple wheel definitions show reuse\n\n**Benefits:**\n- Single source of truth for component specifications\n- Enables reuse across configurations\n- Changes propagate automatically\n\n### 2. Layered Architecture ✗\n**Evidence:**\n- No clear separation between layers found\n- All elements at same abstraction level\n\n**Recommendation:**\n- Consider separating logical decomposition from physical implementation\n```",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": [
+      "pattern_identification",
+      "evidence_quality",
+      "benefit_analysis",
+      "completeness"
+    ],
+    "rubric": {
+      "pattern_identification": "1.0: Correctly identifies all 5 patterns (or correctly identifies their absence) with clear understanding of each pattern's characteristics. 0.5: Identifies most patterns but misses some or has partial understanding. 0.0: Fails to identify major patterns present in the model.",
+      "evidence_quality": "1.0: Provides specific, concrete evidence for each pattern with element names and examples from the model (e.g., 'Engine definition at line 46, engine usage at line 19'). 0.5: Provides some evidence but it is vague or incomplete. 0.0: Claims patterns exist without providing evidence.",
+      "benefit_analysis": "1.0: Clearly explains the benefits of each identified pattern in the context of this specific model. Shows understanding of why patterns matter. 0.5: Generic benefits that could apply to any model. 0.0: No benefit analysis provided.",
+      "completeness": "1.0: Analyzes all 5 requested patterns. For missing patterns, provides recommendations for how they could be added. 0.5: Analyzes most patterns but skips some. 0.0: Only analyzes 1-2 patterns."
+    },
+    "weight": 3.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "advanced-analysis",
+    "source": "GfSE/SysML-v2-Models lawnmowerPackage.sysml",
+    "tags": ["advanced", "patterns", "architecture", "analysis"]
+  }
+}
