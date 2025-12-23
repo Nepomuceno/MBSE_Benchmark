@@ -1,0 +1,24 @@
+{
+  "id": "sysml-generate-requirements-001",
+  "type": "generation",
+  "name": "SysML v2 Requirement Generation from Natural Language",
+  "description": "Generate SysML v2 requirements from natural language specifications with doc strings and constraints",
+  "prompt": "Convert these requirements to SysML v2 requirement definitions:\n\n1. The battery shall have minimum 80% capacity after 500 charge cycles\n2. The system shall respond to user input within 100 milliseconds\n3. Operating temperature range shall be -20°C to 50°C\n\nRequirements:\n1. Package named 'SystemRequirements'\n2. Import ISQ::* and ScalarValues::*\n3. Create three requirement definitions:\n   - BatteryCapacityReq\n   - ResponseTimeReq\n   - OperatingTempReq\n4. Include doc strings describing each requirement\n5. Add constraint expressions where appropriate\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "combined",
+    "strategies": [
+      {"type": "sysml-validation", "weight": 0.4, "requiredElements": ["requirementDef:BatteryCapacityReq", "requirementDef:ResponseTimeReq", "requirementDef:OperatingTempReq"]},
+      {"type": "llm-judge", "weight": 0.6, "criteria": ["requirement_completeness", "constraint_correctness", "doc_string_quality"]}
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "generation",
+    "tags": ["generation", "requirements", "constraints", "documentation"]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "sysml-generate-actions-001",
+  "type": "generation",
+  "name": "SysML v2 Action Definition Generation",
+  "description": "Generate action definitions with flows for a coffee machine process",
+  "prompt": "Create SysML v2 action definitions for a coffee machine:\n\nRequirements:\n1. Package named 'CoffeeMachine'\n2. Import ScalarValues::*\n3. Create three action definitions:\n   - GrindBeans: input coffeeBeans, output groundCoffee\n   - BrewCoffee: input groundCoffee and water, output brewedCoffee\n   - MakeCoffee: composite action that combines GrindBeans and BrewCoffee with proper flows\n4. Use proper action def syntax with in/out parameters\n5. MakeCoffee should use action usages and flow connections\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "combined",
+    "strategies": [
+      {"type": "sysml-validation", "weight": 0.4, "requiredElements": ["actionDef:GrindBeans", "actionDef:BrewCoffee", "actionDef:MakeCoffee"]},
+      {"type": "llm-judge", "weight": 0.6, "criteria": ["action_structure", "flow_correctness", "composability"]}
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "generation",
+    "tags": ["generation", "actions", "flows", "composition"]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "sysml-generate-connections-001",
+  "type": "generation",
+  "name": "SysML v2 Connection and Binding Generation",
+  "description": "Generate a complete connection topology with typed ports and interface definitions",
+  "prompt": "Given these component definitions, generate the connection statements:\n\nRequirements:\n1. Package named 'ControlSystem'\n2. Assume these definitions exist:\n   - Controller with ports: sensorIn, actuatorOut\n   - Sensor with port: dataOut\n   - Actuator with port: commandIn\n3. Create:\n   - A part usage for each component (controller, sensor, actuator)\n   - Connect statements linking the ports:\n     * sensor.dataOut to controller.sensorIn\n     * controller.actuatorOut to actuator.commandIn\n   - An interface definition 'SensorInterface' for sensor-to-controller communication\n   - An interface definition 'ActuatorInterface' for controller-to-actuator communication\n4. Ensure all connections are properly typed and valid\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "combined",
+    "strategies": [
+      {"type": "sysml-validation", "weight": 0.3, "requiredElements": ["interfaceDef:SensorInterface", "interfaceDef:ActuatorInterface"]},
+      {"type": "llm-judge", "weight": 0.7, "criteria": ["connection_correctness", "type_compatibility", "interface_design"]}
+    ]
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "generation",
+    "tags": ["generation", "connections", "interfaces", "topology"]
+  }
+}

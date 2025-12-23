@@ -1,0 +1,22 @@
+{
+  "id": "sysml-generate-part-001",
+  "type": "generation",
+  "name": "SysML v2 Simple Part Definition Generation",
+  "description": "Generate a simple part definition from requirements with attributes and appropriate imports",
+  "prompt": "Create a SysML v2 part definition for a 'SmartThermostat' with the following attributes:\n\nRequirements:\n1. Package named 'SmartThermostat'\n2. Import ISQ::* and ScalarValues::*\n3. Part def 'SmartThermostat' with:\n   - attribute currentTemperature : ISQ::TemperatureValue\n   - attribute targetTemperature : ISQ::TemperatureValue\n   - attribute isHeating : Boolean\n   - attribute isCooling : Boolean\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "sysml-validation",
+    "weight": 1.0,
+    "requiredElements": ["package:SmartThermostat", "partDef:SmartThermostat", "attribute:currentTemperature", "attribute:targetTemperature", "attribute:isHeating", "attribute:isCooling"]
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "category": "generation",
+    "tags": ["generation", "parts", "attributes", "basic"]
+  }
+}

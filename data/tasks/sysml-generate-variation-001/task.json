@@ -1,0 +1,24 @@
+{
+  "id": "sysml-generate-variation-001",
+  "type": "generation",
+  "name": "SysML v2 Specialization and Variation Generation",
+  "description": "Generate a model with specialization and variations for electric vehicles",
+  "prompt": "Create a SysML v2 model for electric vehicles with specialization and variations:\n\nRequirements:\n1. Package named 'ElectricVehicles'\n2. Import ISQ::*\n3. Create base part def 'ElectricVehicle' with attributes:\n   - batteryCapacity : ISQ::EnergyValue\n   - range : ISQ::LengthValue\n   - weight : ISQ::MassValue\n4. Create three specializations:\n   - Sedan :> ElectricVehicle (add attribute passengers : Integer)\n   - SUV :> ElectricVehicle (add attribute cargoVolume : ISQ::VolumeValue)\n   - Truck :> ElectricVehicle (add attribute towingCapacity : ISQ::MassValue)\n5. Create a variation for battery types with variants:\n   - variation batteryType\n   - variant StandardBattery\n   - variant ExtendedRangeBattery\n\nUse proper SysML v2 specialization (:>) and variation/variant syntax.\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "combined",
+    "strategies": [
+      {"type": "sysml-validation", "weight": 0.3, "requiredElements": ["partDef:ElectricVehicle", "partDef:Sedan", "partDef:SUV", "partDef:Truck"]},
+      {"type": "llm-judge", "weight": 0.7, "criteria": ["specialization_correctness", "variation_syntax", "model_coherence"]}
+    ]
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "generation",
+    "tags": ["generation", "specialization", "variation", "hierarchy"]
+  }
+}

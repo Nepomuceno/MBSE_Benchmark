@@ -1,0 +1,24 @@
+{
+  "id": "sysml-generate-individual-001",
+  "type": "generation",
+  "name": "SysML v2 Individual Definition Generation",
+  "description": "Generate individual definitions and usages for a fleet management scenario",
+  "prompt": "Create SysML v2 individual definitions for a fleet management scenario:\n\nRequirements:\n1. Package named 'FleetManagement'\n2. Create a part def 'Vehicle_Type_A' with attributes:\n   - vin : String\n   - registrationDate : String\n3. Create two individual definitions:\n   - individual def Vehicle_001 :> Vehicle_Type_A with vin=\"VIN123\" and registrationDate=\"2024-01-15\"\n   - individual def Vehicle_002 :> Vehicle_Type_A with vin=\"VIN456\" and registrationDate=\"2024-02-20\"\n4. Create a part 'Fleet' containing individual part usages of these vehicles\n5. Demonstrate the difference between definitions and individuals\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "combined",
+    "strategies": [
+      {"type": "sysml-validation", "weight": 0.4, "requiredElements": ["partDef:Vehicle_Type_A", "individualDef:Vehicle_001", "individualDef:Vehicle_002"]},
+      {"type": "llm-judge", "weight": 0.6, "criteria": ["individual_syntax", "specialization_correct", "attribute_binding"]}
+    ]
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "generation",
+    "tags": ["generation", "individuals", "instances", "specialization"]
+  }
+}

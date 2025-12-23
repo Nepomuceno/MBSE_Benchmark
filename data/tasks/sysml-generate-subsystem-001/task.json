@@ -1,0 +1,24 @@
+{
+  "id": "sysml-generate-subsystem-001",
+  "type": "generation",
+  "name": "SysML v2 Complete Subsystem Generation",
+  "description": "Generate a complete GPS Navigation Subsystem with parts, ports, connections, and requirements",
+  "prompt": "Generate a SysML v2 model for a GPS Navigation Subsystem:\n\nRequirements:\n1. Package named 'GPSNavigationSubsystem'\n2. Import ISQ::* and ScalarValues::*\n3. Create part definitions:\n   - GPSReceiver with attribute accuracy : ISQ::LengthValue\n   - MapDisplay with attribute resolution : Integer\n   - RouteCalculator with attribute maxWaypoints : Integer\n4. Define port types for:\n   - GPS signals (latitude, longitude)\n   - User input\n   - Display output\n5. Create a subsystem part that instantiates these components and connects them\n6. Include 2 requirements:\n   - PositionAccuracyReq: accuracy shall be within 5 meters\n   - ResponseTimeReq: route calculation shall complete within 2 seconds\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "combined",
+    "strategies": [
+      {"type": "sysml-validation", "weight": 0.3, "requiredElements": ["partDef:GPSReceiver", "partDef:MapDisplay", "partDef:RouteCalculator"]},
+      {"type": "llm-judge", "weight": 0.7, "criteria": ["completeness", "syntax_validity", "architecture_quality", "requirement_integration"]}
+    ]
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "generation",
+    "tags": ["generation", "subsystem", "architecture", "integration"]
+  }
+}
