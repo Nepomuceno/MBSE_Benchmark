@@ -265,7 +265,7 @@ For each category, create documentation explaining:
 
 ## Success Criteria
 
-1. All 45 tasks are runnable
+1. All 59 tasks are runnable
 2. Validators correctly identify valid/invalid SysML v2
 3. Extraction tasks return structured data
 4. LLM judge provides consistent evaluations
