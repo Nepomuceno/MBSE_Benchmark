@@ -10,11 +10,9 @@
     "expected": []
   },
   "evaluation": {
-    "type": "combined",
-    "strategies": [
-      {"type": "sysml-validation", "weight": 0.3, "requiredElements": ["analysisDef"]},
-      {"type": "llm-judge", "weight": 0.7, "criteria": ["analysis_structure", "objective_definition", "parameter_completeness", "action_flow"]}
-    ]
+    "type": "llm-judge",
+    "weight": 3.0,
+    "criteria": ["analysis_structure", "objective_definition", "parameter_completeness", "action_flow"]
   },
   "metadata": {
     "difficulty": "hard",

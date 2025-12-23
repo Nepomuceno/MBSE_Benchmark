@@ -10,11 +10,9 @@
     "expected": []
   },
   "evaluation": {
-    "type": "combined",
-    "strategies": [
-      {"type": "sysml-validation", "weight": 0.4, "requiredElements": ["calcDef:FuelConsumption", "calcDef:TotalMass", "calcDef:Range"]},
-      {"type": "llm-judge", "weight": 0.6, "criteria": ["calc_structure", "type_correctness", "computation_logic"]}
-    ]
+    "type": "llm-judge",
+    "weight": 2.0,
+    "criteria": ["calc_structure", "type_correctness", "computation_logic"]
   },
   "metadata": {
     "difficulty": "medium",

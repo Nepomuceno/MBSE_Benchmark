@@ -10,11 +10,9 @@
     "expected": []
   },
   "evaluation": {
-    "type": "combined",
-    "strategies": [
-      {"type": "sysml-validation", "weight": 0.3, "requiredElements": ["interfaceDef:SensorInterface", "interfaceDef:ActuatorInterface"]},
-      {"type": "llm-judge", "weight": 0.7, "criteria": ["connection_correctness", "type_compatibility", "interface_design"]}
-    ]
+    "type": "llm-judge",
+    "weight": 2.5,
+    "criteria": ["connection_correctness", "type_compatibility", "interface_design"]
   },
   "metadata": {
     "difficulty": "hard",

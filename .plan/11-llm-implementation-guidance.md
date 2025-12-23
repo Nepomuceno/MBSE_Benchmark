@@ -130,20 +130,20 @@ When implementing a task, update the checklist in this file:
 
 #### Generation Tasks (GEN-001 to GEN-014)
 
-- [ ] GEN-001: sysml-generate-part-001
-- [ ] GEN-002: sysml-generate-ports-001
-- [ ] GEN-003: sysml-generate-requirements-001
-- [ ] GEN-004: sysml-generate-states-001
-- [ ] GEN-005: sysml-generate-actions-001
-- [ ] GEN-006: sysml-generate-subsystem-001
-- [ ] GEN-007: sysml-generate-variation-001
-- [ ] GEN-008: sysml-generate-usecase-001
-- [ ] GEN-009: sysml-generate-constraints-001
-- [ ] GEN-010: sysml-generate-calc-001
-- [ ] GEN-011: sysml-generate-connections-001
-- [ ] GEN-012: sysml-generate-analysis-001
-- [ ] GEN-013: sysml-generate-individual-001
-- [ ] GEN-014: sysml-generate-messages-001
+- [x] GEN-001: sysml-generate-part-001 (2025-12-23)
+- [x] GEN-002: sysml-generate-ports-001 (2025-12-23)
+- [x] GEN-003: sysml-generate-requirements-001 (2025-12-23)
+- [x] GEN-004: sysml-generate-states-001 (2025-12-23)
+- [x] GEN-005: sysml-generate-actions-001 (2025-12-23)
+- [x] GEN-006: sysml-generate-subsystem-001 (2025-12-23)
+- [x] GEN-007: sysml-generate-variation-001 (2025-12-23)
+- [x] GEN-008: sysml-generate-usecase-001 (2025-12-23)
+- [x] GEN-009: sysml-generate-constraints-001 (2025-12-23)
+- [x] GEN-010: sysml-generate-calc-001 (2025-12-23)
+- [x] GEN-011: sysml-generate-connections-001 (2025-12-23)
+- [x] GEN-012: sysml-generate-analysis-001 (2025-12-23)
+- [x] GEN-013: sysml-generate-individual-001 (2025-12-23)
+- [x] GEN-014: sysml-generate-messages-001 (2025-12-23)
 
 #### Transformation Tasks (TRN-001 to TRN-012)
 

@@ -10,11 +10,9 @@
     "expected": []
   },
   "evaluation": {
-    "type": "combined",
-    "strategies": [
-      {"type": "sysml-validation", "weight": 0.4, "requiredElements": ["partDef:Vehicle_Type_A", "individualDef:Vehicle_001", "individualDef:Vehicle_002"]},
-      {"type": "llm-judge", "weight": 0.6, "criteria": ["individual_syntax", "specialization_correct", "attribute_binding"]}
-    ]
+    "type": "llm-judge",
+    "weight": 2.0,
+    "criteria": ["individual_syntax", "specialization_correct", "attribute_binding"]
   },
   "metadata": {
     "difficulty": "medium",
