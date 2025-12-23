@@ -1,0 +1,29 @@
+{
+  "id": "sysml-transform-plantuml-001",
+  "type": "generation",
+  "name": "SysML v2 to PlantUML Diagram Transformation",
+  "description": "Transform a SysML v2 model into PlantUML class diagram code that visualizes the system architecture",
+  "prompt": "Convert this SysML v2 model into PlantUML code that visualizes the system architecture.\n\nMapping rules:\n1. Each 'part def' becomes a PlantUML class with <<part def>> stereotype\n2. Each 'port def' becomes a class with <<port def>> stereotype\n3. Specialization (:> or specializes) becomes inheritance arrow (<|--)\n4. Part usages (parts within a part def) become composition (*--)\n5. Attributes become class members with their types\n6. Port usages become associations with appropriate stereotypes\n7. Use clear, hierarchical layout directives for readability\n\nThe PlantUML should render a clear architecture diagram showing the system structure and relationships.\n\nOutput only valid PlantUML code starting with @startuml and ending with @enduml.",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["plantuml_validity", "relationship_mapping", "visual_clarity", "completeness"],
+    "rubric": {
+      "plantuml_validity": "1.0: Valid PlantUML code that starts with @startuml, ends with @enduml, uses correct syntax for classes, stereotypes, and relationships. 0.5: Mostly valid but minor syntax issues. 0.0: Invalid PlantUML that won't render.",
+      "relationship_mapping": "1.0: Correct PlantUML relationships - part def → class with <<part def>>, :> → <|--, part usages → *--, attributes as class members with types. 0.5: Most relationships correct but some mapping errors. 0.0: Major relationship mapping errors.",
+      "visual_clarity": "1.0: Diagram would render clearly with logical layout, readable labels, appropriate use of stereotypes and grouping. 0.5: Renders but layout or labels could be clearer. 0.0: Confusing or unreadable diagram.",
+      "completeness": "1.0: All major elements from model included (all part defs, key relationships, important attributes). 0.5: Most elements included but some notable omissions. 0.0: Many elements missing."
+    },
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models ForestFireObservationDrone.sysml",
+    "tags": ["transformation", "visualization", "plantuml"]
+  }
+}
