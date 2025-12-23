@@ -7,7 +7,7 @@ and are provided under the BSD 3-Clause License.
 
 ## Source
 
-**GfSE SysML-v2-Models Repository**
+### GfSE SysML-v2-Models Repository
 
 - URL: <https://github.com/GfSE/SysML-v2-Models>
 - License: BSD 3-Clause License

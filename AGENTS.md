@@ -107,10 +107,14 @@ Guidelines for AI agents contributing to this project.
 
 ## Before Submitting
 
-1. Run `bun test` - all tests pass
-2. Run `bun run lint` - no lint errors
-3. Run `bun run lint:md` - no markdown errors
+**IMPORTANT: Always run these checks before committing:**
+
+1. Run `bun run lint:md` - no markdown errors (run this first!)
+2. Run `bun test` - all tests pass
+3. Run `bun run lint` - no lint errors
 4. Run `bun run typecheck` - no type errors
 5. Check bundle size hasn't grown unnecessarily
 6. Verify no secrets in code
 7. Update documentation if behavior changes
+
+The markdown lint check (`bun run lint:md`) must pass before any commit.

@@ -11,6 +11,7 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["error_count", "correction_accuracy", "sysml_v2_knowledge"],
+    "rubric": "The model contains exactly 10 keyword errors that must be identified: (1) 'packge' should be 'package' (line 6), (2) 'imprt' should be 'import' (line 8), (3) 'prt' should be 'part' (line 10), (4) 'atribute' should be 'attribute' (line 11), (5) 'partdef' should be 'part def' (two words, line 23), (6) 'dfe' should be 'def' (line 35), (7) 'specliaizes' should be 'specializes' (line 39), (8) 'asert' should be 'assert' (line 51), (9) 'constrant' should be 'constraint' (line 55), (10) 'packege' should be 'package' (line 59). All 10 errors must be identified with their correct replacements.",
     "weight": 1.5
   },
   "metadata": {

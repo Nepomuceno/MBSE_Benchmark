@@ -11,6 +11,7 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["constraint_understanding", "expression_validity", "explanation_quality"],
+    "rubric": "The model contains 8 requirement definitions with constraints. Expected validity assessment: (1) TemperatureReq - VALID, uses abs() function and comparison, (2) CoolingReq - INVALID, missing right operand after '<=', (3) AirQualityReq - VALID, uses multiple conditions with && operators, (4) ResponseTimeReq - INVALID, dangling '&&' operator at end of expression, (5) InterfaceReq - INVALID, uses assignment '=' instead of comparison '==' for boolean check, (6) SafetyReq - VALID, proper boolean comparison with || operator, (7) PowerReq - INVALID, missing closing brace for constraint block, (8) ReliabilityReq - VALID, proper numeric comparison with >=. The response must correctly classify all 8 constraints and explain the specific errors in the 4 invalid ones.",
     "weight": 1.5
   },
   "metadata": {
