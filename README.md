@@ -128,8 +128,22 @@ LOCAL_MODEL_URL=http://localhost:11434
 │   └── results/          # Cached results
 ├── config/
 │   └── models.json       # Model configurations
-└── .plan/                # Implementation plans and progress
+└── .plan/                # Implementation plans for LLM agents
 ```
+
+## Implementation Plans (.plan)
+
+The `.plan/` folder contains implementation plans and progress tracking for
+AI agents working on this project. It includes:
+
+- Task specifications for all SysML v2 benchmark categories
+- Implementation checklists with progress tracking
+- Prompts for continuing development in new sessions
+- Best practices and guidelines for task implementation
+
+**Note:** This folder is committed to the repository to enable collaborative
+AI-assisted development. It will be cleaned up or archived after the
+implementation phase is complete.
 
 ## Benchmark Versioning
 
