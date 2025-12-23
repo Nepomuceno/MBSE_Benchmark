@@ -37,6 +37,9 @@
     "sysml-generate-analysis-001",
     "sysml-generate-individual-001",
     "sysml-generate-messages-001",
+    "sysml-advanced-quality-001",
+    "sysml-advanced-patterns-001",
+    "sysml-advanced-merge-001",
     "sysml-transform-todoc-001",
     "sysml-transform-req2model-001",
     "sysml-transform-refactor-001",
@@ -109,6 +112,15 @@
         "sysml-generate-analysis-001",
         "sysml-generate-individual-001",
         "sysml-generate-messages-001"
+        ]
+    },
+    "advanced": {
+      "name": "Advanced Semantic Analysis",
+      "description": "Expert-level tasks testing deep understanding of SysML v2 semantics, patterns, and model quality assessment",
+      "tasks": [
+        "sysml-advanced-quality-001",
+        "sysml-advanced-patterns-001",
+        "sysml-advanced-merge-001"
       ]
     },
     "transformation": {
