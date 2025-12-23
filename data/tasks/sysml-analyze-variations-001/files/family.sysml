@@ -90,14 +90,14 @@ package Family {
 	
 	//Interface definition, being a conection between two ports
 	interface def VerbalCommunication {
-		end communicationPartnerA : VerbalExchange;
-		end communicationPartnerB : ~VerbalExchange;
-	}
+			end communicationPartnerA : VerbalExchange;
+			end communicationPartnerB : ~VerbalExchange;
+		}
 	
-	// connections definition. A connection is a spezialisation of a part and a LinkObject(KerML) and therefore has structure. Here a Child has structure and a connection.
-	// the child can have two or more timeslices.
-	// two snapshots define the birth and death of child.
-	connection def Child :> Person {
+		// connections definition. A connection is a specialization of a part and a LinkObject(KerML) and therefore has structure. Here a Child has structure and a connection.
+		// the child can have two or more timeslices.
+		// two snapshots define the birth and death of child.
+		connection def Child :> Person {
 		end mother : Person[1];
 		end father : Person[1];
 		snapshot birth;
