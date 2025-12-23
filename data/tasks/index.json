@@ -22,7 +22,12 @@
     "sysml-analyze-variations-001",
     "sysml-analyze-topology-001",
     "sysml-analyze-individuals-001",
-    "sysml-analyze-crossref-001"
+    "sysml-analyze-crossref-001",
+    "sysml-req-satisfaction-001",
+    "sysml-req-coverage-001",
+    "sysml-req-constraint-001",
+    "sysml-req-derivation-001",
+    "sysml-req-impact-001"
   ],
   "categories": {
     "validation": {
@@ -63,6 +68,17 @@
         "sysml-analyze-topology-001",
         "sysml-analyze-individuals-001",
         "sysml-analyze-crossref-001"
+      ]
+    },
+    "requirements": {
+      "name": "Requirements Traceability",
+      "description": "Tasks testing ability to work with requirements, satisfaction relationships, and traceability",
+      "tasks": [
+        "sysml-req-satisfaction-001",
+        "sysml-req-coverage-001",
+        "sysml-req-constraint-001",
+        "sysml-req-derivation-001",
+        "sysml-req-impact-001"
       ]
     }
   }
