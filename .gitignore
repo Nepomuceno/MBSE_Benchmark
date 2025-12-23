@@ -41,3 +41,6 @@ public/
 
 # Planning documents (committed for LLM implementation guidance)
 # .plan/
+
+# Local planning documents (agent-specific, not committed)
+.plan/local/
