@@ -1,0 +1,27 @@
+{
+  "id": "sysml-analyze-specialization-001",
+  "type": "analysis",
+  "name": "SysML v2 Specialization Relationship Analysis",
+  "description": "Identify all specialization (inheritance) relationships in a SysML v2 model, understanding the type hierarchy.",
+  "prompt": "Analyze the specialization relationships in this SysML v2 model.\n\nIdentify all specialization relationships using the `:>` or `specializes` syntax. For each specialization:\n1. Identify the child type (the one being defined)\n2. Identify the parent type (the one being specialized)\n3. Note the kind of definition (item def, part def, port def, etc.)\n\nReturn a JSON object with:\n- \"specializations\": array of objects with \"child\", \"parent\", and \"kind\" fields\n- \"hierarchy\": a text representation showing the inheritance tree\n\nExample format:\n```json\n{\n  \"specializations\": [\n    {\"child\": \"Car\", \"parent\": \"Vehicle\", \"kind\": \"part def\"},\n    {\"child\": \"Truck\", \"parent\": \"Vehicle\", \"kind\": \"part def\"}\n  ],\n  \"hierarchy\": \"Vehicle\\n  ├── Car\\n  └── Truck\"\n}\n```",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["completeness", "accuracy", "hierarchy_clarity"],
+    "rubric": {
+      "completeness": "1.0: All specialization relationships found (SalesOrder, MaterialOrder, ProductOrder, PurchaseOrder, Inquiry, OrderQuotation, OrderConfirmation all specialize GeneralOrder). 0.5: Most relationships found but missing 1-2. 0.0: Missing more than half of the relationships.",
+      "accuracy": "1.0: All child-parent pairs correctly identified with correct 'kind' (item def). 0.5: Some relationships have wrong parent or kind. 0.0: Majority of relationships incorrectly identified.",
+      "hierarchy_clarity": "1.0: Hierarchy diagram clearly shows GeneralOrder as root with all specializations as children. 0.5: Hierarchy present but formatting is unclear or incomplete. 0.0: No hierarchy provided or completely wrong structure."
+    },
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models Fischertechnik.sysml",
+    "tags": ["analysis", "specialization", "inheritance", "hierarchy"]
+  }
+}

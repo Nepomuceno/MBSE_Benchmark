@@ -1,0 +1,28 @@
+{
+  "id": "sysml-analyze-individuals-001",
+  "type": "analysis",
+  "name": "SysML v2 Definitions vs Individuals Analysis",
+  "description": "Distinguish between definitions and individual instances in a SysML v2 model.",
+  "prompt": "Analyze this SysML v2 model to distinguish between definitions and individuals.\n\nIn SysML v2:\n- **Definitions** (`part def`, `item def`, etc.) define types/classes\n- **Individuals** (`individual part`, specific usages) are specific instances\n- **Usages** (`part name : Type`) are instances of definitions\n\nFor this model:\n1. Identify all definitions (types)\n2. Identify all individual parts and usages (instances)\n3. Explain the typing relationship between them\n4. Note any redefinitions (`:>>` syntax)\n\nReturn a JSON object with:\n- \"definitions\": array of type definitions\n- \"individuals\": array of individual instances/usages\n- \"relationships\": array describing instance-of relationships\n- \"explanation\": explanation of the definition vs instance distinction\n\nExample format:\n```json\n{\n  \"definitions\": [\n    {\"name\": \"Person\", \"kind\": \"part def\", \"description\": \"Base person type\"}\n  ],\n  \"individuals\": [\n    {\"name\": \"judge\", \"type\": \"adult\", \"kind\": \"part usage\", \"multiplicity\": \"[1]\"}\n  ],\n  \"relationships\": [\n    {\"individual\": \"judge\", \"instanceOf\": \"adult\", \"specializesFrom\": \"Person\"}\n  ],\n  \"explanation\": \"The model defines Person as a type, adult as a specialized usage, and judge as a specific individual...\"\n}\n```",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["definition_vs_instance", "relationship_understanding", "sysml_v2_concepts", "completeness"],
+    "rubric": {
+      "definition_vs_instance": "1.0: Correctly identifies definitions (Person, Child, Adoption_Certificate, Administrative_Document, etc.) vs usages (adult, judge, woman, man, child, adoptiveParent_1, adoptiveParent_2). Understands that 'part def' creates a type while 'part name : Type' creates an instance. 0.5: Some confusion between definitions and usages. 0.0: Cannot distinguish definitions from instances.",
+      "relationship_understanding": "1.0: Correctly traces typing: judge :> adult, adult : Person, child : Child. Understands :> for subsetting/specialization and : for typing. 0.5: Some relationships correct but others wrong. 0.0: Does not understand typing relationships.",
+      "sysml_v2_concepts": "1.0: Demonstrates understanding of SysML v2 concepts: connection def for associations (Child connects mother and father), redefinition syntax (:>>), multiplicity notation ([1], [*]). 0.5: Partial understanding. 0.0: Does not understand SysML v2 semantics.",
+      "completeness": "1.0: Identifies all major definitions and usages in the Family package. 0.5: Most elements found. 0.0: Missing many elements."
+    },
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models family.sysml",
+    "tags": ["analysis", "definitions", "individuals", "typing"]
+  }
+}

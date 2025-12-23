@@ -11,7 +11,11 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["error_detection", "location_accuracy", "fix_suggestion"],
-    "rubric": "The model contains exactly 2 missing closing braces. Expected errors to identify: (1) Missing closing brace for 'state def StopWatch' - this state definition block is never closed, (2) Missing closing brace for 'package StopWatchStates' - the package block is never closed. The response must identify both missing braces, their locations (StopWatch state def and StopWatchStates package), and suggest adding the closing braces at the end of the file.",
+    "rubric": {
+      "error_detection": "1.0: Identifies exactly 2 missing closing braces. Does not claim 'NO ERRORS FOUND'. 0.5: Identifies 1 of 2 missing braces. 0.0: Claims no errors or identifies wrong errors.",
+      "location_accuracy": "1.0: Correctly locates both errors - (1) Missing closing brace for 'state def StopWatch' and (2) Missing closing brace for 'package StopWatchStates'. 0.5: One location correct. 0.0: Both locations wrong.",
+      "fix_suggestion": "1.0: Suggests adding two closing braces '}' at the end of the file, one for StopWatch and one for the package. 0.5: Suggests fix but with wrong placement. 0.0: No fix suggested or completely wrong fix."
+    },
     "weight": 1.0
   },
   "metadata": {

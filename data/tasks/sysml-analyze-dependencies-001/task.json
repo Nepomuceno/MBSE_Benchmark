@@ -1,0 +1,28 @@
+{
+  "id": "sysml-analyze-dependencies-001",
+  "type": "analysis",
+  "name": "SysML v2 Package Dependency Analysis",
+  "description": "Analyze package structure and import dependencies between packages in a SysML v2 model.",
+  "prompt": "Analyze the package structure and dependencies in this SysML v2 model.\n\nFor each package:\n1. Identify the package name\n2. List all imports (using `import` keyword)\n3. Identify any nested packages\n4. Note any cross-package references\n\nCreate a dependency graph showing which packages depend on which.\n\nReturn a JSON object with:\n- \"packages\": array of package information\n- \"dependencies\": array of dependency relationships (from → to)\n- \"dependencyGraph\": a text representation of the dependency structure\n- \"circularDependencies\": any circular dependencies detected (empty array if none)\n\nExample format:\n```json\n{\n  \"packages\": [\n    {\"name\": \"MainPackage\", \"imports\": [\"LibraryPackage::*\"], \"nestedPackages\": [\"SubPackage\"]}\n  ],\n  \"dependencies\": [\n    {\"from\": \"MainPackage\", \"to\": \"LibraryPackage\"}\n  ],\n  \"dependencyGraph\": \"LibraryPackage\\n  ← MainPackage\",\n  \"circularDependencies\": []\n}\n```",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["dependency_identification", "graph_accuracy", "circular_detection", "completeness"],
+    "rubric": {
+      "dependency_identification": "1.0: Correctly identifies ForestFireObservationDrone imports Drone_SharedAssetsSuperset::** and any other import statements. 0.5: Finds some imports but misses others or misidentifies the imported package. 0.0: Cannot identify import dependencies.",
+      "graph_accuracy": "1.0: Dependency graph correctly shows direction of dependencies (importing package depends on imported package). 0.5: Graph present but direction unclear or some edges wrong. 0.0: No graph or completely incorrect.",
+      "circular_detection": "1.0: Correctly identifies whether circular dependencies exist (none in this model). 0.5: Attempts detection but with errors. 0.0: Does not address circular dependencies.",
+      "completeness": "1.0: Identifies the ForestFireObservationDrone package and all its imports, plus references to external types (Drone, DroneEngine, BatteryCapacityKind, etc.). 0.5: Finds main package but misses some cross-references. 0.0: Missing major elements."
+    },
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models ForestFireObservationDrone.sysml",
+    "tags": ["analysis", "packages", "dependencies", "imports"]
+  }
+}

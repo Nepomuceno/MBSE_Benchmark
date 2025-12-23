@@ -11,7 +11,11 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["completeness", "json_validity", "connection_accuracy"],
-    "rubric": "The answer must be valid JSON representing an array of connection objects. Each object must contain at least a 'source' field and a 'target' field, and may optionally include a 'context' field. The JSON must include all 'connect' statements present in the provided SysML v2 model. Key connections should include: materialIn to Heating.productIn, Heating.productOut to Bending.productIn, Bending.productOut to Cutting.productIn, Customer.inquiryOut to Manufacturer.Sales.inquiryIn, and Supplier.materialOut to Manufacturer.Storage.materialIn.",
+    "rubric": {
+      "completeness": "1.0: Extracts all ~25 connect statements including AngleProductionLine internal chain (materialIn→Heating, Heating→Bending, Bending→Cutting, Cutting→Drilling, Drilling→Grinding, Grinding→Polishing, Polishing→productOut), Manufacturer internal connections, and external connections (Customer↔Manufacturer, Supplier↔Manufacturer). 0.5: Extracts 15-24 connections. 0.0: Extracts fewer than 15 connections.",
+      "json_validity": "1.0: Valid JSON array with objects containing 'source' and 'target' fields. 0.5: Valid JSON but inconsistent structure. 0.0: Invalid JSON.",
+      "connection_accuracy": "1.0: Source and target references exactly match the model syntax (e.g., 'Heating.productOut' not 'heating.output'). 0.5: Most references correct but some have naming errors. 0.0: Many references incorrect or fabricated."
+    },
     "weight": 1.5
   },
   "metadata": {

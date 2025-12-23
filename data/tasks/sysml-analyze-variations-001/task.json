@@ -1,0 +1,28 @@
+{
+  "id": "sysml-analyze-variations-001",
+  "type": "analysis",
+  "name": "SysML v2 Variation Point Analysis",
+  "description": "Identify and analyze variation points and their variants in a SysML v2 model.",
+  "prompt": "Analyze the variation points in this SysML v2 model.\n\nIdentify all `variation` declarations and their `variant` options:\n1. Find each variation point\n2. List all available variants for each variation\n3. Explain what differs between the variants\n4. Note any constraints or conditions on variant selection\n\nReturn a JSON object with:\n- \"variationPoints\": array of variation point information\n- \"summary\": explanation of the variation modeling approach\n\nExample format:\n```json\n{\n  \"variationPoints\": [\n    {\n      \"name\": \"adoption_certificate\",\n      \"type\": \"part\",\n      \"variants\": [\n        {\"name\": \"TypeB1\", \"description\": \"Adoption with woman as parent1\"},\n        {\"name\": \"TypeB2\", \"description\": \"Adoption with man as parent1\"},\n        {\"name\": \"TypeC\", \"description\": \"Adoption with both adoptive parents\"}\n      ],\n      \"differences\": \"The variants differ in which adults serve as the adoptive parents\"\n    }\n  ],\n  \"summary\": \"The model uses variation to represent different legal adoption scenarios...\"\n}\n```",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["variation_identification", "variant_description", "difference_explanation", "completeness"],
+    "rubric": {
+      "variation_identification": "1.0: Finds both variation points: adoption_certificate (with 3 variants) and rodBolt in ConnectingRod (with 2 variants). 0.5: Finds one variation point but misses the other. 0.0: Cannot identify any variation points.",
+      "variant_description": "1.0: For adoption_certificate: correctly describes TypeB1 (woman + adoptiveParent), TypeB2 (man + adoptiveParent), TypeC (both adoptive parents). For rodBolt: describes rodBoltA (Steel, 2.5 Mass) and rodBoltB (Aluminum, 2.0 Mass). 0.5: Describes variants but with some inaccuracies. 0.0: Variants not properly described.",
+      "difference_explanation": "1.0: Clearly explains what differs: adoption_certificate variants differ in parent combinations; rodBolt variants differ in material (Steel vs Aluminum) and mass. 0.5: Some differences explained but not all. 0.0: No meaningful difference explanation.",
+      "completeness": "1.0: Covers all variation points and all variants with their attributes. 0.5: Most content covered. 0.0: Major omissions."
+    },
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models family.sysml",
+    "tags": ["analysis", "variation", "variants", "product-line"]
+  }
+}

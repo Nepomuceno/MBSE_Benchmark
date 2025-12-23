@@ -11,7 +11,11 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["completeness", "json_validity", "endpoint_accuracy"],
-    "rubric": "The answer must be valid JSON array containing interface definition objects. The model contains one interface definition 'VerbalCommunication' with two ends: 'communicationPartnerA' of type 'VerbalExchange' (not conjugate) and 'communicationPartnerB' of type '~VerbalExchange' (conjugate). The response should correctly identify this interface and its endpoint structure.",
+    "rubric": {
+      "completeness": "1.0: Extracts the VerbalCommunication interface def and all 4 interface usages (verbalAdultCommunicationActionWoman, verbalAdultCommunicationActionMan, verbalParentingCommunicationActionWoman, and one more). 0.5: Finds the interface def but misses some usages. 0.0: Misses the interface def.",
+      "json_validity": "1.0: Valid JSON array with correct object structure including 'name' and 'ends' fields. 0.5: Valid JSON but minor structural issues. 0.0: Invalid JSON.",
+      "endpoint_accuracy": "1.0: Correctly identifies both ends of VerbalCommunication: communicationPartnerA (VerbalExchange, not conjugate) and communicationPartnerB (~VerbalExchange, conjugate). Understands ~ prefix means conjugate. 0.5: Identifies ends but conjugate flag incorrect. 0.0: Wrong end names or types."
+    },
     "weight": 1.5
   },
   "metadata": {

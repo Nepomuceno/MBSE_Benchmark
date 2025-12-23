@@ -1,0 +1,28 @@
+{
+  "id": "sysml-analyze-topology-001",
+  "type": "analysis",
+  "name": "SysML v2 Connection Topology Analysis",
+  "description": "Analyze the connection topology and identify communication patterns in a SysML v2 model.",
+  "prompt": "Analyze the connection topology in this SysML v2 manufacturing system model.\n\nIdentify:\n1. **Hub components**: Parts with many connections (high connectivity)\n2. **Linear chains**: Sequences of connected parts (A → B → C)\n3. **Bidirectional vs unidirectional flows**: Based on port directions (in/out)\n4. **Connection patterns**: How parts communicate through ports\n\nReturn a JSON object with:\n- \"hubs\": array of parts with high connectivity\n- \"chains\": array of linear connection sequences\n- \"connections\": array of all connections with direction info\n- \"topologyDiagram\": a text representation of the topology\n\nExample format:\n```json\n{\n  \"hubs\": [\n    {\"name\": \"Manufacturer\", \"connectionCount\": 8, \"role\": \"Central coordination\"}\n  ],\n  \"chains\": [\n    {\"name\": \"ProductionLine\", \"sequence\": [\"Heating\", \"Bending\", \"Cutting\", \"Drilling\", \"Grinding\", \"Polishing\"]}\n  ],\n  \"connections\": [\n    {\"from\": \"Customer.inquiryOut\", \"to\": \"Manufacturer.Sales.inquiryIn\", \"direction\": \"unidirectional\"}\n  ],\n  \"topologyDiagram\": \"Customer ←→ Manufacturer ←→ Supplier\"\n}\n```",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["topology_understanding", "pattern_recognition", "flow_direction", "completeness"],
+    "rubric": {
+      "topology_understanding": "1.0: Correctly identifies the three main actors (Customer, Manufacturer, Supplier) and Manufacturer's internal structure (Sales, Production, Storage, Dispatch, Procurement, ProductionScheduling). 0.5: Identifies main structure but misses some components. 0.0: Does not understand the topology.",
+      "pattern_recognition": "1.0: Identifies AngleProductionLine as a linear chain (Heating→Bending→Cutting→Drilling→Grinding→Polishing) and Manufacturer as the central hub connecting Customer and Supplier. 0.5: Identifies some patterns but misses important ones. 0.0: Cannot recognize patterns.",
+      "flow_direction": "1.0: Correctly interprets port directions (in/out, ~PortDef for conjugate) to determine flow direction. Identifies bidirectional communication between Customer and Manufacturer. 0.5: Some flow directions correct but others wrong. 0.0: Does not understand flow direction.",
+      "completeness": "1.0: Documents all major connections including internal Manufacturer connections and external connections to Customer/Supplier. 0.5: Most connections documented. 0.0: Missing many connections."
+    },
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models Fischertechnik.sysml",
+    "tags": ["analysis", "topology", "connections", "patterns"]
+  }
+}

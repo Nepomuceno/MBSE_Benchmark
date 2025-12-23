@@ -1,0 +1,27 @@
+{
+  "id": "sysml-analyze-flow-001",
+  "type": "analysis",
+  "name": "SysML v2 Action Flow Tracing",
+  "description": "Trace action flows and understand the sequence of operations in a SysML v2 model.",
+  "prompt": "Analyze the action flow in this SysML v2 model.\n\nTrace the sequence of actions defined using `action` definitions. For each action sequence:\n1. Identify the parent action containing the flow\n2. List the sequence of sub-actions in execution order (using `first`, `then`, `done` keywords)\n3. Identify any flow connections between actions\n\nReturn a JSON object with:\n- \"actionFlows\": array of objects describing each action flow\n- \"flowDiagram\": a text representation showing the action sequence\n\nExample format:\n```json\n{\n  \"actionFlows\": [\n    {\n      \"name\": \"cutgrass\",\n      \"sequence\": [\"start\", \"Start Engine\", \"Push mower\", \"Shutoff mower\", \"done\"],\n      \"parent\": \"lawnmower\"\n    }\n  ],\n  \"flowDiagram\": \"cutgrass: start → Start Engine → Push mower → Shutoff mower → done\"\n}\n```",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["flow_tracing", "sequence_accuracy", "completeness"],
+    "rubric": {
+      "flow_tracing": "1.0: Correctly traces the cutgrass action flow: start → 'Start Engine' → 'Push mower' → 'Shutoff mower' → done using first/then keywords. 0.5: Identifies the flow but misses some steps or order. 0.0: Cannot trace the action flow.",
+      "sequence_accuracy": "1.0: All action names exactly match the model ('Start Engine', 'Push mower', 'Shutoff mower') and order is correct. 0.5: Some action names slightly wrong or order partially incorrect. 0.0: Major errors in action names or sequence.",
+      "completeness": "1.0: Identifies the cutgrass action, its parent (lawnmower), and all sub-actions. Also notes any other actions in the model. 0.5: Finds main flow but misses context. 0.0: Missing major components."
+    },
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models lawnmowerPackage.sysml",
+    "tags": ["analysis", "actions", "flow", "sequence"]
+  }
+}

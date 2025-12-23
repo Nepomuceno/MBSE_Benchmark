@@ -11,7 +11,11 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["error_count", "correction_accuracy", "sysml_v2_knowledge"],
-    "rubric": "The model contains exactly 10 keyword errors that must be identified: (1) 'packge' should be 'package' (line 6), (2) 'imprt' should be 'import' (line 8), (3) 'prt' should be 'part' (line 10), (4) 'atribute' should be 'attribute' (line 11), (5) 'partdef' should be 'part def' (two words, line 23), (6) 'dfe' should be 'def' (line 35), (7) 'specliaizes' should be 'specializes' (line 39), (8) 'asert' should be 'assert' (line 51), (9) 'constrant' should be 'constraint' (line 55), (10) 'packege' should be 'package' (line 59). All 10 errors must be identified with their correct replacements.",
+    "rubric": {
+      "error_count": "1.0: Identifies all 10 keyword errors. 0.5: Identifies 6-9 errors. 0.0: Identifies fewer than 6 errors or reports many false positives.",
+      "correction_accuracy": "1.0: All corrections are correct - 'packge'→'package', 'imprt'→'import', 'prt'→'part', 'atribute'→'attribute', 'partdef'→'part def' (two words), 'dfe'→'def', 'specliaizes'→'specializes', 'asert'→'assert', 'constrant'→'constraint', 'packege'→'package'. 0.5: Most corrections correct but 2-3 wrong. 0.0: Majority of corrections wrong.",
+      "sysml_v2_knowledge": "1.0: Demonstrates understanding that 'part def' is two words in SysML v2, recognizes all valid keyword spellings, and doesn't flag correct keywords as errors. 0.5: Some confusion about valid keywords. 0.0: Poor understanding of SysML v2 keywords."
+    },
     "weight": 1.5
   },
   "metadata": {

@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "tasks": [
     "sysml-valid-detection-001",
     "sysml-invalid-braces-001",
@@ -14,7 +14,15 @@
     "sysml-extract-hierarchy-001",
     "sysml-extract-attributes-001",
     "sysml-extract-actions-001",
-    "sysml-extract-interfaces-001"
+    "sysml-extract-interfaces-001",
+    "sysml-analyze-specialization-001",
+    "sysml-analyze-flow-001",
+    "sysml-analyze-constraints-001",
+    "sysml-analyze-dependencies-001",
+    "sysml-analyze-variations-001",
+    "sysml-analyze-topology-001",
+    "sysml-analyze-individuals-001",
+    "sysml-analyze-crossref-001"
   ],
   "categories": {
     "validation": {
@@ -41,6 +49,20 @@
         "sysml-extract-attributes-001",
         "sysml-extract-actions-001",
         "sysml-extract-interfaces-001"
+      ]
+    },
+    "analysis": {
+      "name": "SysML v2 Analysis",
+      "description": "Tasks testing ability to analyze relationships, patterns, and semantics in SysML v2 models",
+      "tasks": [
+        "sysml-analyze-specialization-001",
+        "sysml-analyze-flow-001",
+        "sysml-analyze-constraints-001",
+        "sysml-analyze-dependencies-001",
+        "sysml-analyze-variations-001",
+        "sysml-analyze-topology-001",
+        "sysml-analyze-individuals-001",
+        "sysml-analyze-crossref-001"
       ]
     }
   }

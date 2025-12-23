@@ -1,0 +1,28 @@
+{
+  "id": "sysml-analyze-constraints-001",
+  "type": "analysis",
+  "name": "SysML v2 Constraint Analysis",
+  "description": "Analyze constraints in requirements and explain what behaviors they enforce or prohibit.",
+  "prompt": "Analyze the constraints in this SysML v2 model.\n\nFor each requirement definition containing a `require constraint`:\n1. Identify the requirement name and its documentation\n2. Extract the constraint expression\n3. Explain what the constraint enforces in plain language\n4. Describe what system behavior would violate this constraint\n\nReturn a JSON object with:\n- \"constraints\": array of analyzed constraints\n- \"summary\": overall summary of the constraint patterns\n\nExample format:\n```json\n{\n  \"constraints\": [\n    {\n      \"requirement\": \"TemperatureRegulationReqDef\",\n      \"doc\": \"The HVAC system shall regulate the cabin temperature...\",\n      \"expression\": \"abs(actualTemperature - setTemperature) <= 1\",\n      \"meaning\": \"The actual temperature must be within 1 degree of the set temperature\",\n      \"violation\": \"Temperature deviating more than 1 degree from the setpoint\"\n    }\n  ],\n  \"summary\": \"The model defines temperature, performance, and reliability constraints...\"\n}\n```",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["constraint_understanding", "violation_examples", "clarity", "completeness"],
+    "rubric": {
+      "constraint_understanding": "1.0: Correctly interprets all constraint expressions (e.g., abs(actualTemperature - setTemperature) <= 1 means temperature must stay within 1 degree, responseTime <= maxResponseTime means quick response required). 0.5: Understands most constraints but misinterprets some. 0.0: Fundamentally misunderstands constraint semantics.",
+      "violation_examples": "1.0: Provides concrete, realistic violation scenarios for each constraint (e.g., 'temperature at 25°C when set to 22°C violates the 1-degree tolerance'). 0.5: Some violation examples but not for all constraints or examples are vague. 0.0: No meaningful violation examples.",
+      "clarity": "1.0: Explanations are clear, concise, and use plain language accessible to non-experts. 0.5: Explanations understandable but verbose or slightly confusing. 0.0: Explanations unclear or too technical.",
+      "completeness": "1.0: Analyzes all 17 requirement definitions in the HVAC model. 0.5: Covers most requirements (12-16). 0.0: Covers fewer than half of the requirements."
+    },
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models HVACSystemRequirements.sysml",
+    "tags": ["analysis", "constraints", "requirements", "validation"]
+  }
+}
