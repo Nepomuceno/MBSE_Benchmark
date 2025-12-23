@@ -9,8 +9,9 @@
     "initial": "files"
   },
   "evaluation": {
-    "type": "element-extraction",
-    "expectedElements": ["VehicleStartSignal", "VehicleOnSignal", "VehicleOffSignal"],
+    "type": "llm-judge",
+    "criteria": ["json_validity", "action_extraction", "parameter_accuracy"],
+    "rubric": "The response must be valid JSON containing an array of action definition objects. Each object must have 'name', 'inputs', and 'outputs' fields. The model contains 3 action definitions: VehicleStartSignal, VehicleOnSignal, and VehicleOffSignal. All three are simple action definitions with no input or output parameters, so 'inputs' and 'outputs' arrays should be empty for each. Score based on: (1) Valid JSON array structure, (2) All 3 action definitions included, (3) Correct empty arrays for inputs/outputs, (4) No fabricated parameters.",
     "weight": 1.0
   },
   "metadata": {

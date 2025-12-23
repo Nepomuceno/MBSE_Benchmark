@@ -11,7 +11,7 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["hierarchy_completeness", "relationship_accuracy", "structure_clarity"],
-    "rubric": "The model defines a factory hierarchy with the following expected structure: factoryContext (root) contains Manufacturer, Customer, and Supplier. Manufacturer contains Production, Storage, Sales, Procurement, ProductionScheduling, and Dispatch. Production contains ProductionControl and AngleProductionLine. AngleProductionLine contains Heating, Bending, Cutting, Drilling, Grinding, and Polishing. The response must show this complete 4-level hierarchy with all 16 parts correctly nested: factoryContext > {Manufacturer > {Production > {ProductionControl, AngleProductionLine > {Heating, Bending, Cutting, Drilling, Grinding, Polishing}}, Storage, Sales, Procurement, ProductionScheduling, Dispatch}, Customer, Supplier}.",
+    "rubric": "The model defines a factory hierarchy with the following expected structure: factoryContext (root) contains Manufacturer, Customer, and Supplier. Manufacturer contains Production, Storage, Sales, Procurement, ProductionScheduling, and Dispatch. Production contains ProductionControl and AngleProductionLine. AngleProductionLine contains Heating, Bending, Cutting, Drilling, Grinding, and Polishing. The response must show this complete 4-level hierarchy with all 18 parts correctly nested: factoryContext > {Manufacturer > {Production > {ProductionControl, AngleProductionLine > {Heating, Bending, Cutting, Drilling, Grinding, Polishing}}, Storage, Sales, Procurement, ProductionScheduling, Dispatch}, Customer, Supplier}.",
     "weight": 2.0
   },
   "metadata": {
