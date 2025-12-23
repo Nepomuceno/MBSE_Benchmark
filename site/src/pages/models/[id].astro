@@ -170,8 +170,8 @@ const getScoreColor = (score: number) => {
                       <div>
                         <div class="text-slate-500 text-xs uppercase tracking-wider mb-1">Tool Results ({iter.toolResults.length})</div>
                         <div class="space-y-2">
-                          {iter.toolResults.map((res) => (
-                            <div class="bg-white border border-slate-200 rounded p-3">
+                          {iter.toolResults.map((res, index) => (
+                            <div class="bg-white border border-slate-200 rounded p-3" key={`${res.tool}-${index}`}>
                               <div class="text-xs font-mono text-emerald-600 mb-1">{res.tool}</div>
                               <pre class="text-xs text-slate-600 overflow-x-auto max-h-24 overflow-y-auto">{JSON.stringify(res.result, null, 2)}</pre>
                             </div>
