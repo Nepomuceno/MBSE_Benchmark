@@ -1,0 +1,29 @@
+{
+  "id": "sysml-state-complex-001",
+  "type": "analysis",
+  "name": "SysML v2 Complex State Machine Analysis",
+  "description": "Analyze nested and parallel state machines with entry/exit actions, guard conditions, and do activities.",
+  "prompt": "Analyze this complex SysML v2 state machine that includes parallel regions.\n\nProvide a comprehensive analysis including:\n\n1. **Parallel Regions** - Identify all parallel state regions and their states\n2. **Entry Actions** - List all entry actions for each state\n3. **Exit Actions** - List all exit actions for each state\n4. **Do Activities** - List all do activities within states\n5. **Guard Conditions** - Identify any guard conditions on transitions\n6. **State Transitions** - Document transitions within each region\n\nFormat your response with clear sections for each aspect.\n\nExample format:\n\n## Parallel Regions\n1. **operatingStates**\n   - States: off, starting, on\n   - Description: Manages operational state of vehicle\n\n## Entry Actions\n| State    | Entry Action         |\n|----------|---------------------|\n| on       | performSelfTest()    |\n\n## Exit Actions\n| State | Exit Action          |\n|-------|---------------------|\n| on    | applyParkingBrake()  |\n\n## Do Activities\n| State | Activity             |\n|-------|---------------------|\n| on    | providePower()       |\n\n## Guard Conditions\n- starting → on: if (selfTestPassed)\n\n## Transitions\nProvide transitions for each parallel region separately.",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["parallel_understanding", "action_identification", "guard_recognition", "completeness"],
+    "rubric": {
+      "parallel_understanding": "1.0: Correctly identifies both parallel regions (operatingStates and healthStates) with their respective states. Understands that they run concurrently. 0.5: Identifies parallel structure but misses details or doesn't explain concurrent nature. 0.0: Fails to recognize parallel regions.",
+      "action_identification": "1.0: Correctly identifies all entry actions (performSelfTest, initializeSystems, runDiagnostics), exit action (applyParkingBrake), and do activities (providePower, senseTemperature, runDiagnostics). 0.5: Identifies most actions but misses some or categorizes incorrectly. 0.0: Misses majority of actions or completely incorrect.",
+      "guard_recognition": "1.0: Identifies the guard condition 'if (selfTestPassed)' on the starting→on transition. 0.5: Mentions guard conditions but incorrectly. 0.0: Does not identify guard conditions.",
+      "completeness": "1.0: Provides comprehensive analysis covering all states in both regions (operatingStates: off, starting, on; healthStates: normal, degraded, maintenance) and all transitions between them. 0.5: Analysis covers most elements but missing significant details. 0.0: Incomplete or superficial analysis."
+    },
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "analysis",
+    "source": "Custom VehicleStates.sysml",
+    "tags": ["states", "state-machine", "parallel-states", "actions", "guards", "complex"],
+    "weight": 2.5
+  }
+}

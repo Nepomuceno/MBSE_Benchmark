@@ -1,0 +1,29 @@
+{
+  "id": "sysml-state-extraction-001",
+  "type": "analysis",
+  "name": "SysML v2 State Machine Extraction",
+  "description": "Extract and document states, transitions, and structure from a SysML v2 state machine.",
+  "prompt": "Analyze this SysML v2 state machine and provide:\n\n1. **List of all states** - Include initial and final states if present\n2. **Transition table** - Format: | From | Trigger | To |\n3. **ASCII state diagram** - Visual representation of the state machine\n4. **Analysis** - Identify any unreachable states, ambiguities, or non-deterministic transitions\n\nExample format:\n\n## States\n- ready (initial)\n- running\n- paused\n- stopped\n\n## Transition Table\n| From    | Trigger             | To      |\n|---------|---------------------|---------|\n| ready   | VehicleStartSignal  | running |\n\n## ASCII State Diagram\n```\n[ready] --VehicleStartSignal--> [running]\n```\n\n## Analysis\n- Note any issues or observations about the state machine structure",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["state_completeness", "transition_accuracy", "diagram_quality", "ambiguity_detection"],
+    "rubric": {
+      "state_completeness": "1.0: All 4 states identified (ready, running, paused, stopped) with correct initial state. 0.5: 3 states found or missing initial state designation. 0.0: Fewer than 3 states found.",
+      "transition_accuracy": "1.0: All transitions correctly identified with proper from-state, trigger (VehicleStartSignal, VehicleOnSignal, VehicleOffSignal), and to-state. Notes ambiguity in paused state having two transitions with same trigger. 0.5: Most transitions correct but missing some or has minor errors. 0.0: Majority of transitions incorrect or missing.",
+      "diagram_quality": "1.0: Clear ASCII diagram showing all states and transitions with proper flow direction. 0.5: Diagram present but unclear or missing some elements. 0.0: No diagram or completely incorrect.",
+      "ambiguity_detection": "1.0: Identifies that paused state has two outgoing transitions on VehicleOffSignal (ambiguity/non-determinism). 0.5: Partial recognition of issues. 0.0: No analysis of potential issues."
+    },
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "analysis",
+    "source": "GfSE/SysML-v2-Models StopWatchStates.sysml",
+    "tags": ["states", "state-machine", "transitions", "behavior"],
+    "weight": 2.0
+  }
+}
