@@ -11,6 +11,7 @@
   "evaluation": {
     "type": "llm-judge",
     "criteria": ["semantic_understanding", "reference_checking", "completeness"],
+    "rubric": "The model contains at least 15 semantic errors that should be identified: (1) UndefinedPackage import does not exist, (2) UndefinedType::speed reference undefined, (3) PowerUnit::watt reference undefined, (4) RoadInterfacePort type undefined (should be VehicleToRoadPort), (5) startEngine action not defined, (6) FrontAxle incorrectly specializes RearAxle (should be Axle), (7) Gasoline item undefined (should be Fuel), (8) FuelCommand type undefined (should be FuelCmd) in FuelCmdPort, (9) TorqueValue undefined (should be Torque) in DrivePwrPort, (10) FuelCommand undefined in ProvidePower action, (11) TorqueOutput undefined in ProvidePower action, (12) MotorTorque undefined in GenerateTorque action, (13) MassUnit::kilogram undefined in MassRequirement, (14) SportsCar undefined (should be Vehicle) in SpeedRequirement, (15) TurboEngine undefined (should be Engine), (16) AutomaticTransmission undefined, (17) inputPort undefined on transmission. A good response should identify most of these undefined references and type errors.",
     "weight": 2.0
   },
   "metadata": {

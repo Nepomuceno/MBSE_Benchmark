@@ -9,10 +9,9 @@
     "initial": "files"
   },
   "evaluation": {
-    "type": "llm-judge",
-    "criteria": ["completeness", "json_validity", "parameter_accuracy"],
-    "rubric": "The answer must be valid JSON array. Each element must be an object with keys 'name', 'inputs', and 'outputs'. The 'name' must match an action definition name from the SysML v2 model. The 'inputs' and 'outputs' fields must each be arrays of objects with keys 'name' and 'type' describing the corresponding parameters. All action definitions in the provided model must be included (VehicleStartSignal, VehicleOnSignal, VehicleOffSignal), even if they have no parameters (use empty arrays for inputs/outputs).",
-    "weight": 1.5
+    "type": "element-extraction",
+    "expectedElements": ["VehicleStartSignal", "VehicleOnSignal", "VehicleOffSignal"],
+    "weight": 1.0
   },
   "metadata": {
     "difficulty": "medium",
