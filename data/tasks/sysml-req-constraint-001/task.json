@@ -1,0 +1,27 @@
+{
+  "id": "sysml-req-constraint-001",
+  "type": "analysis",
+  "name": "Constraint Verification with Calculation",
+  "description": "Verify if constraint expressions are satisfied by calculating actual values from component attributes.",
+  "prompt": "Analyze the vehicleMassRequirement constraint in this model.\n\n1. State the constraint expression and its bound value (massRequired)\n2. Calculate the actual vehicle mass by summing all component masses:\n   - List each component and its mass value from the model\n   - Show the summation step-by-step\n   - Include both structural mass and fuel mass\n3. Determine if the constraint is satisfied (massActual <= massRequired)\n4. Explain your reasoning with specific values\n\nFormat your response as:\n\n**Constraint**: [expression] with bound [value]\n\n**Calculation**:\n- body: [value] kg\n- engine: [value] kg\n- transmission: [value] kg\n- rearAxle: [value] kg\n- fuelTank (empty): [value] kg\n- fuelMass: [value] kg\n- frontAxle: [value] kg\n- driveshaft: [value] kg\n**Total Mass**: [sum] kg\n\n**Result**: PASS or FAIL\n**Explanation**: [reasoning]",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["calculation_accuracy", "reasoning_quality", "constraint_verification"],
+    "rubric": {
+      "calculation_accuracy": "1.0: Correctly calculates total mass as 2410 kg (75+800+875+200+100+200+100+60) and identifies all component masses. 0.5: Calculation mostly correct but misses one or two components or has minor arithmetic errors. 0.0: Significant calculation errors.",
+      "reasoning_quality": "1.0: Clear step-by-step reasoning showing the constraint massActual <= 2000, calculated value 2410 kg, and conclusion that it FAILS because 2410 > 2000. 0.5: Reasoning present but lacks clarity or specific values. 0.0: Poor or missing reasoning.",
+      "constraint_verification": "1.0: Correctly identifies that the constraint FAILS and provides specific evidence (expected values: FAIL, 2410 kg, 2000 kg bound). 0.5: Identifies failure but lacks specifics. 0.0: Incorrect conclusion."
+    },
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "analysis",
+    "source": "VehicleModel.sysml",
+    "tags": ["requirements", "constraints", "calculation", "verification"]
+  }
+}

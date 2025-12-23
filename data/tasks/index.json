@@ -23,6 +23,11 @@
     "sysml-analyze-topology-001",
     "sysml-analyze-individuals-001",
     "sysml-analyze-crossref-001",
+    "sysml-req-satisfaction-001",
+    "sysml-req-coverage-001",
+    "sysml-req-constraint-001",
+    "sysml-req-derivation-001",
+    "sysml-req-impact-001",
     "sysml-generate-part-001",
     "sysml-generate-ports-001",
     "sysml-generate-requirements-001",
@@ -92,6 +97,44 @@
         "sysml-analyze-topology-001",
         "sysml-analyze-individuals-001",
         "sysml-analyze-crossref-001"
+      ]
+    },
+    "requirements": {
+      "name": "Requirements Traceability",
+      "description": "Tasks testing ability to work with requirements, satisfaction relationships, and traceability",
+      "tasks": [
+        "sysml-req-satisfaction-001",
+        "sysml-req-coverage-001",
+        "sysml-req-constraint-001",
+        "sysml-req-derivation-001",
+        "sysml-req-impact-001"
+        ]
+    },
+    "advanced": {
+      "name": "Advanced Semantic Analysis",
+      "description": "Expert-level tasks testing deep understanding of SysML v2 semantics, patterns, and model quality assessment",
+      "tasks": [
+        "sysml-advanced-quality-001",
+        "sysml-advanced-patterns-001",
+        "sysml-advanced-merge-001"
+      ]
+    },
+    "transformation": {
+      "name": "SysML v2 Transformation",
+      "description": "Tasks testing ability to transform SysML v2 models between representations or refactor them",
+      "tasks": [
+        "sysml-transform-todoc-001",
+        "sysml-transform-req2model-001",
+        "sysml-transform-refactor-001",
+        "sysml-transform-simplify-001",
+        "sysml-transform-notation-001",
+        "sysml-transform-plantuml-001",
+        "sysml-transform-typescript-001",
+        "sysml-transform-statemachine-001",
+        "sysml-transform-decompose-001",
+        "sysml-transform-enrich-001",
+        "sysml-transform-req2test-001",
+        "sysml-transform-migrate-001"
       ]
     },
     "generation": {

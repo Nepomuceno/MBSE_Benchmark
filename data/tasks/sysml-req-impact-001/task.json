@@ -1,0 +1,27 @@
+{
+  "id": "sysml-req-impact-001",
+  "type": "analysis",
+  "name": "Requirement Change Impact Analysis",
+  "description": "Analyze the impact of changing a requirement on components and design.",
+  "prompt": "Analyze the impact of changing the vehicleMassRequirement constraint.\n\n**Scenario**: The vehicleMassRequirement changes from 2000 kg to 1800 kg.\n\nPerform a comprehensive impact analysis:\n\n1. **Affected Components**: Which components are directly affected by this change? (Hint: trace through satisfy relationships)\n\n2. **Constraint Analysis**: \n   - Calculate the current vehicle mass from component values\n   - Compare against the NEW requirement (1800 kg)\n   - Which constraints would now fail?\n   - By how much is the requirement violated?\n\n3. **Design Changes**: What design changes might be needed to meet the new requirement?\n   - Which components could be lightened?\n   - What are realistic mass reduction targets for each component?\n   - Are there any trade-offs to consider?\n\n4. **Cascading Effects**: Would this change impact any other requirements or constraints in the system?\n\nFormat your response with clear sections for each analysis point above.",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["impact_completeness", "trace_accuracy", "change_suggestions"],
+    "rubric": {
+      "impact_completeness": "1.0: Identifies vehicle_b and all its components (body, engine, transmission, axles, fuel tank, driveshaft) as affected. Calculates current mass (2410 kg) and new violation (610 kg over new limit). 0.5: Identifies some affected components but misses key elements or calculations. 0.0: Poor impact identification.",
+      "trace_accuracy": "1.0: Correctly traces satisfy relationship from vehicleMassRequirement to vehicle_b, and understands that all vehicle components contribute to mass. 0.5: Partial tracing but incomplete. 0.0: Poor or no tracing.",
+      "change_suggestions": "1.0: Provides specific, realistic suggestions for mass reduction (e.g., lighter materials for transmission, smaller fuel tank, weight reduction for heavy components like engine/transmission). Considers trade-offs (e.g., engine power vs. mass, fuel capacity vs. range). 0.5: Provides suggestions but they are generic or lack detail. 0.0: Poor or no suggestions."
+    },
+    "weight": 3.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "analysis",
+    "source": "VehicleModel.sysml",
+    "tags": ["requirements", "impact-analysis", "traceability", "design-change"]
+  }
+}

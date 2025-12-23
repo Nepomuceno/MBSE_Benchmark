@@ -1,0 +1,27 @@
+{
+  "id": "sysml-req-satisfaction-001",
+  "type": "analysis",
+  "name": "Requirement Satisfaction Identification",
+  "description": "Identify which components satisfy which requirements and verify if satisfaction constraints are met.",
+  "prompt": "Analyze this SysML v2 model and identify all requirement satisfaction relationships.\n\nFor each `satisfy` statement, list:\n1. The requirement being satisfied (requirement name)\n2. The component satisfying it (full path/name)\n3. Whether the satisfaction can be verified from the model (check if constraints pass based on attribute values)\n\nFormat your response as:\n\n**Requirement**: [requirement name]\n**Satisfied by**: [component name/path]\n**Verification**: [PASS/FAIL/UNKNOWN] - [explanation based on constraint and values]\n\nAnalyze all satisfy relationships in the model.",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["relationship_identification", "constraint_analysis", "verification_insight"],
+    "rubric": {
+      "relationship_identification": "1.0: Correctly identifies all three satisfy relationships: vehicleMassRequirement satisfied by vehicle_b, vehicleFuelEconomyRequirement satisfied by vehicle_b, torqueGenerationRequirement satisfied by vehicle_b.engine. 0.5: Identifies 2 out of 3 relationships. 0.0: Identifies fewer than 2.",
+      "constraint_analysis": "1.0: Correctly analyzes constraints - mass constraint FAILS (calculated mass ~2410kg > 2000kg), fuel economy FAILS (14.5 < 15.0), torque PASSES (320 >= 300). 0.5: Correctly analyzes 2 out of 3 constraints. 0.0: Fewer than 2 correct.",
+      "verification_insight": "1.0: Shows clear calculation/reasoning for each constraint verification with specific values from the model. 0.5: Provides reasoning but lacks specific values or calculations. 0.0: No meaningful verification reasoning."
+    },
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "analysis",
+    "source": "VehicleModel.sysml (Requirements section)",
+    "tags": ["requirements", "satisfaction", "traceability", "constraints"]
+  }
+}
