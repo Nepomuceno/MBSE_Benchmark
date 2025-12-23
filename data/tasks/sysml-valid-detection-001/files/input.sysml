@@ -77,7 +77,7 @@ port def ShipmentPortDef {
 }
 
 port def PurchaseOrderPortDef {
-    out item PurchaseOrder;
+    out item purchaseOrder : PurchaseOrder;
 }
 
 port def OrderQuotationPortDef {

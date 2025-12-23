@@ -2,8 +2,8 @@
   "id": "sysml-extract-attributes-001",
   "type": "analysis",
   "name": "SysML v2 Attribute Extraction",
-  "description": "Extract all attributes with their types and default values from a SysML v2 model.",
-  "prompt": "Extract all `attribute` declarations from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"name\": the attribute name\n- \"type\": the attribute type (after : or :>)\n- \"value\": the default value if specified, or null\n- \"owner\": the part/item def that contains this attribute\n\nExample output format:\n```json\n[\n  {\"name\": \"orderID\", \"type\": \"String\", \"value\": null, \"owner\": \"GeneralOrder\"},\n  {\"name\": \"temperature\", \"type\": \"Real\", \"value\": \"25.0\", \"owner\": \"Sensor\"}\n]\n```\n\nInclude ALL attributes from all definitions.",
+  "description": "Extract all attributes with their types and default values from item definitions, part definitions, and parts in a SysML v2 model.",
+  "prompt": "Extract all `attribute` declarations from this SysML v2 model, including those in item def, part def, and part declarations.\n\nReturn a JSON array where each object contains:\n- \"name\": the attribute name\n- \"type\": the attribute type (after : or :>)\n- \"value\": the default value if specified, or null\n- \"owner\": the definition or part that contains this attribute\n\nExample output format:\n```json\n[\n  {\"name\": \"orderID\", \"type\": \"String\", \"value\": null, \"owner\": \"GeneralOrder\"},\n  {\"name\": \"temperature\", \"type\": \"Real\", \"value\": \"25.0\", \"owner\": \"Sensor\"}\n]\n```\n\nInclude ALL attributes from all definitions (item def, part def, part).",
   "maxTokens": 1500,
   "files": {
     "initial": "files"

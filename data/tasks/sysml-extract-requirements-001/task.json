@@ -9,8 +9,9 @@
     "initial": "files"
   },
   "evaluation": {
-    "type": "element-extraction",
-    "expectedElements": ["TemperatureRegulationReqDef", "CoolingFunctionReqDef", "HeatingFunctionReqDef", "DefrostingReqDef", "AirQualityControlReqDef", "UserInterfaceReqDef", "PerformanceReqDef", "ReliabilityReqDef", "PowerConsumptionReqDef", "NoiseLevelsReqDef", "ElectricalSystemInterfaceReqDef", "EngineInterfaceReqDef", "UserInterfaceAccessibilityReqDef", "TestingReqDef", "UserFeedbackReqDef", "GlossaryReqDef", "ReferencesReqDef"],
+    "type": "llm-judge",
+    "criteria": ["completeness", "structure_accuracy", "constraint_extraction"],
+    "rubric": "The response must be valid JSON containing an array of requirement definition objects. Each object must have 'name', 'doc', 'attributes', and 'constraint' fields. All 17 requirement definitions from the input must be included: TemperatureRegulationReqDef, CoolingFunctionReqDef, HeatingFunctionReqDef, DefrostingReqDef, AirQualityControlReqDef, UserInterfaceReqDef, PerformanceReqDef, ReliabilityReqDef, PowerConsumptionReqDef, NoiseLevelsReqDef, ElectricalSystemInterfaceReqDef, EngineInterfaceReqDef, UserInterfaceAccessibilityReqDef, TestingReqDef, UserFeedbackReqDef, GlossaryReqDef, ReferencesReqDef.",
     "weight": 2.0
   },
   "metadata": {

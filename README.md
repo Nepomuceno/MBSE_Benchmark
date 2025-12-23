@@ -18,13 +18,12 @@ This tool provides a standardized way to benchmark AI models against a curated s
 
 ## SysML v2 Tasks
 
-The benchmark includes tasks for:
+The benchmark currently includes SysML v2 tasks for:
 
-- **Validation** (VAL-001 to VAL-006): Syntax validation, error detection
-- **Extraction** (EXT-001 to EXT-008): Part, port, requirement, connection extraction
-- **Analysis** (ANA-001 to ANA-008): Specialization, flow, constraint analysis
-- **Generation** (GEN-001 to GEN-014): Code generation tasks
-- **Transformation** (TRN-001 to TRN-012): Model transformation tasks
+- **Validation** (e.g., `sysml-valid-detection-001`): Syntax validation, error detection
+- **Extraction** (e.g., `sysml-extract-parts-001`): Part, port, requirement, connection extraction
+
+Additional categories such as analysis, generation, and transformation are planned for future releases.
 
 ### Source Models
 

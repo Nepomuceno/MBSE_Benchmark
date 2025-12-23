@@ -11,26 +11,26 @@ describe("loader", () => {
       expect(Array.isArray(index.tasks)).toBe(true);
     });
 
-    test("index contains sample-task", async () => {
+    test("index contains sysml tasks", async () => {
       const index = await loadTaskIndex(basePath);
-      expect(index.tasks).toContain("sample-task");
+      expect(index.tasks).toContain("sysml-valid-detection-001");
     });
   });
 
   describe("loadTask", () => {
-    test("loads sample-task", async () => {
-      const task = await loadTask("sample-task", basePath);
-      expect(task.id).toBe("sample-task");
+    test("loads sysml-valid-detection-001", async () => {
+      const task = await loadTask("sysml-valid-detection-001", basePath);
+      expect(task.id).toBe("sysml-valid-detection-001");
       expect(task.type).toBe("qa");
       expect(task.name).toBeDefined();
       expect(task.prompt).toBeDefined();
     });
 
     test("loads initial files", async () => {
-      const task = await loadTask("sample-task", basePath);
+      const task = await loadTask("sysml-valid-detection-001", basePath);
       expect(task.initialFiles).toBeDefined();
-      expect(task.initialFiles["README.md"]).toBeDefined();
-      expect(task.initialFiles["README.md"]).toContain("MBSE");
+      expect(task.initialFiles["input.sysml"]).toBeDefined();
+      expect(task.initialFiles["input.sysml"]).toContain("port def");
     });
 
     test("throws for non-existent task", async () => {
@@ -45,7 +45,7 @@ describe("loader", () => {
       expect(tasks.length).toBeGreaterThan(0);
 
       const ids = tasks.map((t) => t.id);
-      expect(ids).toContain("sample-task");
+      expect(ids).toContain("sysml-valid-detection-001");
     });
   });
 
@@ -53,7 +53,7 @@ describe("loader", () => {
     test("returns task IDs", async () => {
       const ids = await getTaskIds(basePath);
       expect(Array.isArray(ids)).toBe(true);
-      expect(ids).toContain("sample-task");
+      expect(ids).toContain("sysml-valid-detection-001");
     });
   });
 });

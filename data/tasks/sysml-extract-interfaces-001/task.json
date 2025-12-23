@@ -9,8 +9,9 @@
     "initial": "files"
   },
   "evaluation": {
-    "type": "element-extraction",
-    "expectedElements": ["VerbalCommunication", "communicationPartnerA", "communicationPartnerB", "VerbalExchange"],
+    "type": "llm-judge",
+    "criteria": ["completeness", "json_validity", "endpoint_accuracy"],
+    "rubric": "The answer must be valid JSON array containing interface definition objects. The model contains one interface definition 'VerbalCommunication' with two ends: 'communicationPartnerA' of type 'VerbalExchange' (not conjugate) and 'communicationPartnerB' of type '~VerbalExchange' (conjugate). The response should correctly identify this interface and its endpoint structure.",
     "weight": 1.5
   },
   "metadata": {
