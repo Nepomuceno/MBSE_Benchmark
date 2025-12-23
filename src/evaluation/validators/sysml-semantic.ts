@@ -264,8 +264,8 @@ export async function getSemanticScore(
   const minorCount = result.differences.filter((d) => d.significance === "minor").length;
   const cosmeticCount = result.differences.filter((d) => d.significance === "cosmetic").length;
 
-  // Weight: major=0.3, minor=0.1, cosmetic=0.02
-  const penalty = majorCount * 0.3 + minorCount * 0.1 + cosmeticCount * 0.02;
+  // Weight: major=0.3, minor=0.1, cosmetic=0.02; cap penalty at 1.0
+  const penalty = Math.min(1, majorCount * 0.3 + minorCount * 0.1 + cosmeticCount * 0.02);
 
   // Return confidence adjusted by penalty, minimum 0
   return Math.max(0, result.confidence * (1 - penalty));
