@@ -119,14 +119,14 @@ When implementing a task, update the checklist in this file:
 
 #### Analysis Tasks (ANA-001 to ANA-008)
 
-- [ ] ANA-001: sysml-analyze-specialization-001
-- [ ] ANA-002: sysml-analyze-flow-001
-- [ ] ANA-003: sysml-analyze-constraints-001
-- [ ] ANA-004: sysml-analyze-dependencies-001
-- [ ] ANA-005: sysml-analyze-variations-001
-- [ ] ANA-006: sysml-analyze-topology-001
-- [ ] ANA-007: sysml-analyze-individuals-001
-- [ ] ANA-008: sysml-analyze-crossref-001
+- [x] ANA-001: sysml-analyze-specialization-001 (2025-12-23)
+- [x] ANA-002: sysml-analyze-flow-001 (2025-12-23)
+- [x] ANA-003: sysml-analyze-constraints-001 (2025-12-23)
+- [x] ANA-004: sysml-analyze-dependencies-001 (2025-12-23)
+- [x] ANA-005: sysml-analyze-variations-001 (2025-12-23)
+- [x] ANA-006: sysml-analyze-topology-001 (2025-12-23)
+- [x] ANA-007: sysml-analyze-individuals-001 (2025-12-23)
+- [x] ANA-008: sysml-analyze-crossref-001 (2025-12-23)
 
 #### Generation Tasks (GEN-001 to GEN-014)
 
