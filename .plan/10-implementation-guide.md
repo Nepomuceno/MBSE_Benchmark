@@ -248,7 +248,7 @@ For each category, create documentation explaining:
 - [ ] 6 validation tasks created
 - [ ] 8 extraction tasks created
 - [ ] 8 analysis tasks created
-- [ ] 7 generation tasks created
+- [ ] 14 generation tasks created
 - [ ] 5 transformation tasks created
 - [ ] 5 requirements tasks created
 - [ ] 3 state machine tasks created
