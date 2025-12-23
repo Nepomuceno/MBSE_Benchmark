@@ -236,7 +236,9 @@ export async function areModelsEquivalent(
   options: SemanticCompareOptions = {}
 ): Promise<boolean> {
   const result = await compareSemantics(expectedModel, actualModel, options);
-  return result.equivalent && result.confidence > 0.7;
+  const confidenceThreshold =
+    (options as any).confidenceThreshold != null ? (options as any).confidenceThreshold : 0.7;
+  return result.equivalent && result.confidence > confidenceThreshold;
 }
 
 /**
