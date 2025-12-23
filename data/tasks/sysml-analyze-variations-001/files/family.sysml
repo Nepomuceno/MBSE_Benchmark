@@ -212,7 +212,7 @@ package Family {
 	interface verbalParentingCommunicationActionWoman : VerbalCommunication
 		connect communicationPartnerA ::> woman.verbalExchange to communicationPartnerB ::> child.verbalExchange;
 	
-	//three possible variants of cerificates. Depending on the variant there will be up to five persons in the package.
+	//three possible variants of certificates. Depending on the variant there will be up to five persons in the package.
 	variation part adoption_certificate : Adoption_Certificate{
 		variant connection adoption_certificate_TypeB1 : Adoption_Certificate 
 		connect (parent1 ::> woman, adoptiveParent_1 ::> adult, certifiedChild ::> child);
