@@ -1,0 +1,27 @@
+{
+  "id": "sysml-generate-ports-001",
+  "type": "generation",
+  "name": "SysML v2 Port and Interface Generation",
+  "description": "Generate port and interface definitions for a sensor system with input/output items",
+  "prompt": "Create SysML v2 port and interface definitions for a sensor system:\n\nRequirements:\n1. Package named 'SensorSystem'\n2. Import ISQ::* and ScalarValues::*\n3. Create a SensorPort that outputs:\n   - temperature : ISQ::TemperatureValue\n   - humidity : Real\n4. Create a ControlPort that accepts:\n   - setpoint : ISQ::TemperatureValue\n5. Create an interface definition 'SensorControlInterface' connecting sensor to controller\n\nUse proper port def syntax with in/out items.\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "weight": 1.5,
+    "criteria": ["port_structure", "interface_correctness", "syntax_validity"],
+    "rubric": {
+      "port_structure": "1.0: Port definitions include correct in/out items with proper types (SensorPort outputs temperature and humidity, ControlPort accepts setpoint). 0.5: Ports defined but some items missing or incorrect direction. 0.0: Port structure fundamentally incorrect or missing.",
+      "interface_correctness": "1.0: Interface definition correctly connects two port ends (sensor and controller) using proper SysML v2 syntax. 0.5: Interface present but incomplete or one end missing. 0.0: No interface or completely incorrect structure.",
+      "syntax_validity": "1.0: All SysML v2 syntax is valid (package, imports, port def, interface def keywords used correctly). 0.5: Minor syntax errors that don't prevent understanding. 0.0: Major syntax errors or invalid SysML v2 code."
+    }
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "generation",
+    "tags": ["generation", "ports", "interfaces", "communication"]
+  }
+}

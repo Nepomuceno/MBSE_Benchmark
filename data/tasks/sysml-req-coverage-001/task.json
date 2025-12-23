@@ -1,0 +1,27 @@
+{
+  "id": "sysml-req-coverage-001",
+  "type": "analysis",
+  "name": "Requirement Coverage Analysis",
+  "description": "Analyze requirement coverage by identifying satisfied, unsatisfied, and partially satisfied requirements.",
+  "prompt": "Given the requirements model and the system component model, analyze the requirement coverage.\n\nIdentify:\n1. **Satisfied Requirements**: Requirements that have satisfy relationships with components and constraints are met (provide evidence from the model)\n2. **Unsatisfied Requirements**: Requirements that have NO satisfy relationships in the component model\n3. **Partially Satisfied Requirements**: Requirements that have satisfy relationships but constraints may not be fully met\n\nFor each unsatisfied requirement, suggest which component(s) in the system model might logically satisfy it.\n\nFormat your response as:\n\n## Satisfied Requirements\n- [Requirement name]: Satisfied by [component] - [evidence]\n\n## Unsatisfied Requirements\n- [Requirement name]: Not satisfied - Suggest: [component suggestion with reasoning]\n\n## Partially Satisfied Requirements\n- [Requirement name]: Satisfied by [component] but [constraint issue]",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["coverage_accuracy", "gap_identification", "suggestions_quality"],
+    "rubric": {
+      "coverage_accuracy": "1.0: Correctly identifies satisfied vs unsatisfied requirements. Recognizes TemperatureRegulationReq and CoolingFunctionReq as satisfied, and correctly identifies unsatisfied requirements. 0.5: Mostly correct but misses some satisfied/unsatisfied categorizations. 0.0: Significant errors in categorization.",
+      "gap_identification": "1.0: Clearly identifies all gaps in coverage with specific requirement names that lack satisfy relationships. 0.5: Identifies some gaps but misses several. 0.0: Poor gap identification.",
+      "suggestions_quality": "1.0: Provides logical, specific component suggestions for unsatisfied requirements (e.g., suggests Compressor for cooling, Heater for heating, Sensor for performance monitoring). 0.5: Provides suggestions but they are generic or partially incorrect. 0.0: No meaningful suggestions."
+    },
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "analysis",
+    "source": "HVACSystemRequirements.sysml + component model",
+    "tags": ["requirements", "coverage", "traceability", "gap-analysis"]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "sysml-req-derivation-001",
+  "type": "generation",
+  "name": "Requirement Derivation",
+  "description": "Derive component-level requirements from system-level requirements.",
+  "prompt": "Given the system-level HVAC requirements in this model, derive component-level requirements for these subsystems:\n\n1. **Compressor unit** (for cooling functionality)\n2. **Temperature sensor** (for temperature measurement)\n3. **Control unit** (for system control and performance)\n\nFor each component, generate SysML v2 requirement definitions that:\n- Are derived from appropriate system-level requirements\n- Include relevant attributes and constraints\n- Use proper `derive` relationships to trace back to parent requirements\n- Follow SysML v2 syntax\n\nFormat your output as valid SysML v2 code with:\n```sysml\nrequirement def [ComponentRequirementName] {\n    doc /* ... */\n    attribute [name] : [type];\n    require constraint { ... }\n}\n\nrequirement [instanceName] : [ComponentRequirementName] {\n    derive from [systemRequirement];\n}\n```\n\nGenerate at least one derived requirement for each of the three components.",
+  "maxTokens": 2500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["derivation_quality", "traceability", "sysml_syntax"],
+    "rubric": {
+      "derivation_quality": "1.0: Derives logical, relevant component requirements for all three components (Compressor, Temperature Sensor, Control Unit) that properly decompose system requirements. Includes proper SysML v2 syntax. 0.5: Derives requirements for 2 components or requirements are partially relevant, or has minor syntax issues. 0.0: Poor or missing derivations.",
+      "traceability": "1.0: Includes explicit derive relationships linking component requirements back to system requirements (e.g., derive from TemperatureRegulationReqDef, CoolingFunctionReqDef, PerformanceReqDef). 0.5: Some traceability but incomplete or unclear. 0.0: No traceability.",
+      "sysml_syntax": "1.0: Uses proper SysML v2 syntax for requirement def, attributes, constraints, and derive relationships. No major syntax errors that would prevent parsing. 0.5: Mostly correct syntax with minor issues. 0.0: Significant syntax errors."
+    },
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "generation",
+    "source": "HVACSystemRequirements.sysml",
+    "tags": ["requirements", "derivation", "traceability", "generation"]
+  }
+}

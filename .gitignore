@@ -45,3 +45,4 @@ public/
 
 # Local planning documents (agent-specific, not committed)
 .plan/local/
+package-lock.json

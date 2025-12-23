@@ -1,0 +1,33 @@
+{
+  "id": "sysml-advanced-quality-001",
+  "type": "analysis",
+  "name": "SysML v2 Model Quality Assessment",
+  "description": "Perform a comprehensive quality assessment of a SysML v2 model against industry best practices, evaluating naming conventions, documentation, modularity, completeness, and complexity.",
+  "prompt": "Perform a quality assessment of this SysML v2 model. Evaluate the following aspects and provide a score from 1 (poor) to 5 (excellent) for each:\n\n1. **Naming conventions** - Are element names clear, consistent, and follow standard conventions (e.g., PascalCase for definitions, camelCase for usages)?\n2. **Documentation** - Are elements properly documented with doc strings? Is the documentation clear and helpful?\n3. **Modularity** - Is the model well-structured with logical package organization and appropriate separation of concerns?\n4. **Completeness** - Are there any dangling references, missing elements, or incomplete relationships?\n5. **Complexity** - Is the model unnecessarily complex? Are there overly nested structures or convoluted expressions?\n\nFor each category, provide:\n- A score (1-5)\n- Justification for the score\n- Specific issues identified (if any)\n- Recommendations for improvement\n\nReturn a JSON object with the following structure:\n```json\n{\n  \"naming\": {\n    \"score\": <number>,\n    \"justification\": \"<explanation>\",\n    \"issues\": [\"<issue1>\", \"<issue2>\"],\n    \"recommendations\": [\"<recommendation1>\", \"<recommendation2>\"]\n  },\n  \"documentation\": {\n    \"score\": <number>,\n    \"justification\": \"<explanation>\",\n    \"issues\": [\"<issue1>\", \"<issue2>\"],\n    \"recommendations\": [\"<recommendation1>\", \"<recommendation2>\"]\n  },\n  \"modularity\": {\n    \"score\": <number>,\n    \"justification\": \"<explanation>\",\n    \"issues\": [\"<issue1>\", \"<issue2>\"],\n    \"recommendations\": [\"<recommendation1>\", \"<recommendation2>\"]\n  },\n  \"completeness\": {\n    \"score\": <number>,\n    \"justification\": \"<explanation>\",\n    \"issues\": [\"<issue1>\", \"<issue2>\"],\n    \"recommendations\": [\"<recommendation1>\", \"<recommendation2>\"]\n  },\n  \"complexity\": {\n    \"score\": <number>,\n    \"justification\": \"<explanation>\",\n    \"issues\": [\"<issue1>\", \"<issue2>\"],\n    \"recommendations\": [\"<recommendation1>\", \"<recommendation2>\"]\n  },\n  \"overall_score\": <number>,\n  \"summary\": \"<overall assessment>\",\n  \"priority_recommendations\": [\"<top recommendation 1>\", \"<top recommendation 2>\", \"<top recommendation 3>\"]\n}\n```",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": [
+      "assessment_thoroughness",
+      "scoring_justification",
+      "issue_identification",
+      "recommendations_quality"
+    ],
+    "rubric": {
+      "assessment_thoroughness": "1.0: Evaluates all 5 quality dimensions (naming, documentation, modularity, completeness, complexity) with detailed analysis of each. 0.5: Evaluates most dimensions but some analysis is superficial. 0.0: Missing evaluations or very superficial analysis.",
+      "scoring_justification": "1.0: Each score is well-justified with specific examples from the model. Justifications are clear and objective. 0.5: Scores are justified but examples are vague or limited. 0.0: Scores lack proper justification.",
+      "issue_identification": "1.0: Identifies concrete, specific issues with clear examples (e.g., 'typo in line 49: awakake should be awake', 'undocumented ports in VerbalExchange'). 0.5: Identifies some issues but they are vague or generic. 0.0: Fails to identify specific issues.",
+      "recommendations_quality": "1.0: Provides actionable, prioritized recommendations that would meaningfully improve the model. 0.5: Recommendations are generic or not clearly actionable. 0.0: No useful recommendations provided."
+    },
+    "weight": 3.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "advanced-analysis",
+    "source": "GfSE/SysML-v2-Models family.sysml",
+    "tags": ["advanced", "quality-assessment", "best-practices", "analysis"]
+  }
+}
