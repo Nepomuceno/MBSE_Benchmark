@@ -51,3 +51,14 @@ export {
   type ExtraNode,
   type MisplacedNode,
 } from "./sysml-structure.js";
+
+// Semantic comparison (LLM-assisted)
+export {
+  compareSemantics,
+  compareSemanticsSync,
+  areModelsEquivalent,
+  getSemanticScore,
+  type SemanticComparisonResult,
+  type SemanticDifference,
+  type SemanticCompareOptions,
+} from "./sysml-semantic.js";
