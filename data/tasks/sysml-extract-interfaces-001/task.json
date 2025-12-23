@@ -1,0 +1,23 @@
+{
+  "id": "sysml-extract-interfaces-001",
+  "type": "analysis",
+  "name": "SysML v2 Interface Extraction",
+  "description": "Extract interface definitions and their endpoints from a SysML v2 model.",
+  "prompt": "Extract all `interface def` declarations from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"name\": the interface definition name\n- \"ends\": array of {\"name\": end name, \"type\": port type, \"conjugate\": true/false if prefixed with ~}\n\nExample output format:\n```json\n[\n  {\n    \"name\": \"VerbalCommunication\",\n    \"ends\": [\n      {\"name\": \"communicationPartnerA\", \"type\": \"VerbalExchange\", \"conjugate\": false},\n      {\"name\": \"communicationPartnerB\", \"type\": \"VerbalExchange\", \"conjugate\": true}\n    ]\n  }\n]\n```\n\nAlso extract interface usages (interface statements with connect clauses) if present.",
+  "maxTokens": 1500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["completeness", "json_validity", "endpoint_accuracy"],
+    "rubric": "The answer must be valid JSON array containing interface definition objects. The model contains one interface definition 'VerbalCommunication' with two ends: 'communicationPartnerA' of type 'VerbalExchange' (not conjugate) and 'communicationPartnerB' of type '~VerbalExchange' (conjugate). The response should correctly identify this interface and its endpoint structure.",
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models example_family/family.sysml",
+    "tags": ["extraction", "interfaces", "connections"]
+  }
+}

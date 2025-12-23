@@ -1,0 +1,22 @@
+{
+  "id": "sysml-extract-ports-001",
+  "type": "analysis",
+  "name": "SysML v2 Port Definition Extraction",
+  "description": "Extract all port definitions with their directions and item types from a SysML v2 model.",
+  "prompt": "Extract all `port def` declarations from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"name\": the port definition name\n- \"items\": array of objects with {\"direction\": \"in\"|\"out\"|\"inout\", \"name\": item name, \"type\": item type}\n\nExample output format:\n```json\n[\n  {\"name\": \"FuelCmdPort\", \"items\": [{\"direction\": \"in\", \"name\": \"fuelCmd\", \"type\": \"FuelCmd\"}]},\n  {\"name\": \"DataPort\", \"items\": [{\"direction\": \"out\", \"name\": \"data\", \"type\": \"DataPacket\"}]}\n]\n```\n\nInclude ALL port definitions, even empty ones.",
+  "maxTokens": 1500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "element-extraction",
+    "expectedElements": ["InventoryPortDef", "ShippingConfirmationPortDef", "ProductOrderPortDef", "SalesOrderPortDef", "ProductPortDef", "MaterialOrderPortDef", "MaterialPortDef", "InquiryPortDef", "ShipmentPortDef", "PurchaseOrderPortDef", "OrderQuotationPortDef", "OrderConfirmationPortDef"],
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models Fischertechnik.sysml",
+    "tags": ["extraction", "ports", "interfaces"]
+  }
+}

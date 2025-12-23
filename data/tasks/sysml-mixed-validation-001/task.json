@@ -1,0 +1,22 @@
+{
+  "id": "sysml-mixed-validation-001",
+  "type": "qa",
+  "name": "SysML v2 Mixed Valid/Invalid Blocks",
+  "description": "Given multiple SysML v2 code snippets, identify which are valid and which contain errors. Tests comprehensive syntax validation skills.",
+  "prompt": "Below are 5 SysML v2 code snippets labeled A through E.\n\nFor each snippet, state:\n1. VALID or INVALID\n2. If INVALID, explain the specific error(s)\n3. If VALID, briefly describe what the code defines\n\nProvide your answer in this format:\nA: VALID/INVALID - explanation\nB: VALID/INVALID - explanation\n... and so on",
+  "maxTokens": 1000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "element-extraction",
+    "expectedElements": ["A: VALID", "B: INVALID", "C: VALID", "D: INVALID", "E: VALID"],
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "validation",
+    "source": "Mixed from GfSE/SysML-v2-Models",
+    "tags": ["syntax", "validation", "comprehensive"]
+  }
+}

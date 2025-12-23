@@ -1,0 +1,22 @@
+{
+  "id": "sysml-invalid-keywords-001",
+  "type": "qa",
+  "name": "SysML v2 Invalid Keywords Detection",
+  "description": "Detect incorrect SysML v2 keywords such as misspellings or SysML v1 style keywords. Tests knowledge of correct SysML v2 keyword syntax.",
+  "prompt": "This code attempts to be valid SysML v2 but contains keyword errors.\n\nIdentify each keyword error and provide:\n1. The incorrect keyword found\n2. The correct SysML v2 keyword that should be used\n3. The line or context where it appears\n\nList all errors you find, even if there are many.",
+  "maxTokens": 800,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["error_count", "correction_accuracy", "sysml_v2_knowledge"],
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "validation",
+    "source": "Modified from GfSE/SysML-v2-Models Metamodel.sysml",
+    "tags": ["syntax", "validation", "keywords", "error-detection"]
+  }
+}

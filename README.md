@@ -1,6 +1,6 @@
 # MBSE Benchmark
 
-A benchmarking framework for evaluating AI models on Model-Based Systems Engineering tasks.
+A benchmarking framework for evaluating AI models on Model-Based Systems Engineering tasks, with a focus on SysML v2.
 
 ## Overview
 
@@ -14,6 +14,22 @@ This tool provides a standardized way to benchmark AI models against a curated s
 - 💾 **Result caching** - Skip already-run benchmarks unless forced
 - 🎨 **Beautiful CLI** - Ink-powered terminal interface
 - 📈 **GitHub Actions** - Automated benchmark runs with published rankings
+- 🔧 **SysML v2 Validators** - Built-in syntax validation and component extraction
+
+## SysML v2 Tasks
+
+The benchmark currently includes SysML v2 tasks for:
+
+- **Validation** (e.g., `sysml-valid-detection-001`): Syntax validation, error detection
+- **Extraction** (e.g., `sysml-extract-parts-001`): Part, port, requirement, connection extraction
+
+Additional categories such as analysis, generation, and transformation are planned for future releases.
+
+### Source Models
+
+The SysML v2 models in `data/tasks/models/source/` are from the
+[GfSE SysML-v2-Models](https://github.com/GfSE/SysML-v2-Models) repository
+(BSD-3-Clause license).
 
 ## Installation
 
@@ -95,18 +111,24 @@ LOCAL_MODEL_URL=http://localhost:11434
 
 ```text
 ├── src/
-│   ├── cli/          # Ink CLI components
-│   ├── benchmark/    # Benchmark runner logic
-│   ├── models/       # AI model adapters
-│   ├── cache/        # Result caching
-│   └── utils/        # Shared utilities
+│   ├── cli/              # Ink CLI components
+│   ├── benchmark/        # Benchmark runner logic
+│   ├── evaluation/       # Evaluation strategies
+│   │   ├── validators/   # SysML v2 validators
+│   │   └── strategies/   # Scoring strategies
+│   ├── models/           # AI model adapters
+│   ├── cache/            # Result caching
+│   └── utils/            # Shared utilities
 ├── data/
-│   ├── tasks/        # Benchmark tasks and evaluations
-│   └── results/      # Cached results (committed to repo)
+│   ├── tasks/            # Benchmark tasks
+│   │   ├── models/       # Source SysML models (from GfSE)
+│   │   │   ├── source/   # Valid models
+│   │   │   └── invalid/  # Intentionally invalid models
+│   │   └── sysml-*/      # Individual task definitions
+│   └── results/          # Cached results
 ├── config/
-│   └── models.json   # Model configurations
-└── .github/
-    └── workflows/    # CI/CD for benchmark runs
+│   └── models.json       # Model configurations
+└── .plan/                # Implementation plans and progress
 ```
 
 ## Benchmark Versioning

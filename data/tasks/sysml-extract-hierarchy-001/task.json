@@ -1,0 +1,22 @@
+{
+  "id": "sysml-extract-hierarchy-001",
+  "type": "analysis",
+  "name": "SysML v2 Hierarchy Extraction",
+  "description": "Extract the complete part hierarchy showing parent-child containment relationships.",
+  "prompt": "Build a hierarchical tree of all parts in this SysML v2 model.\n\nShow the parent-child containment relationships (parts contained within other parts).\n\nReturn as an indented text tree or JSON structure showing:\n- Top-level parts\n- Nested parts within each parent\n- The complete containment hierarchy\n\nExample text format:\n```\nfactoryContext\n├── Manufacturer\n│   ├── Production\n│   │   ├── ProductionControl\n│   │   └── AngleProductionLine\n│   │       ├── Heating\n│   │       └── Bending\n│   └── Storage\n└── Customer\n```\n\nOr JSON format:\n```json\n{\"name\": \"factoryContext\", \"children\": [{\"name\": \"Manufacturer\", \"children\": [...]}]}\n```\n\nInclude ALL nested parts.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["hierarchy_completeness", "relationship_accuracy", "structure_clarity"],
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models Fischertechnik.sysml",
+    "tags": ["extraction", "hierarchy", "containment"]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "sysml-extract-actions-001",
+  "type": "analysis",
+  "name": "SysML v2 Action Extraction",
+  "description": "Extract action definitions with their input and output parameters.",
+  "prompt": "Extract all `action def` declarations from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"name\": the action definition name\n- \"inputs\": array of {\"name\": param name, \"type\": param type}\n- \"outputs\": array of {\"name\": param name, \"type\": param type}\n\nExample output format:\n```json\n[\n  {\n    \"name\": \"ProvidePower\",\n    \"inputs\": [{\"name\": \"fuelCmd\", \"type\": \"FuelCmd\"}],\n    \"outputs\": [{\"name\": \"torque\", \"type\": \"Torque\"}]\n  }\n]\n```\n\nInclude ALL action definitions, even those without parameters.",
+  "maxTokens": 1000,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["completeness", "json_validity", "parameter_accuracy"],
+    "rubric": "The answer must be valid JSON array. Each element must be an object with keys 'name', 'inputs', and 'outputs'. The 'name' must match an action definition name from the SysML v2 model. The 'inputs' and 'outputs' fields must each be arrays of objects with keys 'name' and 'type' describing the corresponding parameters. All action definitions in the provided model must be included (VehicleStartSignal, VehicleOnSignal, VehicleOffSignal), even if they have no parameters (use empty arrays for inputs/outputs).",
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models StopWatchStates.sysml",
+    "tags": ["extraction", "actions", "behavior"]
+  }
+}

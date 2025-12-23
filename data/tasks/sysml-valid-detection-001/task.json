@@ -1,0 +1,22 @@
+{
+  "id": "sysml-valid-detection-001",
+  "type": "qa",
+  "name": "SysML v2 Valid Syntax Detection",
+  "description": "Given a valid SysML v2 file, determine if it is syntactically correct. Tests the ability to recognize well-formed SysML v2 syntax including package structure, imports, and part definitions.",
+  "prompt": "Analyze the following SysML v2 code and determine if it is syntactically valid.\n\nAnswer with 'VALID' or 'INVALID' on the first line, followed by a brief explanation of the key structural elements you identified (packages, imports, part definitions, etc.).\n\nIf INVALID, explain what syntax errors you found.",
+  "maxTokens": 500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "keyword-match",
+    "keywords": ["VALID"],
+    "weight": 1.0
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "category": "validation",
+    "source": "GfSE/SysML-v2-Models",
+    "tags": ["syntax", "validation", "basic"]
+  }
+}

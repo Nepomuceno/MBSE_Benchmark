@@ -1,0 +1,22 @@
+{
+  "id": "sysml-extract-parts-001",
+  "type": "analysis",
+  "name": "SysML v2 Part and Item Definition Extraction",
+  "description": "Extract all part definitions and item definitions from a SysML v2 model, identifying names, parent types (specializations), and attributes.",
+  "prompt": "Extract all `part def` and `item def` declarations from this SysML v2 model.\n\nReturn a JSON array where each object contains:\n- \"name\": the definition name\n- \"kind\": \"part def\" or \"item def\"\n- \"parent\": the parent type if specializing (after :> or 'specializes'), or null\n- \"attributes\": array of attribute names defined in the definition\n\nExample output format:\n```json\n[\n  {\"name\": \"Vehicle\", \"kind\": \"part def\", \"parent\": null, \"attributes\": [\"mass\", \"velocity\"]},\n  {\"name\": \"SalesOrder\", \"kind\": \"item def\", \"parent\": \"GeneralOrder\", \"attributes\": []}\n]\n```\n\nInclude ALL part def and item def declarations, even empty ones.",
+  "maxTokens": 1500,
+  "files": {
+    "initial": "files"
+  },
+  "evaluation": {
+    "type": "element-extraction",
+    "expectedElements": ["GeneralOrder", "SalesOrder", "MaterialOrder", "ProductOrder", "PurchaseOrder", "Inquiry", "OrderQuotation", "OrderConfirmation", "Shipment", "ShippingConfirmation", "Product", "Material", "Inventory", "IntermediateProduct", "Machine"],
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "category": "extraction",
+    "source": "GfSE/SysML-v2-Models Fischertechnik.sysml",
+    "tags": ["extraction", "parts", "items", "structure"]
+  }
+}
