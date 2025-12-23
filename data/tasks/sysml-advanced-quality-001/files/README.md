@@ -16,7 +16,14 @@ This file provides guidance on what a comprehensive quality assessment should id
 - Package has documentation
 - Some definitions have good doc strings (Person, ProcessMessage)
 - Many elements lack documentation (ports, attributes, constraints)
-- Comment on line 49: typo "awakake" instead of "awake"
+- Multiple spelling errors found:
+  - Line 49: typo "awakake" instead of "awake"
+  - Line 62: "reults" should be "results"
+  - Line 62: "adressee" should be "addressee"
+  - Line 137: "parameteres" should be "parameters"
+  - Line 145: "incommingMessage" and "parsedIncommingMessage" should use "incoming" not "incomming"
+  - Line 202: "consitutes" should be "constitutes"
+  - Line 215: "cerificates" should be "certificates"
 - Expected Score: 2-3
 
 ### Modularity
@@ -58,5 +65,5 @@ Expected Overall Score: 2.5-3.5
 1. Add documentation to all public definitions, especially ports and interfaces
 2. Consider organizing into sub-packages (e.g., Definitions, Usages, Actions, Requirements)
 3. Define missing port features for judge, adult, and socialService parts
-4. Fix documentation typo: "awakake" → "awake" on line 49
+4. Fix all spelling errors in comments and documentation (awakake, reults, adressee, parameteres, incommingMessage, consitutes, cerificates)
 5. Consider using more consistent naming (either all snake_case or all camelCase for usages)
