@@ -59,7 +59,7 @@ package Family {
 					doc /*
 					 * the action is triggered by any SoundWaveMessage, processes it through a called action and sends a response.
 					 * the receival and sending of messages is done through the defined ports of an adult :> Person.
-					 * This reults in everybody responding to everything. To avoid this, the message shall include an adressee.
+					 * This reults in everybody responding to everything. To avoid this, the message shall include an addressee.
 					 */
 					//accept incomingMessage : SoundWaveMessage via adult.verbalExchange.verbalReceiver;
 					action triggerResponse accept incomingInquiry : SoundWaveMessage via adult.verbalExchange.verbalReceiver;
