@@ -8,6 +8,7 @@ export interface ToolCall {
 }
 
 export interface ToolResult {
+  id?: string;
   tool: string;
   result: unknown;
 }
