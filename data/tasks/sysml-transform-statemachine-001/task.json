@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-statemachine-001",
+  "type": "generation",
+  "name": "SysML v2 State Machine to Executable TypeScript Transformation",
+  "description": "Transform a SysML v2 state machine definition into executable TypeScript code with state management",
+  "prompt": "Transform this SysML v2 state machine into executable TypeScript code:\n\n1. Create a TypeScript enum for all states (ready, running, paused, stopped)\n2. Create interfaces for all signal/event types (action defs)\n3. Create a state machine class with:\n   - Private currentState property\n   - Constructor that initializes to the entry state\n   - Public method for each transition that:\n     * Checks if the current state matches the 'first' state\n     * Accepts the appropriate signal type\n     * Transitions to the 'then' state if valid\n     * Returns boolean indicating success\n   - Public getCurrentState() method\n   - Event handler methods for processing signals\n\nThe code should be executable, type-safe, and maintain proper state machine semantics (only valid transitions allowed).\n\nInclude comments explaining the state machine logic.\n\nOutput only valid TypeScript code.",
+  "maxTokens": 4000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["code_validity", "state_preservation", "transition_logic", "type_safety", "executability"],
+    "weight": 3.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models StopWatchStates.sysml",
+    "tags": ["transformation", "state-machine", "code-generation", "typescript"]
+  }
+}

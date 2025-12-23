@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-req2model-001",
+  "type": "generation",
+  "name": "Natural Language Requirements to SysML v2 Model Transformation",
+  "description": "Transform natural language requirements document into a structured SysML v2 requirements package with proper constraints",
+  "prompt": "Transform this requirements document into a SysML v2 requirements package. For each requirement:\n\n1. Create a requirement def with the requirement ID as part of the name\n2. Add a doc string containing the requirement text\n3. Extract quantitative values as attributes with appropriate types (Distance, Time, Percentage, etc.)\n4. Create require constraints that express the requirement conditions\n5. Organize all requirements into a package named 'AutonomousDroneRequirements'\n\nExample mapping:\n- \"accuracy of ±2 meters\" → attribute targetAccuracy : Distance; require constraint { actualAccuracy <= targetAccuracy }\n- \"response time of less than 100 milliseconds\" → attribute maxResponseTime : Time; require constraint { responseTime < maxResponseTime }\n\nEnsure the output is valid SysML v2 syntax with proper imports if needed.",
+  "maxTokens": 4000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["requirement_coverage", "id_preservation", "constraint_extraction", "semantic_accuracy", "sysml_syntax_validity"],
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "transformation",
+    "source": "Custom requirements document",
+    "tags": ["transformation", "requirements", "nl-to-model"]
+  }
+}

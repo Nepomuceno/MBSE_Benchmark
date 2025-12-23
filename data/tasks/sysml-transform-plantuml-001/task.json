@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-plantuml-001",
+  "type": "generation",
+  "name": "SysML v2 to PlantUML Diagram Transformation",
+  "description": "Transform a SysML v2 model into PlantUML class diagram code that visualizes the system architecture",
+  "prompt": "Convert this SysML v2 model into PlantUML code that visualizes the system architecture.\n\nMapping rules:\n1. Each 'part def' becomes a PlantUML class with <<part def>> stereotype\n2. Each 'port def' becomes a class with <<port def>> stereotype\n3. Specialization (:> or specializes) becomes inheritance arrow (<|--)\n4. Part usages (parts within a part def) become composition (*--)\n5. Attributes become class members with their types\n6. Port usages become associations with appropriate stereotypes\n7. Use clear, hierarchical layout directives for readability\n\nThe PlantUML should render a clear architecture diagram showing the system structure and relationships.\n\nOutput only valid PlantUML code starting with @startuml and ending with @enduml.",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["plantuml_validity", "relationship_mapping", "visual_clarity", "completeness"],
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models ForestFireObservationDrone.sysml",
+    "tags": ["transformation", "visualization", "plantuml"]
+  }
+}

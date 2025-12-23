@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-req2test-001",
+  "type": "generation",
+  "name": "SysML v2 Requirements to Verification Cases Transformation",
+  "description": "Transform SysML v2 requirements into corresponding verification test cases with proper traceability",
+  "prompt": "Transform these SysML v2 requirements into verification cases. For each requirement definition:\n\n1. Create a verification case definition with a name like 'Verify_<RequirementName>'\n2. Define test setup (preconditions) based on the requirement attributes\n3. Define test procedure (test actions) that would verify the requirement\n4. Define pass/fail criteria derived from the requirement's 'require constraint'\n5. Add a 'verify' relationship linking the verification case back to the original requirement\n6. Include objective documentation explaining what is being verified\n\nCreate a new package 'HVACSystemVerification' containing all verification cases.\n\nExample structure:\nverification def VerifyTemperatureRegulation {\n    doc /* Verification case for temperature regulation requirement */\n    \n    // Test setup\n    attribute testSetTemp : Temperature;\n    attribute measuredTemp : Temperature;\n    \n    // Acceptance criteria from requirement\n    assert constraint { abs(measuredTemp - testSetTemp) <= 1 }\n    \n    verify requirement HVACSystemRequirements::TemperatureRegulationReqDef\n}\n\nOutput valid SysML v2 verification package.",
+  "maxTokens": 5000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["verification_completeness", "traceability", "test_logic", "constraint_mapping", "sysml_syntax_validity"],
+    "weight": 3.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models HVACSystemRequirements.sysml",
+    "tags": ["transformation", "verification", "requirements", "testing"]
+  }
+}

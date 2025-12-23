@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-notation-001",
+  "type": "generation",
+  "name": "SysML v2 to JSON Schema Translation",
+  "description": "Translate SysML v2 type definitions into equivalent JSON Schema, preserving semantic relationships and constraints",
+  "prompt": "Translate this SysML v2 model into an equivalent JSON Schema. Apply these mapping rules:\n\n1. Each 'part def' becomes a JSON Schema object type with properties\n2. Attributes become properties with appropriate JSON Schema types:\n   - String → \"type\": \"string\"\n   - Real/Integer → \"type\": \"number\" or \"integer\"\n   - Boolean → \"type\": \"boolean\"\n3. Specialization (specializes keyword or :>) becomes \"allOf\" for inheritance\n4. Constraints become JSON Schema validation rules (minimum, maximum, pattern, etc.)\n5. Multiplicity [1] becomes \"required\" in the parent object\n6. Create a complete JSON Schema document with \"$schema\" and proper \"definitions\"\n\nPreserve all semantic relationships and ensure the JSON Schema is valid according to JSON Schema Draft 7 or later.\n\nOutput only the JSON Schema - no explanatory text.",
+  "maxTokens": 3500,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["semantic_preservation", "json_schema_validity", "type_mapping", "constraint_translation"],
+    "weight": 3.0
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models Metamodel.sysml",
+    "tags": ["transformation", "cross-notation", "json-schema"]
+  }
+}

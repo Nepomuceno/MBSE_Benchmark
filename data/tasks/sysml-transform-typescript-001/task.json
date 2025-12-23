@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-typescript-001",
+  "type": "generation",
+  "name": "SysML v2 to TypeScript Interface Transformation",
+  "description": "Transform SysML v2 part definitions into TypeScript interfaces for use in software implementations",
+  "prompt": "Convert this SysML v2 model to TypeScript interfaces:\n\nMapping rules:\n1. Each 'part def' becomes a TypeScript interface\n2. Attributes become typed properties:\n   - String → string\n   - Real → number\n   - Integer → number\n   - Boolean → boolean\n3. Specialization (:> or specializes) becomes 'extends' in TypeScript\n4. Multiplicity [*] or arrays become array types (e.g., Type[])\n5. Multiplicity [1] means required (non-optional) property\n6. Add JSDoc comments above each interface with documentation from the model\n7. Preserve package structure as namespaces if appropriate\n\nGenerate valid TypeScript that could be compiled and used in a simulation or implementation.\n\nOutput only the TypeScript code with proper imports if needed.",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["typescript_validity", "type_mapping", "documentation", "semantic_preservation"],
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models Metamodel.sysml",
+    "tags": ["transformation", "code-generation", "typescript"]
+  }
+}

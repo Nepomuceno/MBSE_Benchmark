@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-enrich-001",
+  "type": "generation",
+  "name": "SysML v2 Model Enrichment with Documentation",
+  "description": "Enrich a basic SysML v2 model by adding comprehensive documentation, comments, and metadata while preserving structure",
+  "prompt": "Enrich this SysML v2 model by adding documentation and metadata:\n\n1. Add doc strings (using doc /* ... */) to every part def explaining its purpose and role in the system\n2. Add doc strings to port defs explaining what they connect and their purpose\n3. Add inline comments (using //) explaining complex relationships and connections\n4. Add default values for numeric attributes where sensible (based on typical use)\n5. Add metadata annotations where appropriate (e.g., #system, #requirement)\n6. Ensure documentation is clear, concise, and technically accurate\n\nPreserve all existing structure - do not change element names, types, or relationships. Only add documentation, comments, default values, and metadata.\n\nThe enriched model should be more understandable to someone reading it for the first time while maintaining identical functionality.\n\nOutput valid SysML v2 code with the enrichments.",
+  "maxTokens": 3500,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["documentation_quality", "structure_preservation", "completeness", "technical_accuracy"],
+    "weight": 1.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models InternetModel_v1.sysml",
+    "tags": ["transformation", "documentation", "enrichment"]
+  }
+}

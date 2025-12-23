@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-migrate-001",
+  "type": "generation",
+  "name": "SysML v2 Model Pattern Migration and Modernization",
+  "description": "Migrate a SysML v2 model from older patterns to modern best practices and conventions",
+  "prompt": "This SysML v2 model uses some older patterns that should be updated to modern conventions:\n\n1. Replace connection defs with interface defs where representing bidirectional communication\n2. Convert direct attribute assignments (attribute x = value) to proper redefinitions (attribute redefines x = value)\n3. Add proper port conjugation (~) for bidirectional ports\n4. Replace redundant connections with bind statements where appropriate for data flow\n5. Use modern specialization syntax consistently\n6. Add documentation to explain the patterns being used\n\nModern pattern examples:\n- interface def PowerInterface { end source : PowerPort; end target : ~PowerPort; }\n- attribute redefines voltage = 24;\n- bind motor.power = controller.outputPower;\n\nModernize the model while preserving exact semantics - the model should behave identically but use current best practices.\n\nOutput valid SysML v2 code with modern patterns.",
+  "maxTokens": 4000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["pattern_improvement", "semantic_preservation", "syntax_correctness", "best_practices"],
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "transformation",
+    "source": "Custom model with older patterns",
+    "tags": ["transformation", "migration", "modernization", "best-practices"]
+  }
+}

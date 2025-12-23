@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-todoc-001",
+  "type": "generation",
+  "name": "SysML v2 Model to Documentation Transformation",
+  "description": "Transform a SysML v2 model into structured documentation, preserving all semantic information in a readable format",
+  "prompt": "Convert this SysML v2 model into structured documentation. Create a markdown document with:\n\n1. System Overview - high-level description of the system\n2. Package Structure - hierarchy of packages\n3. Component List - all system elements with descriptions\n4. Objectives - system objectives with their IDs\n5. Attributes - key attributes and their purposes\n\nPreserve all semantic information from the model, including documentation strings, IDs, and relationships. Use clear headings and formatting for readability.",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["completeness", "accuracy", "documentation_quality", "structure"],
+    "weight": 2.0
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models ForestFireDetectionSystemModel.sysml",
+    "tags": ["transformation", "documentation", "model-to-doc"]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "sysml-transform-decompose-001",
+  "type": "generation",
+  "name": "SysML v2 Model Decomposition into Multiple Packages",
+  "description": "Decompose a monolithic SysML v2 model into separate, well-organized packages with proper imports",
+  "prompt": "Refactor this monolithic SysML v2 model into separate packages for better organization:\n\n1. 'Definitions' package - all part defs, port defs, interface defs, connection defs, item defs, attribute defs\n2. 'Actions' package - all action defs and use case defs\n3. 'States' package - all state defs\n4. 'Model' package - the actual part usages and model instances\n\nFor each package:\n- Create a separate file (Definitions.sysml, Actions.sysml, States.sysml, Model.sysml)\n- Add proper import statements where one package uses elements from another\n- Ensure all cross-references use correct qualified names or imports\n- Preserve all documentation and comments\n\nAll four files must be valid SysML v2 and together represent the complete original model.\n\nOutput each file clearly separated with file name headers.",
+  "maxTokens": 5000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["proper_decomposition", "correct_imports", "semantic_preservation", "organization_quality", "sysml_syntax_validity"],
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models family.sysml",
+    "tags": ["transformation", "refactoring", "decomposition"]
+  }
+}
