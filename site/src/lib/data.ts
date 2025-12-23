@@ -1,12 +1,32 @@
 import { readdir, stat, readFile } from 'fs/promises';
 import { join } from 'path';
 
+export interface ToolCall {
+  id: string;
+  name: string;
+  arguments: Record<string, unknown>;
+}
+
+export interface ToolResult {
+  id?: string;
+  tool: string;
+  result: unknown;
+}
+
+export interface TaskIteration {
+  iteration: number;
+  response: string;
+  toolCalls?: ToolCall[];
+  toolResults?: ToolResult[];
+  latencyMs: number;
+}
+
 export interface TaskResult {
   taskId: string;
   score: number;
   finalResponse?: string;
   latencyMs: number;
-  iterations?: unknown[];
+  iterations?: TaskIteration[];
   evaluation?: {
     score: number;
     details: {
