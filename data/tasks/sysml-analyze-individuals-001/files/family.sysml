@@ -46,7 +46,7 @@ package Family {
 		attribute weight :> mass;
 		attribute isAdult : Boolean;
 		port verbalExchange : VerbalExchange; 
-		//Person only respond to inquiries in awakake state.
+		//Person only respond to inquiries in awake state.
 		state personStates {
 			entry; then asleep;
 			state asleep;
