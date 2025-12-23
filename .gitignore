@@ -39,5 +39,5 @@ public/
 # Keep results tracked (remove this line if you don't want results in git)
 # !data/results/
 
-# Planning documents (local only)
-.plan/
+# Planning documents (committed for LLM implementation guidance)
+# .plan/
