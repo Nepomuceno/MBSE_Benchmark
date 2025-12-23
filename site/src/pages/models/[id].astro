@@ -154,7 +154,7 @@ const getScoreColor = (score: number) => {
                         <div class="text-slate-500 text-xs uppercase tracking-wider mb-1">Tool Calls ({iter.toolCalls.length})</div>
                         <div class="space-y-2">
                           {iter.toolCalls.map((call) => (
-                            <div class="bg-white border border-slate-200 rounded p-3">
+                            <div class="bg-white border border-slate-200 rounded p-3" key={call.id}>
                               <div class="flex items-center space-x-2 mb-1">
                                 <span class="text-xs font-mono bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{call.name}</span>
                                 <span class="text-xs text-slate-400 font-mono">{call.id}</span>
