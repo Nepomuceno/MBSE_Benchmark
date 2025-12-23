@@ -200,10 +200,9 @@ export async function compareSemantics(
     };
   }
 
-  const adapter = createModelClient(modelConfig);
-  const prompt = buildSemanticComparisonPrompt(expectedModel, actualModel, opts);
-
   try {
+    const adapter = createModelClient(modelConfig);
+    const prompt = buildSemanticComparisonPrompt(expectedModel, actualModel, opts);
     const result = await adapter.generate(prompt, {
       temperature: opts.temperature,
       maxTokens: opts.maxTokens,
