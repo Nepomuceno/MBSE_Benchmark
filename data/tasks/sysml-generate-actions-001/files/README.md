@@ -28,7 +28,7 @@ package CoffeeMachine {
         
         action brew : BrewCoffee {
             in groundCoffee = grind.groundCoffee;
-            in water = water;
+            in water = MakeCoffee.water;
         }
         
         flow grind.groundCoffee to brew.groundCoffee;
