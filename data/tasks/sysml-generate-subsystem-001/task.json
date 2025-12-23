@@ -1,0 +1,28 @@
+{
+  "id": "sysml-generate-subsystem-001",
+  "type": "generation",
+  "name": "SysML v2 Complete Subsystem Generation",
+  "description": "Generate a complete GPS Navigation Subsystem with parts, ports, connections, and requirements",
+  "prompt": "Generate a SysML v2 model for a GPS Navigation Subsystem:\n\nRequirements:\n1. Package named 'GPSNavigationSubsystem'\n2. Import ISQ::* and ScalarValues::*\n3. Create part definitions:\n   - GPSReceiver with attribute accuracy : ISQ::LengthValue\n   - MapDisplay with attribute resolution : Integer\n   - RouteCalculator with attribute maxWaypoints : Integer\n4. Define port types for:\n   - GPS signals (latitude, longitude)\n   - User input\n   - Display output\n5. Create a subsystem part that instantiates these components and connects them\n6. Include 2 requirements:\n   - PositionAccuracyReq: accuracy shall be within 5 meters\n   - ResponseTimeReq: route calculation shall complete within 2 seconds\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 3000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "weight": 3.0,
+    "criteria": ["completeness", "syntax_validity", "architecture_quality", "requirement_integration"],
+    "rubric": {
+      "completeness": "1.0: All required elements present (3 part defs with attributes, port defs, subsystem part with connections, 2 requirements). 0.5: Most elements present but some missing. 0.0: Major elements missing.",
+      "syntax_validity": "1.0: All SysML v2 syntax valid (package, imports, part def, port def, connect statements). 0.5: Minor syntax errors. 0.0: Major syntax errors.",
+      "architecture_quality": "1.0: Components properly structured with ports, connections make sense (GPS→Calculator→Display), subsystem integrates parts correctly. 0.5: Structure present but connections incomplete or illogical. 0.0: Poor or no architectural structure.",
+      "requirement_integration": "1.0: Two requirements properly defined with constraints (accuracy within 5m, calculation within 2s) using ISQ types. 0.5: Requirements present but constraints weak or incomplete. 0.0: Requirements missing or not integrated."
+    }
+  },
+  "metadata": {
+    "difficulty": "hard",
+    "category": "generation",
+    "tags": ["generation", "subsystem", "architecture", "integration"]
+  }
+}

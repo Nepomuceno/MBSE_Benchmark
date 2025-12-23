@@ -1,0 +1,22 @@
+{
+  "id": "sysml-generate-constraints-001",
+  "type": "generation",
+  "name": "SysML v2 Constraint Definition Generation",
+  "description": "Generate constraint definitions for physics calculations with mathematical expressions and ISQ types",
+  "prompt": "Create SysML v2 constraint definitions for physics calculations:\n\nRequirements:\n1. Package named 'PhysicsConstraints'\n2. Import ISQ::* and ScalarValues::*\n3. Create three constraint definitions:\n   - NewtonsSecondLaw: F = m * a (force equals mass times acceleration)\n   - KineticEnergy: KE = 0.5 * m * v^2\n   - PowerEquation: P = F * v (power equals force times velocity)\n\nUse proper ISQ types for all physical quantities (force, mass, acceleration, energy, power, velocity).\n\nReturn only the SysML v2 code, no explanation.",
+  "maxTokens": 2000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "sysml-validation",
+    "weight": 1.5,
+    "requiredElements": ["package:PhysicsConstraints", "constraintDef:NewtonsSecondLaw", "constraintDef:KineticEnergy", "constraintDef:PowerEquation"]
+  },
+  "metadata": {
+    "difficulty": "easy",
+    "category": "generation",
+    "tags": ["generation", "constraints", "physics", "expressions"]
+  }
+}
