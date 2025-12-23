@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "tasks": [
     "sysml-valid-detection-001",
     "sysml-invalid-braces-001",
@@ -22,7 +22,19 @@
     "sysml-analyze-variations-001",
     "sysml-analyze-topology-001",
     "sysml-analyze-individuals-001",
-    "sysml-analyze-crossref-001"
+    "sysml-analyze-crossref-001",
+    "sysml-transform-todoc-001",
+    "sysml-transform-req2model-001",
+    "sysml-transform-refactor-001",
+    "sysml-transform-simplify-001",
+    "sysml-transform-notation-001",
+    "sysml-transform-plantuml-001",
+    "sysml-transform-typescript-001",
+    "sysml-transform-statemachine-001",
+    "sysml-transform-decompose-001",
+    "sysml-transform-enrich-001",
+    "sysml-transform-req2test-001",
+    "sysml-transform-migrate-001"
   ],
   "categories": {
     "validation": {
@@ -63,6 +75,24 @@
         "sysml-analyze-topology-001",
         "sysml-analyze-individuals-001",
         "sysml-analyze-crossref-001"
+      ]
+    },
+    "transformation": {
+      "name": "SysML v2 Transformation",
+      "description": "Tasks testing ability to transform SysML v2 models between representations or refactor them",
+      "tasks": [
+        "sysml-transform-todoc-001",
+        "sysml-transform-req2model-001",
+        "sysml-transform-refactor-001",
+        "sysml-transform-simplify-001",
+        "sysml-transform-notation-001",
+        "sysml-transform-plantuml-001",
+        "sysml-transform-typescript-001",
+        "sysml-transform-statemachine-001",
+        "sysml-transform-decompose-001",
+        "sysml-transform-enrich-001",
+        "sysml-transform-req2test-001",
+        "sysml-transform-migrate-001"
       ]
     }
   }

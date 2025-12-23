@@ -1,0 +1,30 @@
+{
+  "id": "sysml-transform-decompose-001",
+  "type": "generation",
+  "name": "SysML v2 Model Decomposition into Multiple Packages",
+  "description": "Decompose a monolithic SysML v2 model into separate, well-organized packages with proper imports",
+  "prompt": "Refactor this monolithic SysML v2 model into separate packages for better organization:\n\n1. 'Definitions' package - all part defs, port defs, interface defs, connection defs, item defs, attribute defs\n2. 'Actions' package - all action defs and use case defs\n3. 'States' package - all state defs\n4. 'Model' package - the actual part usages and model instances\n\nFor each package:\n- Create a separate file (Definitions.sysml, Actions.sysml, States.sysml, Model.sysml)\n- Add proper import statements where one package uses elements from another\n- Ensure all cross-references use correct qualified names or imports\n- Preserve all documentation and comments\n\nAll four files must be valid SysML v2 and together represent the complete original model.\n\nOutput each file clearly separated with file name headers.",
+  "maxTokens": 5000,
+  "files": {
+    "initial": "files",
+    "expected": []
+  },
+  "evaluation": {
+    "type": "llm-judge",
+    "criteria": ["proper_decomposition", "correct_imports", "semantic_preservation", "organization_quality", "sysml_syntax_validity"],
+    "rubric": {
+      "proper_decomposition": "1.0: Clean separation - Definitions package has all part/port/interface/connection/item/attribute defs, Actions package has action/use case defs, States package has state defs, Model package has part usages and model instances. 0.5: Mostly separated but some elements misplaced. 0.0: Poor separation or elements in wrong packages.",
+      "correct_imports": "1.0: All four packages have correct import statements where needed (e.g., Model imports from Definitions, Actions, States using proper syntax like 'import Definitions::*;'). 0.5: Some imports present but incomplete or syntax errors. 0.0: Missing or incorrect imports causing unresolved references.",
+      "semantic_preservation": "1.0: All functionality identical after decomposition - Person definition works the same, Family relationships preserved, use cases intact. 0.5: Most functionality preserved but minor issues. 0.0: Semantic changes or broken functionality.",
+      "organization_quality": "1.0: Logical, maintainable organization that improves code clarity and follows package separation best practices. 0.5: Organized but could be improved. 0.0: Poor organization or confusing structure.",
+      "sysml_syntax_validity": "1.0: All four output files are valid SysML v2 with proper package syntax. 0.5: Minor syntax errors in one or two files. 0.0: Major syntax errors across files."
+    },
+    "weight": 2.5
+  },
+  "metadata": {
+    "difficulty": "medium",
+    "category": "transformation",
+    "source": "GfSE/SysML-v2-Models family.sysml",
+    "tags": ["transformation", "refactoring", "decomposition"]
+  }
+}
