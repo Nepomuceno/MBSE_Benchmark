@@ -67,11 +67,16 @@ export function createAzureAdapter(config: ModelConfig): ModelAdapter {
 
     async warmup(): Promise<void> {
       // Simple warmup request to load model into memory
-      await generateText({
-        model,
-        prompt: "Hello",
-        maxOutputTokens: 10,
-      });
+      try {
+        await generateText({
+          model,
+          prompt: "Hello",
+          maxOutputTokens: 10,
+        });
+      } catch (error) {
+        // Warmup failures are non-fatal; log and continue
+        console.warn(`Warmup failed for model "${config.id}":`, error);
+      }
     },
 
     async generate(prompt: string, options?: GenerateOptions): Promise<GenerateResult> {

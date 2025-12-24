@@ -39,6 +39,7 @@
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
       "deployment": "gpt-oss-120b",
+      "supportsResponses": false,
       "supportsTools": true
     },
     {
@@ -49,6 +50,7 @@
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
       "deployment": "Phi-4-reasoning",
       "reasoningModel": true,
+      "supportsResponses": false,
       "supportsTools": false
     },
     {
@@ -58,6 +60,7 @@
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
       "deployment": "DeepSeek-V3.2",
+      "supportsResponses": false,
       "supportsTools": true
     },
     {
@@ -66,7 +69,6 @@
       "provider": "openai-compatible",
       "envEndpoint": "LOCAL_MODEL_URL",
       "model": "openai/gpt-oss-20b",
-      "supportsResponses": true,
       "supportsTools": true
     },
     {
@@ -75,7 +77,6 @@
       "provider": "openai-compatible",
       "envEndpoint": "LOCAL_MODEL_URL",
       "model": "zai-org/glm-4.6v-flash",
-      "supportsResponses": true,
       "supportsTools": true
     },
     {
@@ -84,7 +85,6 @@
       "provider": "openai-compatible",
       "envEndpoint": "LOCAL_MODEL_URL",
       "model": "google/gemma-3-4b",
-      "supportsResponses": true,
       "supportsTools": true
     },
     {
@@ -93,7 +93,6 @@
       "provider": "openai-compatible",
       "envEndpoint": "LOCAL_MODEL_URL",
       "model": "nvidia/nemotron-3-nano",
-      "supportsResponses": true,
       "supportsTools": true
     },
     {
@@ -102,7 +101,6 @@
       "provider": "openai-compatible",
       "envEndpoint": "LOCAL_MODEL_URL",
       "model": "essentialai/rnj-1",
-      "supportsResponses": true,
       "supportsTools": true
     }
   ]

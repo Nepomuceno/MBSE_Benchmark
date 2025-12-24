@@ -78,7 +78,7 @@ supportsResponses: false → azure.chat() (Chat Completions API)
 
 ## Tool Support
 
-Models with `supportsTools: false` will still receive tool definitions but may not respond correctly.
+Models with `supportsTools: false` will not receive tool definitions (tools are disabled for these models).
 
 Consider this when:
 

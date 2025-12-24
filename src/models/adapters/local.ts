@@ -47,11 +47,9 @@ export function createLocalAdapter(config: ModelConfig): ModelAdapter {
   // Check if model supports tools
   const supportsTools = config.supportsTools !== false;
 
-  // Use Responses API if model supports it, otherwise use Chat Completions API
+  // Local/OpenAI-compatible models use Chat Completions API
   const modelId = config.model || config.id;
-  const model = config.supportsResponses
-    ? openai.responses(modelId)
-    : openai.chat(modelId);
+  const model = openai.chat(modelId);
 
   return {
     id: config.id,
@@ -59,11 +57,16 @@ export function createLocalAdapter(config: ModelConfig): ModelAdapter {
 
     async warmup(): Promise<void> {
       // Simple warmup request to load model into memory
-      await generateText({
-        model,
-        prompt: "Hello",
-        maxOutputTokens: 10,
-      });
+      try {
+        await generateText({
+          model,
+          prompt: "Hello",
+          maxOutputTokens: 10,
+        });
+      } catch (error) {
+        // Warmup failures are non-fatal; log and continue
+        console.warn(`Warmup failed for model "${config.id}":`, error);
+      }
     },
 
     async generate(prompt: string, options?: GenerateOptions): Promise<GenerateResult> {
