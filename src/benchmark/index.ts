@@ -4,4 +4,7 @@ export type {
   TaskResult,
   TaskIteration,
   BenchmarkConfig,
+  TaskProgressEvent,
+  BenchmarkProgressEvent,
+  ProgressCallback,
 } from "./runner.js";

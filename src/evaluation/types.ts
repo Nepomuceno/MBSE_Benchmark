@@ -30,7 +30,6 @@ export interface EvaluationContext {
 
 export interface LlmJudgeConfig {
   modelId: string;
-  temperature: number;
   maxTokens: number;
 }
 

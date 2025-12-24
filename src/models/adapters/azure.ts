@@ -52,26 +52,48 @@ export function createAzureAdapter(config: ModelConfig): ModelAdapter {
     resourceName: extractResourceName(endpoint),
   });
 
+  // Use Responses API if model supports it, otherwise use Chat Completions API
+  const deploymentName = config.deployment || config.id;
+  const model = config.supportsResponses 
+    ? azure(deploymentName) 
+    : azure.chat(deploymentName);
+
+  // Check if model supports tools
+  const supportsTools = config.supportsTools !== false;
+
   return {
     id: config.id,
     name: config.name,
 
+    async warmup(): Promise<void> {
+      // Simple warmup request to load model into memory
+      try {
+        await generateText({
+          model,
+          prompt: "Hello",
+          maxOutputTokens: 10,
+        });
+      } catch (error) {
+        // Warmup failures are non-fatal; log and continue
+        console.warn(`Warmup failed for model "${config.id}":`, error);
+      }
+    },
+
     async generate(prompt: string, options?: GenerateOptions): Promise<GenerateResult> {
       const startTime = Date.now();
 
-      const tools = options?.tools
+      // Only include tools if model supports them
+      const tools = supportsTools && options?.tools
         ? Object.fromEntries(
             options.tools.map((t) => [t.name, convertToolDefinition(t)])
           )
         : undefined;
 
       const result = await generateText({
-        model: azure(config.deployment || config.id),
+        model,
         prompt,
         system: options?.systemPrompt,
         maxOutputTokens: options?.maxTokens,
-        // Skip temperature for reasoning models (they don't support it)
-        temperature: config.reasoningModel ? undefined : options?.temperature,
         tools,
       });
 

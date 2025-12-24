@@ -12,11 +12,39 @@ import {
 } from "../evaluation/index.js";
 import { computeVersion } from "./version.js";
 
+export interface TaskProgressEvent {
+  taskId: string;
+  status: "pending" | "running" | "completed" | "failed";
+  iteration: number;
+  maxIterations: number;
+  score?: number;
+  latencyMs?: number;
+  error?: string;
+}
+
+export interface BenchmarkProgressEvent {
+  type: "task_start" | "task_iteration" | "task_complete" | "task_error";
+  task: TaskProgressEvent;
+  overall: {
+    completed: number;
+    running: number;
+    pending: number;
+    total: number;
+    totalRequests: number;
+    completedRequests: number;
+    runningScore: number;
+    elapsedMs: number;
+  };
+}
+
+export type ProgressCallback = (event: BenchmarkProgressEvent) => void;
+
 export interface BenchmarkConfig {
   version?: string;
   tasks?: string[];
   maxIterations?: number;
   basePath?: string;
+  onProgress?: ProgressCallback;
 }
 
 export interface TaskIteration {
@@ -61,6 +89,7 @@ export async function runBenchmark(
   const settings = loadBenchmarkSettings();
   const version = config.version || (await computeVersion(basePath));
   const maxIterations = config.maxIterations || settings.maxIterations;
+  const onProgress = config.onProgress;
 
   // Get model
   const modelConfig = getModel(modelId);
@@ -69,6 +98,9 @@ export async function runBenchmark(
   }
   const adapter = createModelClient(modelConfig);
 
+  // Warmup the model (loads it into memory for local models)
+  await adapter.warmup();
+
   // Load tasks
   let tasks: LoadedTask[];
   if (config.tasks && config.tasks.length > 0) {
@@ -76,6 +108,55 @@ export async function runBenchmark(
   } else {
     tasks = await loadAllTasks(basePath);
   }
+
+  // Progress tracking state
+  const progressState = {
+    taskStatus: new Map<string, TaskProgressEvent>(),
+    completedRequests: 0,
+    totalRequests: 0,
+    scores: [] as number[],
+  };
+
+  // Initialize task progress
+  for (const task of tasks) {
+    progressState.taskStatus.set(task.id, {
+      taskId: task.id,
+      status: "pending",
+      iteration: 0,
+      maxIterations,
+    });
+  }
+
+  // Helper to emit progress
+  const emitProgress = (type: BenchmarkProgressEvent["type"], taskId: string, updates: Partial<TaskProgressEvent>) => {
+    if (!onProgress) return;
+    
+    const current = progressState.taskStatus.get(taskId)!;
+    const updated = { ...current, ...updates };
+    progressState.taskStatus.set(taskId, updated);
+
+    const statuses = Array.from(progressState.taskStatus.values());
+    const completed = statuses.filter(s => s.status === "completed" || s.status === "failed").length;
+    const running = statuses.filter(s => s.status === "running").length;
+    const pending = statuses.filter(s => s.status === "pending").length;
+
+    onProgress({
+      type,
+      task: updated,
+      overall: {
+        completed,
+        running,
+        pending,
+        total: tasks.length,
+        totalRequests: progressState.totalRequests,
+        completedRequests: progressState.completedRequests,
+        runningScore: progressState.scores.length > 0 
+          ? progressState.scores.reduce((a, b) => a + b, 0) / progressState.scores.length 
+          : 0,
+        elapsedMs: Date.now() - startTime,
+      },
+    });
+  };
 
   // Run tasks in parallel with concurrency from settings (default 5)
   const concurrency = settings.parallelTasks ?? 5;
@@ -89,13 +170,28 @@ export async function runBenchmark(
       adapter,
       maxIterations,
       settings,
-      concurrency
+      concurrency,
+      emitProgress,
+      progressState
     );
   } else {
     // Run tasks sequentially
     taskResults = [];
     for (const task of tasks) {
-      const result = await runTask(adapter, task, maxIterations, settings);
+      emitProgress("task_start", task.id, { status: "running" });
+      const result = await runTask(adapter, task, maxIterations, settings, (iteration) => {
+        progressState.totalRequests++;
+        emitProgress("task_iteration", task.id, { iteration, status: "running" });
+      });
+      progressState.completedRequests += result.iterations.length;
+      progressState.scores.push(result.score);
+      emitProgress(result.error ? "task_error" : "task_complete", task.id, {
+        status: result.error ? "failed" : "completed",
+        score: result.score,
+        latencyMs: result.latencyMs,
+        error: result.error,
+        iteration: result.iterations.length,
+      });
       taskResults.push(result);
     }
   }
@@ -129,12 +225,23 @@ export async function runBenchmark(
   };
 }
 
+type ProgressEmitter = (type: BenchmarkProgressEvent["type"], taskId: string, updates: Partial<TaskProgressEvent>) => void;
+
+interface ProgressStateType {
+  taskStatus: Map<string, TaskProgressEvent>;
+  completedRequests: number;
+  totalRequests: number;
+  scores: number[];
+}
+
 async function runTasksInParallel(
   tasks: LoadedTask[],
   adapter: ModelAdapter,
   maxIterations: number,
   settings: BenchmarkSettings,
-  concurrency: number
+  concurrency: number,
+  emitProgress: ProgressEmitter,
+  progressState: ProgressStateType
 ): Promise<TaskResult[]> {
   const results: TaskResult[] = [];
   const queue = [...tasks];
@@ -143,7 +250,20 @@ async function runTasksInParallel(
     while (queue.length > 0) {
       const task = queue.shift();
       if (task) {
-        const result = await runTask(adapter, task, maxIterations, settings);
+        emitProgress("task_start", task.id, { status: "running" });
+        const result = await runTask(adapter, task, maxIterations, settings, (iteration) => {
+          progressState.totalRequests++;
+          emitProgress("task_iteration", task.id, { iteration, status: "running" });
+        });
+        progressState.completedRequests += result.iterations.length;
+        progressState.scores.push(result.score);
+        emitProgress(result.error ? "task_error" : "task_complete", task.id, {
+          status: result.error ? "failed" : "completed",
+          score: result.score,
+          latencyMs: result.latencyMs,
+          error: result.error,
+          iteration: result.iterations.length,
+        });
         results.push(result);
       }
     }
@@ -167,7 +287,8 @@ async function runTask(
   adapter: ModelAdapter,
   task: LoadedTask,
   maxIterations: number,
-  settings: BenchmarkSettings
+  settings: BenchmarkSettings,
+  onIteration?: (iteration: number) => void
 ): Promise<TaskResult> {
   const taskStartTime = Date.now();
   const iterations: TaskIteration[] = [];
@@ -184,10 +305,12 @@ async function runTask(
     // Agentic loop
     for (let i = 0; i < maxIterations; i++) {
       const iterationStart = Date.now();
+      
+      // Notify progress
+      onIteration?.(i + 1);
 
       const result = await adapter.generate(currentPrompt, {
         maxTokens: task.maxTokens || 2000,
-        temperature: 0,
         tools: fsTools.definitions,
       });
 

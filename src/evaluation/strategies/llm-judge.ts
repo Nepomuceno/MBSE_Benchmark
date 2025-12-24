@@ -38,7 +38,6 @@ export class LlmJudgeStrategy implements EvaluationStrategy {
 
     try {
       const result = await adapter.generate(prompt, {
-        temperature: this.config.temperature,
         maxTokens: this.config.maxTokens,
         systemPrompt: "You are an expert evaluator for AI benchmark tasks. Return valid JSON only.",
       });

@@ -11,6 +11,7 @@ describe("types", () => {
     const mockAdapter: ModelAdapter = {
       id: "test-id",
       name: "Test Model",
+      warmup: async () => {},
       generate: async () => ({
         text: "response",
         usage: { promptTokens: 10, completionTokens: 20 },
@@ -21,12 +22,14 @@ describe("types", () => {
     expect(mockAdapter.id).toBe("test-id");
     expect(mockAdapter.name).toBe("Test Model");
     expect(typeof mockAdapter.generate).toBe("function");
+    expect(typeof mockAdapter.warmup).toBe("function");
   });
 
   test("GenerateResult can include tool calls", async () => {
     const mockAdapter: ModelAdapter = {
       id: "test",
       name: "Test",
+      warmup: async () => {},
       generate: async (): Promise<GenerateResult> => ({
         text: "",
         toolCalls: [
@@ -60,7 +63,6 @@ describe("types", () => {
 
     const options: GenerateOptions = {
       maxTokens: 1000,
-      temperature: 0.7,
       systemPrompt: "You are a helpful assistant",
       tools,
     };
