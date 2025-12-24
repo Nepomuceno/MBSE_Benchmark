@@ -118,3 +118,21 @@ Guidelines for AI agents contributing to this project.
 7. Update documentation if behavior changes
 
 The markdown lint check (`bun run lint:md`) must pass before any commit.
+
+## Adding New Models
+
+When adding models to `config/models.json`, refer to the model configuration documentation:
+
+- **[docs/model-configuration.md](docs/model-configuration.md)** - Complete reference for model properties, API support tables, and examples
+
+Key properties to set for each model:
+
+- `supportsResponses` - Whether to use Responses API (OpenAI models) or Chat API
+- `supportsTools` - Whether the model supports tool/function calling
+- `reasoningModel` - Whether the model uses reasoning tokens
+
+## Documentation
+
+Extended documentation lives in the `docs/` folder:
+
+- `docs/model-configuration.md` - Model setup and API compatibility reference

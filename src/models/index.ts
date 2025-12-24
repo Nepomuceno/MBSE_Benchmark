@@ -11,6 +11,10 @@ export interface ModelConfig {
   deployment?: string;
   model?: string;
   reasoningModel?: boolean;
+  /** Whether this model supports the Azure Responses API (vs Chat Completions API) */
+  supportsResponses?: boolean;
+  /** Whether this model supports tool/function calling */
+  supportsTools?: boolean;
 }
 
 export function loadModels(): ModelConfig[] {

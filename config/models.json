@@ -7,7 +7,9 @@
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
       "deployment": "gpt-5.2",
-      "reasoningModel": true
+      "reasoningModel": true,
+      "supportsResponses": true,
+      "supportsTools": true
     },
     {
       "id": "gpt-5.1-codex-mini",
@@ -16,7 +18,9 @@
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
       "deployment": "gpt-5.1-codex-mini",
-      "reasoningModel": true
+      "reasoningModel": true,
+      "supportsResponses": true,
+      "supportsTools": true
     },
     {
       "id": "gpt-4.1",
@@ -24,7 +28,9 @@
       "provider": "azure",
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
-      "deployment": "gpt-4.1"
+      "deployment": "gpt-4.1",
+      "supportsResponses": true,
+      "supportsTools": true
     },
     {
       "id": "gpt-oss-120b",
@@ -32,7 +38,8 @@
       "provider": "azure",
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
-      "deployment": "gpt-oss-120b"
+      "deployment": "gpt-oss-120b",
+      "supportsTools": true
     },
     {
       "id": "phi-4-reasoning",
@@ -41,7 +48,8 @@
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
       "deployment": "Phi-4-reasoning",
-      "reasoningModel": true
+      "reasoningModel": true,
+      "supportsTools": false
     },
     {
       "id": "deepseek-v3.2",
@@ -49,40 +57,53 @@
       "provider": "azure",
       "envKey": "AZURE_OPENAI_API_KEY",
       "envEndpoint": "AZURE_OPENAI_ENDPOINT",
-      "deployment": "DeepSeek-V3.2"
+      "deployment": "DeepSeek-V3.2",
+      "supportsTools": true
     },
     {
       "id": "local-gpt-oss-20b",
       "name": "GPT-OSS 20B (Local)",
       "provider": "openai-compatible",
-      "envKey": "LOCAL_API_KEY",
       "envEndpoint": "LOCAL_MODEL_URL",
-      "model": "openai/gpt-oss-20b"
+      "model": "openai/gpt-oss-20b",
+      "supportsResponses": true,
+      "supportsTools": true
     },
     {
-      "id": "local-phi-4-reasoning",
-      "name": "Phi-4 Reasoning Plus (Local)",
+      "id": "local-glm-4.6v-flash",
+      "name": "GLM-4.6V Flash (Local)",
       "provider": "openai-compatible",
-      "envKey": "LOCAL_API_KEY",
       "envEndpoint": "LOCAL_MODEL_URL",
-      "model": "microsoft/phi-4-reasoning-plus",
-      "reasoningModel": true
+      "model": "zai-org/glm-4.6v-flash",
+      "supportsResponses": true,
+      "supportsTools": true
     },
     {
-      "id": "local-qwen3-coder",
-      "name": "Qwen3 Coder 30B (Local)",
+      "id": "local-gemma-3-4b",
+      "name": "Gemma 3 4B (Local)",
       "provider": "openai-compatible",
-      "envKey": "LOCAL_API_KEY",
       "envEndpoint": "LOCAL_MODEL_URL",
-      "model": "qwen/qwen3-coder-30b"
+      "model": "google/gemma-3-4b",
+      "supportsResponses": true,
+      "supportsTools": true
     },
     {
-      "id": "local-lfm2",
-      "name": "LFM2 1.2B (Local)",
+      "id": "local-nemotron-3-nano",
+      "name": "Nemotron-3 Nano (Local)",
       "provider": "openai-compatible",
-      "envKey": "LOCAL_API_KEY",
       "envEndpoint": "LOCAL_MODEL_URL",
-      "model": "liquid/lfm2-1.2b"
+      "model": "nvidia/nemotron-3-nano",
+      "supportsResponses": true,
+      "supportsTools": true
+    },
+    {
+      "id": "local-rnj-1",
+      "name": "RNJ-1 (Local)",
+      "provider": "openai-compatible",
+      "envEndpoint": "LOCAL_MODEL_URL",
+      "model": "essentialai/rnj-1",
+      "supportsResponses": true,
+      "supportsTools": true
     }
   ]
 }

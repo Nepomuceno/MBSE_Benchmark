@@ -10,6 +10,8 @@ export interface CliArgs {
   help?: boolean;
   verbose?: boolean;
   output?: OutputFormat;
+  debug?: boolean;
+  task?: string;
 }
 
 export function parseArgs(argv: string[]): CliArgs {
@@ -62,6 +64,14 @@ export function parseArgs(argv: string[]): CliArgs {
         }
         break;
       }
+      case "--debug":
+      case "-d":
+        args.debug = true;
+        break;
+      case "--task":
+      case "-t":
+        args.task = argv[++i];
+        break;
     }
   }
 

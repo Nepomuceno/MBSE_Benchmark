@@ -44,25 +44,43 @@ export function createLocalAdapter(config: ModelConfig): ModelAdapter {
     baseURL,
   });
 
+  // Check if model supports tools
+  const supportsTools = config.supportsTools !== false;
+
+  // Use Responses API if model supports it, otherwise use Chat Completions API
+  const modelId = config.model || config.id;
+  const model = config.supportsResponses
+    ? openai.responses(modelId)
+    : openai.chat(modelId);
+
   return {
     id: config.id,
     name: config.name,
 
+    async warmup(): Promise<void> {
+      // Simple warmup request to load model into memory
+      await generateText({
+        model,
+        prompt: "Hello",
+        maxOutputTokens: 10,
+      });
+    },
+
     async generate(prompt: string, options?: GenerateOptions): Promise<GenerateResult> {
       const startTime = Date.now();
 
-      const tools = options?.tools
+      // Only include tools if model supports them
+      const tools = supportsTools && options?.tools
         ? Object.fromEntries(
             options.tools.map((t) => [t.name, convertToolDefinition(t)])
           )
         : undefined;
 
       const result = await generateText({
-        model: openai(config.model || config.id),
+        model,
         prompt,
         system: options?.systemPrompt,
         maxOutputTokens: options?.maxTokens,
-        temperature: options?.temperature,
         tools,
       });
 

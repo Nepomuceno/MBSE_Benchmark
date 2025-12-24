@@ -12,7 +12,6 @@ export interface ToolCall {
 
 export interface GenerateOptions {
   maxTokens?: number;
-  temperature?: number;
   systemPrompt?: string;
   tools?: ToolDefinition[];
 }
@@ -31,4 +30,6 @@ export interface ModelAdapter {
   id: string;
   name: string;
   generate(prompt: string, options?: GenerateOptions): Promise<GenerateResult>;
+  /** Warmup the model with a simple request to load it into memory */
+  warmup(): Promise<void>;
 }
