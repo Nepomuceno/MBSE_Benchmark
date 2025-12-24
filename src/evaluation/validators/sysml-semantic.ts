@@ -42,8 +42,6 @@ export interface SemanticDifference {
 export interface SemanticCompareOptions {
   /** Model ID to use for LLM-assisted comparison */
   modelId?: string;
-  /** Temperature for LLM generation (0-1) */
-  temperature?: number;
   /** Maximum tokens for LLM response */
   maxTokens?: number;
   /** Consider as equivalent: different import styles */
@@ -56,7 +54,6 @@ export interface SemanticCompareOptions {
 
 const DEFAULT_OPTIONS: SemanticCompareOptions = {
   modelId: "gpt-4o",
-  temperature: 0.1,
   maxTokens: 2000,
   tolerateImportVariations: true,
   tolerateNamingVariations: false,
@@ -204,7 +201,6 @@ export async function compareSemantics(
     const adapter = createModelClient(modelConfig);
     const prompt = buildSemanticComparisonPrompt(expectedModel, actualModel, opts);
     const result = await adapter.generate(prompt, {
-      temperature: opts.temperature,
       maxTokens: opts.maxTokens,
       systemPrompt:
         "You are an expert in SysML v2 and model-based systems engineering. Analyze models for semantic equivalence and return valid JSON only.",
