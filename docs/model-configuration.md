@@ -44,7 +44,7 @@ Models available through Azure AI Foundry marketplace.
 | DeepSeek-V3 | ❌ | ✅ | ✅ | ❌ | General purpose with function calling |
 | DeepSeek-V3-0324 | ❌ | ✅ | ✅ | ❌ | Improved function calling accuracy |
 | DeepSeek-V3.2 | ❌ | ✅ | ✅ | ❌ | Agentic reasoning, multi-step tool use |
-| DeepSeek-V3.2-Speciale | ❌ | ✅ | ❌ | ✅ | Pure reasoning, no tool support |
+| DeepSeek-V3.2-Special | ❌ | ✅ | ❌ | ✅ | Pure reasoning, no tool support |
 | DeepSeek-R1 | ❌ | ✅ | ✅ | ✅ | Reasoning with reduced hallucination |
 | DeepSeek-R1-0528 | ❌ | ✅ | ✅ | ✅ | Enhanced reasoning and tool support |
 | Phi-4 | ❌ | ✅ | ❌ | ❌ | Lightweight, limited capabilities |
